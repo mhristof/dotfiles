@@ -1,0 +1,15 @@
+---
+
+- name: install fzf
+  shell: 'yes | ./install'
+  become: false
+  args:
+    chdir: '{{ home }}/.fzf'
+
+- name: install autojump
+  shell: './install.py'
+  become: false
+  environment:
+    SHELL: bash
+  args:
+    chdir: '{{ home }}/.src/autojump'

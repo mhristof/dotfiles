@@ -1,0 +1,74 @@
+---
+
+- include_tasks: '{{ ansible_system|lower }}.yml'
+
+- name: setup links
+  become: false
+  file:
+    src: '{{ playbook_dir }}/files/{{ item }}'
+    dest: '{{ home }}/.{{ item }}'
+    state: link
+    force: true
+  with_items:
+    - bashrc
+    - bash
+    - vimrc
+    - zshrc
+    - irbc
+    - tmux.conf
+    - dotfilesrc
+  tags:
+    - links
+
+- name: wget random files
+  get_url:
+    url: "https://raw.githubusercontent.com/scop/bash-completion/master/completions/make"
+    dest: '{{ home }}/.bash/make_autocomplete.sh'
+
+- name: install vundle
+  git:
+    repo: https://github.com/VundleVim/Vundle.vim.git
+    dest: '{{ home }}/.vim/bundle/Vundle.vim'
+    version: master
+
+- name: install fzf
+  git:
+    repo: https://github.com/junegunn/fzf.git
+    dest: '{{ home }}/.fzf'
+    depth: 1
+  notify:
+    - install fzf
+
+- name: create directories
+  file:
+    path: '{{ item }}'
+    state: directory
+  with_items:
+    - '{{ home }}/.src'
+
+- name: install autojump
+  git:
+    repo: git://github.com/joelthelion/autojump.git
+    dest: '{{ home }}/.src/autojump'
+    depth: 1
+  notify:
+    - install autojump
+  tags:
+    - autojump
+    - aj
+
+- name: pip install some stuff
+  pip:
+    name: '{{ item }}'
+    state: present
+    extra_args: '--user'
+  with_items:
+    - sh
+  tags:
+    - pip
+
+- name: install oh my zsh shell
+  include_tasks: oh-my-zsh.yml
+
+- debug: msg="vim +PluginInstall +qall"
+

@@ -1,0 +1,17 @@
+---
+
+- name: apt-get stuff
+  become: true
+  apt:
+    name: '{{ item }}'
+    state: present
+    cache_valid_time: 36000
+    update_cache: yes
+  with_items:
+    - git
+    - vim
+    - curl
+    - wget
+    - zsh
+  tags:
+    - apt

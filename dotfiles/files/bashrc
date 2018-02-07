@@ -47,27 +47,9 @@ if [[ $UID -ne 0 ]]; then
     done
 fi
 
-if [[ $- == *i* ]]; then
-    [ -x ~/bin/fortune.sh ] && ~/bin/fortune.sh
-fi
-
-[[ "$(ps uxa | grep [a]wesome | wc -l)" -gt 0 ]] && setup_xdbus
-
-if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-    :
-elif [[ "$(uname)" == 'Linux' ]] && [[ "$(xrandr -q | grep -P "\bconnected\b" -c)" -eq 2 ]]; then
-        xrandr --output DP1 --right-of DP2
-fi
-
-if [[ ! -d ~/.fzf ]]; then
-    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-    ~/.fzf/install
-fi
-
-if [[ -f ~/.bashrc_local ]]; then
-    source ~/.bashrc_local
-fi
-
 if [ -f $(brew --prefix)/etc/bash_completion ]; then
     . $(brew --prefix)/etc/bash_completion
 fi
+
+
+source ~/.dotfilesrc
