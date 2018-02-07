@@ -1,8 +1,0 @@
----
-# tasks file for setup-ubuntu-server
-#
-#
-#
-#
-
-    - debug: msg="test"
