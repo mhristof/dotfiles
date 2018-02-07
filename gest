@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+ROOT=$(git rev-parse --show-toplevel)
+WD=${PWD/$ROOT/}
+echo root: $ROOT wd: $WD
+mkdir -p ~/tmp/$(date +"%Y%m%d_%H%M%S") && pushd $_
+git clone $ROOT ./
+pushd ./$WD
+$@

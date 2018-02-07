@@ -14,6 +14,7 @@ export PATH=/usr/local/opt/coreutils/libexec/gnubin:$PATH
 export PATH=/usr/local/sbin:$PATH
 export PATH=~/umbrella/bin:$PATH
 export PATH=~/.global-modules/bin/:$PATH
+export PATH=~/.yarn/bin:$PATH
 
 brew --prefix cookiecutter &> /dev/null && {
     export PATH=$(brew --prefix cookiecutter):$PATH
@@ -25,3 +26,7 @@ which go &> /dev/null && {
 }
 
 export LESSOPEN="| highlight %s -O xterm256"
+
+unalias gl
+unalias gc
+unalias gp
