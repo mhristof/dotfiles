@@ -70,5 +70,6 @@
 - name: install oh my zsh shell
   include_tasks: oh-my-zsh.yml
 
-- debug: msg="vim +PluginInstall +qall"
-
+- include_tasks: test.yml
+  tags:
+    - test

@@ -18,8 +18,9 @@ Vagrant.configure(VAGRANT_CONFIG_VERSION) do |config|
       end
       box.ssh.forward_agent = true
 
+      config.vm.synced_folder ".", "/vagrant", type: "rsync" # or "rsync"
       config.vm.provision "shell", privileged: false, name: "shell", inline: <<-SHELL
-        /vagrant/setup/install.sh
+        /vagrant/dotfiles/install.sh
       SHELL
     end
   end

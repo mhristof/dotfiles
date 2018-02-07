@@ -1,19 +1,4 @@
 # If you come from bash you might have to change your $PATH.
-export PATH=/usr/local/opt/python/bin:$PATH
-export PATH=$HOME/bin:~/Library/Python/2.7/bin:/usr/local/bin:~/.fzf/bin:$PATH
-export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-export PATH=/usr/local/sbin:$PATH
-export PATH=~/umbrella/bin:$PATH
-export PATH=~/.global-modules/bin/:$PATH
-brew --prefix cookiecutter &> /dev/null && {
-    export PATH=$(brew --prefix cookiecutter):$PATH
-}
-export LESSOPEN="| highlight %s -O xterm256"
-
-which go &> /dev/null && {
-    export GOPATH=$(go env GOPATH)
-    export PATH=$GOPATH/bin:$PATH
-}
 
 # Path to your oh-my-zsh installation.
 export ZSH=~/.oh-my-zsh
