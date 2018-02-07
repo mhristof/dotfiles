@@ -38,4 +38,4 @@ which ansible-playbook &> /dev/null || {
     AP=$(readlink -f "$(python -m site --user-site)/../../../bin/ansible-playbook")
 }
 
-ANSIBLE_ROLES_PATH=$(readlink -f $(dirname $0)/../) $AP -i localhost, -c local "$(dirname "$0")/dotfiles.yml" -b "$@"
+ANSIBLE_ROLES_PATH=$(readlink -f $(dirname $0)/) $AP -i localhost, -c local "$(dirname "$0")/dotfiles/dotfiles.yml" -b "$@"

@@ -1,2 +1,25 @@
 home: '{{ ansible_env.HOME }}'
 user: '{{ lookup("pipe", "whoami") }}'
+
+brew_packages:
+  - cookiecutter
+  - curl
+  - gnu-getopt
+  - httpie
+  - hub
+  - ipcalc
+  - jq
+  - make
+  - mtr
+  - nmap
+  - shellcheck
+  - the_silver_searcher
+  - vim
+  - zsh
+
+apt_packages:
+  - git
+  - vim
+  - curl
+  - wget
+  - zsh
