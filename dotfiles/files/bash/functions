@@ -1,8 +1,12 @@
 # vi: ft=sh
 
-function c () {
-    [ ! "$1" ] && cd ~ && ls && return 0;
-    cd "$1" && ls
+# function c () {
+#     [ ! "$1" ] && cd ~ && ls && return 0;
+#     cd "$1" && ls
+# }
+
+function c() {
+    cd $* && ls
 }
 
 function mkansible {

@@ -1,32 +1,53 @@
 # vim :ft=bash:
 
 for f in ~/.autojump/etc/profile.d/autojump.sh \
+         ~/.bash/alias \
+         ~/.bash/alias.$(uname) \
+         ~/.bash/checks \
+         ~/.bash/functions \
+         ~/.fzf.zsh \
+         ~/.bash/$(basename $SHELL) \
          ~/.bashrc_local; do
     if [[ -f $f ]]; then
         source $f;
     fi
 done
 
-export PATH=~/bin:$PATH
+export EDITOR="vim -X"
 export PATH=/usr/local/opt/python/bin:$PATH
-export PATH=~/Library/Python/2.7/bin:/usr/local/bin:~/.fzf/bin:$PATH
-export PATH=/usr/local/opt/coreutils/libexec/gnubin:$PATH
-export PATH=/usr/local/sbin:$PATH
-export PATH=~/umbrella/bin:$PATH
+export PATH=~/Library/Python/2.7/bin:$PATH
+export PATH=/usr/local/sbin:/usr/local/bin:$PATH
+export PATH=~/.fzf/bin:$PATH
 export PATH=~/.global-modules/bin/:$PATH
 export PATH=~/.yarn/bin:$PATH
+export PATH=~/umbrella/bin:$PATH
+export PATH=/usr/local/opt/coreutils/libexec/gnubin:$PATH
+export PATH=~/bin:$PATH
 
 brew --prefix cookiecutter &> /dev/null && {
     export PATH=$(brew --prefix cookiecutter):$PATH
 }
 
-which go &> /dev/null && {
+which go | grep -v alias &> /dev/null && {
     export GOPATH=$(go env GOPATH)
     export PATH=$GOPATH/bin:$PATH
 }
 
+export PATH=$(echo -n $PATH | awk -v RS=: -v ORS=: '!arr[$0]++') # remove duplicates
+
+export HISTCONTROL=ignoredups:erasedups
+# When the shell exits, append to the history file instead of overwriting it
+shopt -s histappend
+
+# After each command, append to the history file and reread it
+export PROMPT_COMMAND="prompt; history -a; history -c; history -r"
+export HISTSIZE=
+export HISTFILESIZE=
+export HISTTIMEFORMAT='%F %T '
+
+[ -d ~/.backup ] && chmod 700 ~/.backup
+[ -f ~/.pythonrc.py ] && export PYTHONSTARTUP=~/.pythonrc.py
+
 export LESSOPEN="| highlight %s -O xterm256"
 
-unalias gl
-unalias gc
-unalias gp
+ssh-add -l | grep id_rsa &> /dev/null || ssh-add ~/.ssh/id_rsa

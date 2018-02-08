@@ -82,30 +82,5 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-[ -f ~/.bash/alias ] && source ~/.bash/alias
-[ -f ~/.bash/checks ] && source ~/.bash/checks
-[ -f ~/.bash/alias.$(uname) ] && source ~/.bash/alias.$(uname)
-[ -f ~/.bashrc_local ] && source ~/.bashrc_local
-[ -f /usr/local/etc/autojump.sh ] && source /usr/local/etc/autojump.sh
-
-function c() {
-    cd $* && ls
-}
-unalias gl
-unalias gc
-
-[ -f ~/.bash/functions ] && source ~/.bash/functions
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-ssh-add -l | grep id_rsa &> /dev/null || ssh-add ~/.ssh/id_rsa
-[ -f ~/.bamboorc ] && source ~/.bamboorc
-source ~/.zsh-kubectl-prompt.git/kubectl.zsh
-source ~/.oh-my-zsh/plugins/shrink-path/shrink-path.plugin.zsh
-RPROMPT='%{$fg[blue]%}($ZSH_KUBECTL_PROMPT)%{$reset_color%}'
-
-if [[ ! -z "$ITERM_SESSION_ID" ]]; then
-    function precmd {
-        echo $PWD >> /tmp/pwd-$(echo $ITERM_SESSION_ID | cut -d: -f2)
-    }
-fi
-#setopt prompt_subst
-PS1='${ret_status} %{$fg[cyan]%}$(shrink_path -f)%{$reset_color%} $(git_prompt_info)'
+#
+source ~/.dotfilesrc
