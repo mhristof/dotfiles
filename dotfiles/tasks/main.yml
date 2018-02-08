@@ -20,6 +20,16 @@
   tags:
     - links
 
+- name: deploy templates
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - src: tmux.conf
+      dest: '{{ home }}/.tmux.conf'
+  tags:
+    - templates
+
 - name: wget random files
   get_url:
     url: "https://raw.githubusercontent.com/scop/bash-completion/master/completions/make"
