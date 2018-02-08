@@ -1,5 +1,8 @@
 # vim :ft=bash:
 
+# allow the next section to re-arrange paths
+export PATH=/usr/local/sbin:/usr/local/bin:$PATH
+
 for f in ~/.autojump/etc/profile.d/autojump.sh \
          ~/.bash/alias \
          ~/.bash/alias.$(uname) \
@@ -16,7 +19,6 @@ done
 export EDITOR="vim -X"
 export PATH=/usr/local/opt/python/bin:$PATH
 export PATH=~/Library/Python/2.7/bin:$PATH
-export PATH=/usr/local/sbin:/usr/local/bin:$PATH
 export PATH=~/.fzf/bin:$PATH
 export PATH=~/.global-modules/bin/:$PATH
 export PATH=~/.yarn/bin:$PATH
