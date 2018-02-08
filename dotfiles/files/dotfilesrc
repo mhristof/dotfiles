@@ -37,18 +37,19 @@ which go | grep -v alias &> /dev/null && {
 
 export PATH=$(echo -n $PATH | awk -v RS=: -v ORS=: '!arr[$0]++') # remove duplicates
 
+
+[ -d ~/.backup ] && chmod 700 ~/.backup
+[ -f ~/.pythonrc.py ] && export PYTHONSTARTUP=~/.pythonrc.py
+
 export HISTCONTROL=ignoredups:erasedups
 # When the shell exits, append to the history file instead of overwriting it
 shopt -s histappend
 
 # After each command, append to the history file and reread it
 export PROMPT_COMMAND="prompt; history -a; history -c; history -r"
-export HISTSIZE=
+export HISTSIZE=99999999
 export HISTFILESIZE=
 export HISTTIMEFORMAT='%F %T '
-
-[ -d ~/.backup ] && chmod 700 ~/.backup
-[ -f ~/.pythonrc.py ] && export PYTHONSTARTUP=~/.pythonrc.py
 
 export LESSOPEN="| highlight %s -O xterm256"
 
