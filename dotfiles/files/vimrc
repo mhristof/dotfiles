@@ -20,7 +20,7 @@ Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plugin 'junegunn/fzf.vim'
 Plugin 'MarcWeber/vim-addon-mw-utils.git'
 Plugin 'tomtom/tlib_vim.git'
-Plugin 'serialdoom/vim-snipmate.git'
+Plugin 'mhristof/vim-snipmate.git'
 Plugin 'serialdoom/vcscommand.vim.git'
 Plugin 'serialdoom/VisIncr.git'
 Plugin 'serialdoom/vim-ansible-yaml.git'
