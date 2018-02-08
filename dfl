@@ -8,6 +8,14 @@ if [[ -f /.dockerenv ]]; then
     SUDO=''
 fi
 
+if [[ ! -f ~/bin/dotfiles/dotfiles.yml ]]; then
+    # this is the first time that we are running dfl, so clone the
+    # repository and then start that dfl.
+    git clone git@github.com:mhristof/dotfiles.git ~/bin
+    ~/bin/dfl
+    exit 0
+fi
+
 case $(uname) in
     Linux)
         which python &> /dev/null || {
