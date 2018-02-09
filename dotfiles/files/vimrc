@@ -211,6 +211,7 @@ if has("user_commands")
     command! -bang Qa qa<bang>
     command! -bang Set set<bang>
     command! -bang Vs vs<bang>
+    command Squash call Squash()
 endif
 
 function! SessionCreate()
@@ -239,4 +240,11 @@ function! FailedRake()
     silent make
     copen
     let &makeprg=oldro
+endfunction
+
+function! Squash()
+    execute "normal! ggj"
+    execute ".,$s/^pick/squash"
+    execute "normal! ggj"
+    execute "noh"
 endfunction
