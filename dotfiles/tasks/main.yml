@@ -81,12 +81,12 @@
   tags:
     - pip
 
-- name: 'check if {{ home }}/bin is an ssh checkout'
+- name: 'check if {{ bin }} is an ssh checkout'
   shell: git remote -v
   register: git_remote
   changed_when: "'https' in git_remote.stdout"
   args:
-    chdir: '{{ home }}/bin'
+    chdir: '{{ bin }}'
   notify:
     - change git remote to ssh
   tags:
