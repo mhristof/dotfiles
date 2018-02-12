@@ -3,7 +3,7 @@
 - meta: flush_handlers
 
 - name: check available commands
-  shell: source ~/.dotfilesrc && which {{ item }}
+  shell: source ~/.zshrc && which {{ item }}
   changed_when: false
   args:
     executable: /bin/zsh
