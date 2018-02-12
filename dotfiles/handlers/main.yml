@@ -13,3 +13,8 @@
     SHELL: bash
   args:
     chdir: '{{ home }}/.src/autojump'
+
+- name: change git remote to ssh
+  shell: git remote set-url origin git@github.com:mhristof/dotfiles.git
+  args:
+    chdir: '{{ home }}/bin'

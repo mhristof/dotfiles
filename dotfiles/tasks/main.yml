@@ -32,12 +32,12 @@
 
 - name: wget random files
   get_url:
-    url: "https://raw.githubusercontent.com/scop/bash-completion/master/completions/make"
+    url: 'https://raw.githubusercontent.com/scop/bash-completion/master/completions/make'
     dest: '{{ home }}/.bash/make_autocomplete.sh'
 
 - name: install vundle
   git:
-    repo: https://github.com/VundleVim/Vundle.vim.git
+    repo: 'https://github.com/VundleVim/Vundle.vim.git'
     dest: '{{ home }}/.vim/bundle/Vundle.vim'
     version: master
   tags:
@@ -45,7 +45,7 @@
 
 - name: install fzf
   git:
-    repo: https://github.com/junegunn/fzf.git
+    repo: 'https://github.com/junegunn/fzf.git'
     dest: '{{ home }}/.fzf'
     depth: 1
   notify:
@@ -62,7 +62,7 @@
 
 - name: install autojump
   git:
-    repo: git://github.com/joelthelion/autojump.git
+    repo: 'https://github.com/joelthelion/autojump.git'
     dest: '{{ home }}/.src/autojump'
     depth: 1
   notify:
@@ -80,6 +80,17 @@
     - sh
   tags:
     - pip
+
+- name: 'check if {{ home }}/bin is an ssh checkout'
+  shell: git remote -v
+  register: git_remote
+  changed_when: "'https' in git_remote.stdout"
+  args:
+    chdir: '{{ home }}/bin'
+  notify:
+    - change git remote to ssh
+  tags:
+    - github
 
 - name: install oh my zsh shell
   include_tasks: oh-my-zsh.yml
