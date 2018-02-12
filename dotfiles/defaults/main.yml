@@ -24,3 +24,5 @@ apt_packages:
   - curl
   - wget
   - zsh
+  # for `pip install readline`
+  - libncurses5-dev

@@ -37,9 +37,7 @@ which go | grep -v alias &> /dev/null && {
 
 export PATH=$(echo -n $PATH | awk -v RS=: -v ORS=: '!arr[$0]++') # remove duplicates
 
-
-[ -d ~/.backup ] && chmod 700 ~/.backup
-[ -f ~/.pythonrc.py ] && export PYTHONSTARTUP=~/.pythonrc.py
+export PYTHONSTARTUP=~/.pythonrc.py
 
 export HISTCONTROL=ignoredups:erasedups
 # When the shell exits, append to the history file instead of overwriting it

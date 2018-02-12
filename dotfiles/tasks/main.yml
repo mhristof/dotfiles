@@ -5,18 +5,12 @@
 - name: setup links
   become: false
   file:
-    src: '{{ playbook_dir }}/files/{{ item }}'
-    dest: '{{ home }}/.{{ item }}'
+    src: '{{ item }}'
+    dest: '{{ home }}/.{{ item|basename }}'
     state: link
     force: true
-  with_items:
-    - bashrc
-    - bash
-    - vimrc
-    - zshrc
-    - irbc
-    - tmux.conf
-    - dotfilesrc
+  with_fileglob:
+    - 'files/*'
   tags:
     - links
 
@@ -57,8 +51,10 @@
   file:
     path: '{{ item }}'
     state: directory
+    mode: 0700
   with_items:
     - '{{ home }}/.src'
+    - '{{ home }}/.backup'
 
 - name: install autojump
   git:
@@ -78,6 +74,7 @@
     extra_args: '--user'
   with_items:
     - sh
+    - readline
   tags:
     - pip
 
