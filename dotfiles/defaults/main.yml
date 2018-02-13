@@ -3,6 +3,15 @@ bin: '{{ home }}/bin'
 user: '{{ lookup("pipe", "whoami") }}'
 
 brew_packages:
+  - caskroom/cask/alfred
+  - caskroom/cask/iterm2
+  - caskroom/cask/1password
+  - caskroom/cask/docker
+  - caskroom/cask/google-chrome
+  - caskroom/cask/keyboard-maestro
+  - caskroom/cask/slack
+  - caskroom/cask/viber
+  - caskroom/cask/whatsapp
   - cookiecutter
   - curl
   - gnu-getopt
@@ -19,10 +28,9 @@ brew_packages:
   - zsh
 
 apt_packages:
-  - git
-  - vim
   - curl
+  - git
+  - libncurses5-dev # for `pip install readline`
+  - vim
   - wget
   - zsh
-  # for `pip install readline`
-  - libncurses5-dev
