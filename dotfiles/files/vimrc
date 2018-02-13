@@ -146,8 +146,8 @@ if has("autocmd")
     autocmd BufEnter Vagrantfile call SetupRuby()
     autocmd WinLeave * :setlocal rnu!
     autocmd WinEnter * :setlocal rnu
-    autocmd BufEnter *.rb call SetupRuby()
-    autocmd FileType ruby call SetupRuby()
+    autocmd BufEnter *.rb,*.erb call SetupRuby()
+    autocmd FileType ruby,eruby call SetupRuby()
     autocmd VimResized * wincmd =
     autocmd BufEnter,WinEnter *.tf nnoremap <buffer> <silent> K :silent !help-terraform <cword><cr>:redraw!<cr>
 endif
