@@ -1,14 +1,13 @@
 # vim :ft=bash:
 
-# allow the next section to re-arrange paths
-export PATH=/usr/local/sbin:/usr/local/bin:$PATH
-
-
 if [[ ! -z $BASH ]]; then
     THIS_SHELL=bash
 else
     THIS_SHELL=$(basename $SHELL)
 fi
+
+# allow the next section to re-arrange paths
+export PATH=/usr/local/sbin:/usr/local/bin:$PATH
 
 for f in ~/.autojump/etc/profile.d/autojump.sh \
          ~/.bash/alias \
