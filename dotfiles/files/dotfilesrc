@@ -3,14 +3,21 @@
 # allow the next section to re-arrange paths
 export PATH=/usr/local/sbin:/usr/local/bin:$PATH
 
+
+if [[ ! -z $BASH ]]; then
+    THIS_SHELL=bash
+else
+    THIS_SHELL=$(basename $SHELL)
+fi
+
 for f in ~/.autojump/etc/profile.d/autojump.sh \
          ~/.bash/alias \
          ~/.bash/alias.$(uname) \
          ~/.bash/checks \
          ~/.bash/functions \
-         ~/.fzf.$shell \
-         ~/.bash/$shell \
-         ~/.iterm2_shell_integration.$shell \
+         ~/.fzf.${THIS_SHELL} \
+         ~/.bash/$THIS_SHELL \
+         ~/.iterm2_shell_integration.$THIS_SHELL \
          ~/.bashrc_local; do
     if [[ -f $f ]]; then
         source $f;
