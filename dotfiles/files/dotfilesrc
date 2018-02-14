@@ -8,8 +8,9 @@ for f in ~/.autojump/etc/profile.d/autojump.sh \
          ~/.bash/alias.$(uname) \
          ~/.bash/checks \
          ~/.bash/functions \
-         ~/.fzf.zsh \
-         ~/.bash/$(basename $SHELL) \
+         ~/.fzf.$shell \
+         ~/.bash/$shell \
+         ~/.iterm2_shell_integration.$shell \
          ~/.bashrc_local; do
     if [[ -f $f ]]; then
         source $f;
@@ -44,7 +45,6 @@ export HISTCONTROL=ignoredups:erasedups
 shopt -s histappend
 
 # After each command, append to the history file and reread it
-export PROMPT_COMMAND="prompt; history -a; history -c; history -r"
 export HISTSIZE=99999999
 export HISTFILESIZE=
 export HISTTIMEFORMAT='%F %T '
