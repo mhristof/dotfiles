@@ -13,6 +13,7 @@
     - 'files/*'
   tags:
     - links
+    - ln
 
 - name: deploy templates
   template:
