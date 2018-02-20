@@ -1,6 +1,7 @@
 home: '{{ ansible_env.HOME }}'
 bin: '{{ home }}/bin'
 user: '{{ lookup("pipe", "whoami") }}'
+git_email: '{{ lookup("env", "GIT_EMAIL") }}'
 
 brew_packages:
   - caskroom/cask/alfred

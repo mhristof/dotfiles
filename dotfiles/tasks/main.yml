@@ -21,6 +21,8 @@
   with_items:
     - src: tmux.conf
       dest: '{{ home }}/.tmux.conf'
+    - src: gitconfig
+      dest: '{{ home }}/.gitconfig'
   tags:
     - templates
 

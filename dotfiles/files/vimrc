@@ -202,6 +202,7 @@ if has("user_commands")
     cabbrev ag Ack
     cabbrev AG Ack
     cabbrev Ag Ack
+    cabbrev Call call
     " map the damn :W so that you dont type it twice. Or even 3 times. Fucking noob.
     command! -bang Wqa wqa<bang>
     command! -bang Wa wa<bang>
@@ -211,7 +212,7 @@ if has("user_commands")
     command! -bang Qa qa<bang>
     command! -bang Set set<bang>
     command! -bang Vs vs<bang>
-    command Squash call Squash()
+    command! Squash :call Squash()
 endif
 
 function! SessionCreate()

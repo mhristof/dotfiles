@@ -1,10 +1,12 @@
-# vim :ft=bash:
+# vi: ft=sh
 
 if [[ ! -z $BASH ]]; then
     THIS_SHELL=bash
 else
     THIS_SHELL=$(basename $SHELL)
 fi
+
+export GIT_EMAIL="mhristof@gmail.com"
 
 # allow the next section to re-arrange paths
 export PATH=/usr/local/sbin:/usr/local/bin:$PATH
