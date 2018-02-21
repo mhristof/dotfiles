@@ -12,6 +12,7 @@
 *_BASE_*
 *_LOCAL_*
 *_REMOTE_*
+*.orig
 
 .empty
 terraform.tfstate.backup
