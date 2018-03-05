@@ -85,7 +85,9 @@ set viminfo='10,\"100,:20,% " what to save for each file
 set wrap " wrap the damn lines
 set lbr "wrap at character
 set breakat=\ ,(*;+=/| " set your on line break charactesr
-set statusline=%{fugitive#statusline()}%<%f%h%m%r%=%b\ 0x%B\ \ %l,%c%V\ %P
+if filereadable(glob('~/.vim/bundle/vim-fugitive/plugin/fugitive.vim'))
+    set statusline=%{fugitive#statusline()}%<%f%h%m%r%=%b\ 0x%B\ \ %l,%c%V\ %P
+endif
 set backspace=indent,eol,start " backspace now moves to previous line 
 set hlsearch
 set autoindent
@@ -111,7 +113,9 @@ let g:ale_lint_on_text_changed = 'never'
 
 
 
-colorscheme molokai
+if filereadable(glob('~/.vim/bundle/molokai/colors/molokai.vim'))
+  colorscheme molokai
+endif
 set cursorline
 set cursorcolumn
 hi CursorLine   cterm=NONE ctermbg=232 guibg=#050505

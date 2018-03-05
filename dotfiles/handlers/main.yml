@@ -1,5 +1,8 @@
 ---
 
+- name: vim install plugins
+  command: vim +PluginInstall +qall
+
 - name: install fzf
   shell: 'yes | ./install'
   become: false
