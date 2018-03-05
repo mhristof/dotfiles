@@ -38,6 +38,7 @@ Plugin 'tommcdo/vim-lion'
 Plugin 'w0rp/ale'
 Plugin 'elzr/vim-json'
 Plugin 'scrooloose/nerdtree'
+Plugin 'zimbatm/haproxy.vim'
 
 
 " All of your Plugins must be added before the following line
@@ -144,6 +145,7 @@ if has("autocmd")
     autocmd BufEnter *.mkf :set ft=make
     autocmd BufEnter *.dsl :set ft=groovy
     autocmd BufEnter *.yml :set ft=ansible
+    autocmd BufEnter haproxy.cfg* :set ft=haproxy
     autocmd BufEnter .travis.yml :set ft=yaml
     autocmd WinLeave * :setlocal rnu!
     autocmd WinEnter * :setlocal rnu
@@ -196,6 +198,8 @@ if has("user_commands")
     command! -bang -nargs=? -complete=file W w<bang> <args>
     command! -bang -nargs=? -complete=file Wq wq<bang> <args>
     command! -bang -nargs=? -complete=file WQ wq<bang> <args>
+    command! -bang -nargs=? -complete=file Vs vs<bang> <args>
+    command! -bang -nargs=? -complete=file VS vs<bang> <args>
     cabbrev Set set
     cabbrev ack Ack
     cabbrev acl Ack
