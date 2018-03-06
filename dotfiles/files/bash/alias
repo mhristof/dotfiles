@@ -48,3 +48,6 @@ alias kcc='kubectl create'
 alias kcd='kubectl delete'
 alias drit='docker run -it'
 alias drwork='docker run -it -v $PWD:/work -w /work'
+alias ansible="python2.7 $(which ansible)"
+alias ansible-playbook="python2.7 $(which ansible-playbook)"
+alias yoink='open -a Yoink'
