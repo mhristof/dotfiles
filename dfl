@@ -64,7 +64,6 @@ which ansible-playbook &> /dev/null || {
 
 ANSIBLE_ROLES_PATH=$(readlink -f $(dirname $0)/)
 AP=$(readlink -f "$($PYTHON -m site --user-site)/../../../bin/ansible-playbook")
-
 YAML="$(dirname "$0")/dotfiles/dotfiles.yml"
 
 # echo ANSIBLE_ROLES_PATH=$ANSIBLE_ROLES_PATH $PYTHON $AP $YAML
