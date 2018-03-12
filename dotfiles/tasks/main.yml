@@ -112,6 +112,17 @@
   tags:
     - zsh
 
+- name: disable viber adds
+  lineinfile:
+    line: '127.0.0.1 {{ item }}'
+    dest: /etc/hosts
+  with_items:
+    - 'ads.viber.com'
+    - 'ads.aws.viber.com'
+    - 'ads-d.viber.com'
+  tags:
+    - hosts
+
 - include_tasks: test.yml
   tags:
     - test

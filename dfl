@@ -31,6 +31,8 @@ fi
 
 case $(uname) in
     Linux)
+        PYTHON=python
+        PIP=pip
         which python &> /dev/null || {
             $SUDO apt-get update
             $SUDO apt-get install -y python-minimal
@@ -40,12 +42,14 @@ case $(uname) in
         }
         ;;
     Darwin)
+        PYTHON=python2.7
+        PIP=pip2
         which brew &> /dev/null || {
             yes | /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
         }
-        which pip &> /dev/null || {
-            brew install python
-            export PATH="/usr/local/opt/python/libexec/bin:$PATH"
+        which $PYTHON &> /dev/null || {
+            brew install python@2
+            export PATH="$HOME/Library/Python/2.7/bin:/usr/local/opt/python@2/bin:$PATH"
         }
         readlink -f /dev/null &> /dev/null || {
             brew install coreutils
@@ -55,8 +59,14 @@ case $(uname) in
 esac
 
 which ansible-playbook &> /dev/null || {
-    pip install ansible --user
-    AP=$(readlink -f "$(python -m site --user-site)/../../../bin/ansible-playbook")
+    $PIP install ansible --user
 }
 
-ANSIBLE_ROLES_PATH=$(readlink -f $(dirname $0)/) $AP -i localhost, -c local "$(dirname "$0")/dotfiles/dotfiles.yml" -b "$@"
+ANSIBLE_ROLES_PATH=$(readlink -f $(dirname $0)/)
+AP=$(readlink -f "$($PYTHON -m site --user-site)/../../../bin/ansible-playbook")
+
+YAML="$(dirname "$0")/dotfiles/dotfiles.yml"
+
+# echo ANSIBLE_ROLES_PATH=$ANSIBLE_ROLES_PATH $PYTHON $AP $YAML
+
+ANSIBLE_ROLES_PATH=$ANSIBLE_ROLES_PATH $PYTHON $AP -i localhost, -c local $YAML -b "$@"
