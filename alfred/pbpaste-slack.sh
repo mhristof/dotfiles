@@ -3,13 +3,21 @@
 # http://redsymbol.net/articles/unofficial-bash-strict-mode/
 set -euo pipefail
 
-pbpaste | head -1 | grep -oP '^http' && {
+ALFRED=$(dirname $0)
+
+pbpaste | head -1 | ggrep -oP '^http' && {
     exit 0
 }
 
-if [[ $(pbpaste | wc -l) -gt 1 ]]; then
+if pbpaste | ggrep 'failed: ' &> /dev/null; then
+    FORCE_MULTILINE=1
+else
+    FORCE_MULTILINE=1
+fi
+
+if [[ $FORCE_MULTILINE -eq 1 ]] || [[ $(pbpaste | wc -l) -gt 1 ]]; then
     echo '```'
-    pbpaste-json.sh || pbpaste
+    $ALFRED/pbpaste-json.sh || pbpaste
     echo '```'
 else
     echo '`'$(pbpaste)'`'
