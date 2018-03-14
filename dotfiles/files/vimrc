@@ -157,6 +157,7 @@ if has("autocmd")
     autocmd FileType ruby,eruby call SetupRuby()
     autocmd VimResized * wincmd =
     autocmd BufEnter,WinEnter *.tf nnoremap <buffer> <silent> K :silent !help-terraform <cword><cr>:redraw!<cr>
+    autocmd BufWrite * :diffupdate
 endif
 
 if s:uname == "Darwin\n"
