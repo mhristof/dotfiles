@@ -33,6 +33,7 @@ export PATH=~/.global-modules/bin/:$PATH
 export PATH=~/.yarn/bin:$PATH
 export PATH=~/umbrella/bin:$PATH
 export PATH=/usr/local/opt/coreutils/libexec/gnubin:$PATH
+export PATH=/usr/local/opt/findutils/libexec/gnubin:$PATH
 export PATH=~/bin:$PATH
 
 brew --prefix cookiecutter &> /dev/null && {
