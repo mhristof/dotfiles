@@ -8,9 +8,7 @@
 
 import os
 import json
-import glob
 import re
-import urllib.request
 import requests
 import shutil
 import time
@@ -31,7 +29,9 @@ def image_path(fyle):
     if image_lines:
         image_url = image_lines[0].split(' ')[2]
         # print('peos', fyle, image_lines, image_url)
-        dest = os.path.join('/tmp/', os.path.splitext(os.path.basename(fyle))[0] + '.jpg')
+        dest = os.path.join('/tmp/',
+                            os.path.splitext(
+                                os.path.basename(fyle))[0] + '.jpg')
         if os.path.exists(dest):
             return dest
         return download_file(image_url, dest)
@@ -51,7 +51,7 @@ def scripts2items():
     ret = []
     dyr = os.path.dirname(__file__)
     for fyle in scripts(dyr):
-        start = time.time()
+        # start = time.time()
         item = {
             'uid': os.path.basename(fyle),
             'title': os.path.splitext(
@@ -73,7 +73,7 @@ def scripts2items():
 def main():
     """docstring for main"""
 
-    start = time.time()
+    # start = time.time()
     opts = {
         "items": scripts2items()
     }
