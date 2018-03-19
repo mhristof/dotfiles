@@ -36,10 +36,6 @@ export PATH=/usr/local/opt/coreutils/libexec/gnubin:$PATH
 export PATH=/usr/local/opt/findutils/libexec/gnubin:$PATH
 export PATH=~/bin:$PATH
 
-brew --prefix cookiecutter &> /dev/null && {
-    export PATH=$(brew --prefix cookiecutter):$PATH
-}
-
 which go | grep -v alias &> /dev/null && {
     export GOPATH=$(go env GOPATH)
     export PATH=$GOPATH/bin:$PATH
@@ -50,8 +46,12 @@ export PATH=$(echo -n $PATH | awk -v RS=: -v ORS=: '!arr[$0]++') # remove duplic
 export PYTHONSTARTUP=~/.pythonrc.py
 
 export HISTCONTROL=ignoredups:erasedups
-# When the shell exits, append to the history file instead of overwriting it
-shopt -s histappend
+
+if [[ $THIS_SHELL == "bash" ]]; then
+    # When the shell exits, append to the history file instead of overwriting it
+    shopt -s histappend
+fi
+
 
 # After each command, append to the history file and reread it
 export HISTSIZE=99999999

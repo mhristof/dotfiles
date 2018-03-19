@@ -1,4 +1,4 @@
-source ~/.zsh-kubectl-prompt.git/kubectl.zsh
+# source ~/.zsh-kubectl-prompt.git/kubectl.zsh
 source ~/.oh-my-zsh/plugins/shrink-path/shrink-path.plugin.zsh
 # kubernetes info in the right of the cmd line.
 # RPROMPT='%{$fg[blue]%}($ZSH_KUBECTL_PROMPT)%{$reset_color%}'
