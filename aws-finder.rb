@@ -9,7 +9,8 @@ def find_url(needle, region)
     rtb: "https://eu-west-1.console.aws.amazon.com/vpc/home?region=#{region}#routetables:filter=#{needle}",
     vpc: "https://console.aws.amazon.com/vpc/home?region=#{region}#vpcs:filter=#{needle}",
     sg: "https://eu-west-1.console.aws.amazon.com/ec2/v2/home?region=#{region}#SecurityGroups:search=#{needle}",
-    i: "https://eu-west-1.console.aws.amazon.com/ec2/v2/home?region=#{region}#Instances:instanceId=#{needle}"
+    i: "https://eu-west-1.console.aws.amazon.com/ec2/v2/home?region=#{region}#Instances:instanceId=#{needle}",
+    s3: "https://console.aws.amazon.com/s3/buckets/bucket"
   }
 
   maps.each { |k, v|
@@ -31,6 +32,9 @@ if needle.match(/^arn/)
   region = needle.split(':')[3]
   search = needle.split('/')[2]
   url = "https://#{region}.console.aws.amazon.com/ec2/home?region=#{region}#LoadBalancers:search=#{search}"
+elsif needle.match(/^s3/)
+  # s3://bucketname
+  url = "https://console.aws.amazon.com/s3/buckets/#{needle.split('/')[2]}"
 else
   begin
     region = /region=(\w*-\w*-\d*)/.match(ARGV[1])[1]
@@ -40,4 +44,3 @@ else
   url = find_url(needle, region)
 end
 puts url
-# `open #{url}`
