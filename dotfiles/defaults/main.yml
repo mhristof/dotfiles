@@ -10,6 +10,7 @@ brew_packages:
   - caskroom/cask/google-chrome
   - caskroom/cask/iterm2
   - caskroom/cask/keyboard-maestro
+  - caskroom/cask/skitch
   - caskroom/cask/slack
   - caskroom/cask/viber
   - caskroom/cask/whatsapp
