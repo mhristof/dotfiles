@@ -4,6 +4,7 @@ user: '{{ lookup("pipe", "whoami") }}'
 git_email: '{{ lookup("env", "GIT_EMAIL") }}'
 
 brew_packages:
+  - bash
   - caskroom/cask/1password
   - caskroom/cask/alfred
   - caskroom/cask/docker
@@ -15,8 +16,11 @@ brew_packages:
   - caskroom/cask/viber
   - caskroom/cask/whatsapp
   - cookiecutter
+  - coreutils
   - curl
   - findutils
+  - fzf
+  - git
   - gnu-getopt
   - httpie
   - hub
