@@ -20,6 +20,7 @@ brew_packages:
   - curl
   - findutils
   - fzf
+  - gettext
   - git
   - gnu-getopt
   - httpie
