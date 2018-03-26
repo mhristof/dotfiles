@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 import re
 from sh import git
+from sh import which
 
 
 def find(regex):
@@ -93,10 +94,10 @@ def git_ssr(fyle, branch_re=None):
             {
                 "title": "Open commit in github",
                 "action": 1,
-                "parameter": remote + '/commit\\0'
+                "parameter": remote + '/commit/\\0'
             }
         ],
-        "regex": "[0-9a-fA-f]{9}"
+        "regex": "[0-9a-fA-f]{7,9}"
     }
 
     if branch_re:
@@ -170,12 +171,24 @@ def triggers():
             "regex": "^bash: sudo: command not found",
             "action": "SendTextTrigger",
             "parameter": "!!:s/sudo//"
-        }
+        },
     ]
 
 
-def generate_profile(template, fyle, config):
-    # print('Generating template for', fyle)
+def triggers_tags(root, cmd):
+    """docstring for trigger_"""
+    return {
+            # "banco-environments-provisioning/cloudformation/application.json.erb" 468L, 15844C written
+            "regex": '^".*?" \d*L, \d*C written',
+            "action": "CoprocessTrigger",
+            "parameter": "cd {} && {} {}".format(
+                root,
+                which('ctags'),
+                cmd)
+        }
+
+
+def generate_profile(fyle, config):
 
     new = {
         'Guid': re.sub('/', '-', fyle.strip("/")),
@@ -216,6 +229,10 @@ def generate_profile(template, fyle, config):
     new['Smart Selection Rules'].append(shellcheck_ssr())
 
     new['Triggers'] = triggers()
+    if 'tags' in config:
+        new['Triggers'] += [triggers_tags(fyle, config['tags'])]
+
+    # print(json.dumps(new['Triggers'], indent=4))
 
     return new
 
@@ -240,15 +257,10 @@ def main():
     with open(os.path.expanduser('~/.code.yml'), 'r') as stream:
         config = yaml.load(stream)
 
-    with open(os.path.join(os.path.dirname(__file__),
-                           'template.json')) as stream:
-        template = json.load(stream)
-
     fout = {
         'Profiles': []
     }
 
-    # print(template)
     for profile, conf in config.items():
         # print(conf)
         if 'folders' in conf:
@@ -259,10 +271,9 @@ def main():
             raise Exception('Error, folders/find is not defined for profile',
                             profile)
 
-
         for fyle in folders:
             print(fyle)
-            fout['Profiles'] += [generate_profile(template, fyle, conf)]
+            fout['Profiles'] += [generate_profile(fyle, conf)]
 
     if args.dry_run:
         dest = 'profiles.py.json'
