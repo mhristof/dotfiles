@@ -209,12 +209,12 @@ if has("user_commands")
     command! -bang -nargs=? -complete=file Vs vs<bang> <args>
     command! -bang -nargs=? -complete=file VS vs<bang> <args>
     cabbrev Set set
-    cabbrev ack Ack
-    cabbrev acl Ack
-    cabbrev acl Ack
-    cabbrev ag Ack
-    cabbrev AG Ack
-    cabbrev Ag Ack
+    cabbrev ack Ack!
+    cabbrev acl Ack!
+    cabbrev acl Ack!
+    cabbrev ag Ack!
+    cabbrev AG Ack!
+    cabbrev Ag Ack!
     cabbrev Call call
     " map the damn :W so that you dont type it twice. Or even 3 times. Fucking noob.
     command! -bang Wqa wqa<bang>
@@ -261,4 +261,14 @@ function! Squash()
     execute ".,$s/^pick/squash"
     execute "normal! ggj"
     execute "noh"
+endfunction
+
+nmap <C-]> :call TagsOrAck()<cr>
+function TagsOrAck()
+    let l:word = expand('<cword>')
+    try
+        exe ":tag " l:word
+    catch
+        exe ":Ack! " l:word
+    endtry
 endfunction
