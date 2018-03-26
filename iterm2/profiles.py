@@ -215,7 +215,6 @@ def generate_profile(fyle, config):
         new['Badge Text'] = new['Guid']
 
     if os.path.isdir(os.path.join(fyle, '.git')):
-        # print('Adding git stuff')
         if 'branch' not in config:
             config['branch'] = None
         for item in git_ssr(fyle, config['branch']):
@@ -224,15 +223,18 @@ def generate_profile(fyle, config):
     if 'jira' in config:
         new['Smart Selection Rules'].append(jira_ssr(config['jira']))
 
-    new['Smart Selection Rules'].append(aws_ssr())
-    new['Smart Selection Rules'].append(aws_internal_ip_ssr())
+    try:
+        # lazy check if aws is in the disabled list
+        'aws' in config['disable']
+    except KeyError:
+        new['Smart Selection Rules'].append(aws_ssr())
+        new['Smart Selection Rules'].append(aws_internal_ip_ssr())
+
     new['Smart Selection Rules'].append(shellcheck_ssr())
 
     new['Triggers'] = triggers()
     if 'tags' in config:
         new['Triggers'] += [triggers_tags(fyle, config['tags'])]
-
-    # print(json.dumps(new['Triggers'], indent=4))
 
     return new
 
@@ -242,7 +244,6 @@ def main():
 
     import argparse
     parser = argparse.ArgumentParser(description='Generate iterm profiles')
-    # subparsers = parser.add_subparsers(help='commands')
 
     parser.add_argument('-n', '--dry-run',
                         action='store_true',
