@@ -179,7 +179,7 @@ def triggers_tags(root, cmd):
     """docstring for trigger_"""
     return {
             # "banco-environments-provisioning/cloudformation/application.json.erb" 468L, 15844C written
-            "regex": '^".*?" \d*L, \d*C written',
+            "regex": '^"[a-zA-Z0-9].*?" \d*L, \d*C written',
             "action": "CoprocessTrigger",
             "parameter": "cd {} && {} {}".format(
                 root,
