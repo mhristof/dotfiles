@@ -4,7 +4,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 pbpaste | grep 'failed: .*=>' &> /dev/null && {
-    pbpaste | perl -p -e 's/.*=>//' | jq '.'
+    pbpaste | perl -p -e 's/.*?=>//' | jq '.'
     exit 0
 }
 
