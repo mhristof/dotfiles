@@ -171,7 +171,7 @@ if s:uname == "Darwin\n"
     map `e :GBrowse<cr>
 endif
 
-let g:ackprg = 'ag --skip-vcs-ignores --nogroup --nocolor --column'
+let g:ackprg = 'ag --path-to-ignore ~/.ignore --skip-vcs-ignores --nogroup --nocolor --column'
 nmap _a :Ack! <cword><cr>
 nmap _c :Ack! --cc <cword><cr>
 nmap _x :Ack! --xml <cword><cr>
