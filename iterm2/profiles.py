@@ -55,6 +55,21 @@ def shellcheck_ssr():
     }
 
 
+def aws_cf_docs():
+    return {
+        "notes": "aws docs",
+        "precision": "very_high",
+        "actions": [
+            {
+                "title": "call ~/bin/aws-cf-doc.sh",
+                "action": 3,
+                "parameter": "~/bin/aws-cf-doc.sh \\0"
+            }
+        ],
+        "regex": "AWS::[a-zA-Z0-9:]*",
+    }
+
+
 def aws_ssr():
     return {
         "notes": "aws",
@@ -229,6 +244,7 @@ def generate_profile(fyle, config):
     except KeyError:
         new['Smart Selection Rules'].append(aws_ssr())
         new['Smart Selection Rules'].append(aws_internal_ip_ssr())
+        new['Smart Selection Rules'].append(aws_cf_docs())
 
     new['Smart Selection Rules'].append(shellcheck_ssr())
 
