@@ -32,6 +32,7 @@ brew_packages:
   - nmap
   - shellcheck
   - the_silver_searcher
+  - thefuck
   - vim
   - zsh
 
