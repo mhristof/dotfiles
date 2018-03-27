@@ -235,6 +235,8 @@ def generate_profile(fyle, config):
     new['Triggers'] = triggers()
     if 'tags' in config:
         new['Triggers'] += [triggers_tags(fyle, config['tags'])]
+    if 'triggers' in config:
+        new['Triggers'] += config['triggers']
 
     return new
 
