@@ -187,6 +187,11 @@ def triggers():
             "action": "SendTextTrigger",
             "parameter": "!!:s/sudo//"
         },
+        {
+            "regex": "\"[/a-zA-Z0-9_-]*\" E212: Can't open file for writing",
+            "action": "SendTextTrigger",
+            "parameter": ":echom 'Did you mean: :w !sudo tee %'\n"
+        },
     ]
 
 
