@@ -213,6 +213,10 @@ def generate_profile(fyle, config):
     new = {
         'Guid': re.sub('/', '-', fyle.strip("/")),
         "Working Directory": fyle,
+        'AWDS Window Directory': fyle,
+        'AWDS Tab Directory': fyle,
+        'AWDS Tab Option': 'Yes',
+        'AWDS Window Option': 'Yes',
         'Flashing Bell': True,
         'Visual Bell': True,
         'Silence Bell': True,
