@@ -12,7 +12,7 @@ pbpaste | head -1 | ggrep -oP '^http' && {
 if pbpaste | ggrep 'failed: ' &> /dev/null; then
     FORCE_MULTILINE=1
 else
-    FORCE_MULTILINE=1
+    FORCE_MULTILINE=0
 fi
 
 if [[ $FORCE_MULTILINE -eq 1 ]] || [[ $(pbpaste | wc -l) -gt 1 ]]; then

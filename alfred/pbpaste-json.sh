@@ -8,6 +8,7 @@ $(dirname $0)/pbpaste-ansible-error.sh && exit 0
 pbpaste | jq '.' &> /dev/null
 if [[ $? -eq 0 ]]; then
     pbpaste | jq '.'
+    exit 0
 fi
 
-exit 0
+exit 1
