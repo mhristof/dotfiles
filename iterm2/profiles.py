@@ -302,7 +302,7 @@ def main():
     if args.dry_run:
         dest = 'profiles.py.json'
     else:
-        dest = iterm2_dp('profiles.py.json')
+        dest = iterm2_dp('/tmp/profiles.py.json')
     with open(dest, 'w') as out:
         out.write(json.dumps(fout, indent=4))
         print('Generated', dest)
