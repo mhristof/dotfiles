@@ -52,6 +52,12 @@ def main():
     parser.add_argument(
         '-t', '--tag',
         help='Tag to filter with. Used in the form of NAME_REGEX:VALUE_REGEX')
+
+    parser.add_argument('-T', '--not',
+                        dest='not_tags',
+                        default=None,
+                        help='Tags to exclude. Its the same form as -t')
+
     parser.add_argument(
         '-o', '--out',
         default=None,
@@ -92,9 +98,16 @@ def main():
     for reservation in data['Reservations']:
         for instance in reservation['Instances']:
             # print(instance['Tags'])
-            if tags_match(name=args.tag.split(':')[0],
-                          value=args.tag.split(':')[1],
-                          tags=instance['Tags']):
+            add = tags_match(name=args.tag.split(':')[0],
+                             value=args.tag.split(':')[1],
+                             tags=instance['Tags'])
+            if (args.not_tags is not None and
+                    tags_match(name=args.not_tags.split(':')[0],
+                               value=args.not_tags.split(':')[1],
+                               tags=instance['Tags'])):
+                add = False
+
+            if add:
                 to_print += [instance]
 
     display(to_print, args.out, args.delim, args.ansible)
