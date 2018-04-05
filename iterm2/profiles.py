@@ -256,7 +256,6 @@ def generate_cmd_profile(name, config):
         )
 
     new['Initial Text'] = config['cmd']
-    # new['Custom Command'] = "Yes"
     return new
 
 
@@ -367,16 +366,21 @@ def main():
     parser = argparse.ArgumentParser(description='Generate iterm profiles')
 
     parser.add_argument('-n', '--dry-run',
-                        action='store_true',
+                        nargs='?',
+                        action='store',
+                        default=None,
                         help='Dry run mode')
     parser.add_argument('-v', '--verbose',
                         action='count',
                         default=0,
                         help='Increase verbosity')
+    parser.add_argument('-c', '--config',
+                        default='~/.code.yml',
+                        help='Config file to use')
 
     args = parser.parse_args()
 
-    with open(os.path.expanduser('~/.code.yml'), 'r') as stream:
+    with open(os.path.expanduser(args.config), 'r') as stream:
         config = yaml.load(stream)
 
     fout = {
@@ -399,6 +403,7 @@ def main():
             folders = find(conf['glob'])
         elif 'cmd' in conf:
             fout['Profiles'] += [generate_cmd_profile(profile, conf)]
+            continue
         else:
             raise Exception('Error, folders/find is not defined for profile',
                             profile)
@@ -406,10 +411,11 @@ def main():
         for fyle in folders:
             fout['Profiles'] += [generate_profile(fyle, conf)]
 
-    if args.dry_run:
-        dest = '/tmp/profiles.py.json'
+    if args.dry_run is not None:
+        dest = args.dry_run
     else:
         dest = iterm2_dp('profiles.py.json')
+
     with open(dest, 'w') as out:
         out.write(json.dumps(fout, indent=4))
         print('Generated', dest)
