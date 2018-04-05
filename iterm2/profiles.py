@@ -195,10 +195,9 @@ def triggers():
     ]
 
 
-def triggers_tags(root, cmd):
+def triggers_ctags(root, cmd):
     """docstring for trigger_"""
     return {
-            # "banco-environments-provisioning/cloudformation/application.json.erb" 468L, 15844C written
             "regex": '^"[a-zA-Z0-9].*?" \d*L, \d*C written',
             "action": "CoprocessTrigger",
             "parameter": "cd {} && {} {}".format(
@@ -208,22 +207,21 @@ def triggers_tags(root, cmd):
         }
 
 
-def generate_profile(fyle, config):
-
+def default_profile(guid, folder, config, bound=False):
     new = {
-        'Guid': re.sub('/', '-', fyle.strip("/")),
-        "Working Directory": fyle,
-        'AWDS Window Directory': fyle,
-        'AWDS Tab Directory': fyle,
+        'Guid': guid,
+        "Working Directory": folder,
+        'AWDS Window Directory': folder,
+        'AWDS Tab Directory': folder,
         'AWDS Tab Option': 'Yes',
         'AWDS Window Option': 'Yes',
         'Flashing Bell': True,
         'Visual Bell': True,
         'Silence Bell': True,
-        'Bound Hosts': ['*:' + fyle + '/*'],
         'Smart Selection Rules': [],
         'Terminal Type': 'xterm-256color',
         'Unlimited Scrollback': True,
+        'Tags': config['tags'],
         'Jobs to Ignore': [
             'rlogin',
             'ssh',
@@ -232,7 +230,45 @@ def generate_profile(fyle, config):
         ],
     }
 
+    if 'guid' in config:
+        new['Guid'] = config['guid']
+
     new['Name'] = new['Guid']
+
+    if 'badge' in config:
+        new['Badge Text'] = config['badge']
+    else:
+        new['Badge Text'] = new['Guid']
+
+    if bound:
+        new['Bound Hosts'] = ['*:' + folder + '/*']
+    return new
+
+
+def generate_cmd_profile(name, config):
+    if 'folder' not in config:
+        config['folder'] = '~/'
+
+    new = default_profile(
+        guid=name,
+        folder=config['folder'],
+        config=config,
+        )
+
+    new['Initial Text'] = config['cmd']
+    # new['Custom Command'] = "Yes"
+    return new
+
+
+def generate_profile(fyle, config):
+
+    new = default_profile(
+        guid=re.sub('/', '-', fyle.strip("/")),
+        folder=fyle,
+        config=config,
+        bound=True,
+    )
+
     if 'badge' in config:
         new['Badge Text'] = config['badge']
     else:
@@ -258,12 +294,70 @@ def generate_profile(fyle, config):
     new['Smart Selection Rules'].append(shellcheck_ssr())
 
     new['Triggers'] = triggers()
-    if 'tags' in config:
-        new['Triggers'] += [triggers_tags(fyle, config['tags'])]
+    if 'ctags' in config:
+        new['Triggers'] += [triggers_ctags(fyle, config['ctags'])]
     if 'triggers' in config:
         new['Triggers'] += config['triggers']
 
     return new
+
+
+def aws_instances_skip(tags, stags):
+    for tag in tags:
+        if tag['Key'] in stags:
+            return True
+    return False
+
+
+def find_rgb_color(name, config):
+    for color, rgb in config['color'].items():
+        if re.search(color, name):
+            return {
+                "Background Color": {
+                    "Red Component": rgb[0],
+                    "Color Space": "sRGB",
+                    "Blue Component": rgb[1],
+                    "Alpha Component": 1,
+                    "Green Component": rgb[2],
+                },
+            }
+            return rgb
+    return None
+
+
+def aws_instances(config):
+    import boto3
+    ec2client = boto3.client('ec2')
+    response = ec2client.describe_instances()
+    ret = []
+    for reservation in response["Reservations"]:
+        for instance in reservation["Instances"]:
+            # This sample print will output entire Dictionary object
+            name = None
+            for tag in instance['Tags']:
+                if tag['Key'] == 'Name':
+                    name = tag['Value']
+
+            if name == 'Packer Builder':
+                continue
+            if aws_instances_skip(instance['Tags'], config['skip_tags']):
+                continue
+
+            try:
+                new = generate_cmd_profile(name, {
+                    'tags': [name],
+                    'cmd': 'ssh ubuntu@$(jqawstags.py -t Name:{} -s)'.format(
+                        name)
+                })
+
+                rgb = find_rgb_color(name, config)
+                if rgb is not None:
+                    new = {**new, **rgb}
+
+                ret += [new]
+            except KeyError:
+                continue
+    return ret
 
 
 def main():
@@ -290,17 +384,26 @@ def main():
     }
 
     for profile, conf in config.items():
-        # print(conf)
+        if profile == 'aws_instances_as_profiles':
+            fout['Profiles'] += aws_instances(conf)
+            continue
+
+        try:
+            conf['tags'] += [profile]
+        except KeyError:
+            conf['tags'] = [profile]
+
         if 'folders' in conf:
             folders = conf['folders']
         elif 'glob' in conf:
             folders = find(conf['glob'])
+        elif 'cmd' in conf:
+            fout['Profiles'] += [generate_cmd_profile(profile, conf)]
         else:
             raise Exception('Error, folders/find is not defined for profile',
                             profile)
 
         for fyle in folders:
-            print(fyle)
             fout['Profiles'] += [generate_profile(fyle, conf)]
 
     if args.dry_run:
