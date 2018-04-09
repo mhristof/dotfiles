@@ -161,6 +161,7 @@ if has("autocmd")
     autocmd VimResized * wincmd =
     autocmd BufEnter,WinEnter *.tf nnoremap <buffer> <silent> K :silent !help-terraform <cword><cr>:redraw!<cr>
     autocmd BufWrite * :diffupdate
+    autocmd FileType markdown set makeprg=grip\ -b\ %\ &>\ /dev/null
 endif
 
 if s:uname == "Darwin\n"

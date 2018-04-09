@@ -23,6 +23,7 @@ brew_packages:
   - gettext
   - git
   - gnu-getopt
+  - grip
   - httpie
   - hub
   - ipcalc
