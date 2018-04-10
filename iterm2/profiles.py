@@ -342,11 +342,17 @@ def aws_instances(config):
             if aws_instances_skip(instance['Tags'], config['skip_tags']):
                 continue
 
+            cmd = 'ssh ubuntu@$(jqawstags.py -t Name:{} -s)'.format(name)
+            if 'pre_ssh_cmd' in config:
+                cmd = '{} && {}'.format(
+                    config['pre_ssh_cmd'], cmd
+                )
+
             try:
+
                 new = generate_cmd_profile(name, {
                     'tags': [name],
-                    'cmd': 'ssh ubuntu@$(jqawstags.py -t Name:{} -s)'.format(
-                        name)
+                    'cmd': cmd,
                 })
 
                 rgb = find_rgb_color(name, config)
@@ -369,6 +375,7 @@ def main():
                         nargs='?',
                         action='store',
                         default=None,
+                        const='/tmp/profiles.py.json',
                         help='Dry run mode')
     parser.add_argument('-v', '--verbose',
                         action='count',
