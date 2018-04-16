@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 # http://redsymbol.net/articles/unofficial-bash-strict-mode/
 set -euo pipefail
-LOG=/tmp/$(basename $0).log
+LOG=/tmp/$(basename "$0").log
 
 function options {
     cat << EOF
@@ -12,26 +12,26 @@ EOF
 }
 
 function haproxy {
-    echo http://$IP:9600
+    echo "http://$IP:9600"
 }
 
 function consul_leader {
-    echo http://$IP:8500/v1/status/leader
+    echo "http://$IP:8500/v1/status/leader"
 }
 
 function consul_ui {
-    echo http://$IP:8500/ui/
+    echo "http://$IP:8500/ui"
 }
 
 function extract_ip {
     local input
     local ip
     input="$*"
-    ip=$(echo $input | ggrep -oP '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}')
+    ip=$(echo "$input" | ggrep -oP '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}')
     if [[ -z "$ip" ]]; then
         exit 10
     fi
-    echo $ip | tee -a $LOG
+    echo "$ip" | tee -a "$LOG"
 }
 
 function usage {
@@ -47,7 +47,7 @@ EOF
 
 DRY=0
 
-echo $* >> $LOG
+echo "$*" >> "$LOG"
 
 echo "Parsing long args" >> $LOG
 
