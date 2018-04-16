@@ -130,6 +130,19 @@ def git_ssr(fyle, branch_re=None):
         "regex": "[0-9a-fA-f]{7,9}"
     }
 
+    yield {
+        "notes": "Vim2github link from statusline",
+        "precision": "low",
+        "actions": [
+            {
+                "title": "show file in github",
+                "action": 1,
+                "parameter": remote + '/blob/\\1/\\2#L\\3'
+            }
+        ],
+        "regex": "\[Git\(([-_/0-9a-zA-Z]*)\)\]([-_/0-9a-zA-Z.]*):(\d*)"
+    }
+
     if branch_re:
         yield {
             "notes": "Git branch name",
