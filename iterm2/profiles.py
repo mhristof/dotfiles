@@ -55,6 +55,21 @@ def shellcheck_ssr():
     }
 
 
+def ip_ssr():
+    return {
+        "notes": "ip conversion",
+        "precision": "very_low",
+        "actions": [
+            {
+                "title": "launch keyboard maestro macro to resolve ip",
+                "action": 3,
+                "parameter": """osascript -e 'tell application "Keyboard Maestro Engine" to do script "852CD61E-DBDC-4BEF-9AEB-15116C04A36D" with parameter "\\0"' """,
+            }
+        ],
+        "regex": "addr:\d*\.\d*\.\d*\.\d*"
+    }
+
+
 def aws_cf_docs():
     return {
         "notes": "aws docs",
@@ -192,6 +207,11 @@ def triggers():
             "action": "SendTextTrigger",
             "parameter": ":echom 'Did you mean: :w !sudo tee %'\n"
         },
+        {
+            "regex": "^zsh: permission denied: (.*)",
+            "action": "SendTextTrigger",
+            "parameter": " chmod +x \\1 && \\1",
+        },
     ]
 
 
@@ -291,6 +311,7 @@ def generate_profile(fyle, config):
         new['Smart Selection Rules'].append(aws_cf_docs())
 
     new['Smart Selection Rules'].append(shellcheck_ssr())
+    new['Smart Selection Rules'].append(ip_ssr())
 
     new['Triggers'] = triggers()
     if 'ctags' in config:
