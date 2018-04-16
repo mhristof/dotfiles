@@ -263,6 +263,8 @@ def default_profile(guid, folder, config, bound=False):
         ],
     }
 
+    new['Smart Selection Rules'].append(ip_ssr())
+
     if 'guid' in config:
         new['Guid'] = config['guid']
 
@@ -324,7 +326,6 @@ def generate_profile(fyle, config):
         new['Smart Selection Rules'].append(aws_cf_docs())
 
     new['Smart Selection Rules'].append(shellcheck_ssr())
-    new['Smart Selection Rules'].append(ip_ssr())
 
     new['Triggers'] = triggers()
     if 'ctags' in config:
