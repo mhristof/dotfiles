@@ -1,0 +1,8 @@
+{
+  "alfredsnippet" : {
+    "snippet" : "date --iso=seconds | cut -d+ -f1",
+    "uid" : "4FC39B66-D263-4824-8C98-9818931BEF84",
+    "name" : "idate",
+    "keyword" : "£idate"
+  }
+}
