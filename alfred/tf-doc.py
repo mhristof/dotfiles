@@ -197,7 +197,7 @@ def wget(url, dest=None):
 def fetch_icons(cache):
     icons = {
         'web': 'https://rastamouse.me/images/terraform/icon.png',
-        'code': 'https://static.vmguru.com/wordpress/wp-content/uploads/2018/04/as_code.png'
+        'code': 'https://static.vmguru.com/wordpress/wp-content/uploads/2018/04/as_code.png',
     }
 
     for name, url in icons.items():
