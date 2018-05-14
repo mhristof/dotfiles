@@ -21,7 +21,7 @@ if [[ ! -f ~/bin/dotfiles/dotfiles.yml ]]; then
             }
         }
     }
-    mkdir ~/.ssh
+    mkdir -p ~/.ssh
     chmod 700 ~/.ssh
     ssh-keyscan github.com >> ~/.ssh/known_hosts
     git clone https://github.com/mhristof/dotfiles.git ~/bin
