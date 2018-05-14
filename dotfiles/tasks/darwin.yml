@@ -6,3 +6,14 @@
     state: present
   with_items:
     - '{{ brew_packages }}'
+  tags:
+    - brew
+
+- name: brew install casks
+  shell: brew install {{ item }}
+  register: cask_result
+  changed_when: "'is already installed' not in cask_result.stderr and 'Error: It seems there is already an App at' not in cask_result.stderr"
+  with_items:
+    - '{{ brew_casks }}'
+  tags:
+    - casks

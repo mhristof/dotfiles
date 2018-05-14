@@ -3,18 +3,17 @@ bin: '{{ home }}/bin'
 user: '{{ lookup("pipe", "whoami") }}'
 git_email: '{{ lookup("env", "GIT_EMAIL") }}'
 
-brew_packages:
-  - bash
-  - caskroom/cask/1password
+brew_casks:
   - caskroom/cask/alfred
   - caskroom/cask/docker
   - caskroom/cask/google-chrome
   - caskroom/cask/iterm2
-  - caskroom/cask/keyboard-maestro
-  - caskroom/cask/skitch
   - caskroom/cask/slack
   - caskroom/cask/viber
   - caskroom/cask/whatsapp
+
+brew_packages:
+  - bash
   - cookiecutter
   - coreutils
   - curl
@@ -33,9 +32,10 @@ brew_packages:
   - nmap
   - shellcheck
   - the_silver_searcher
-  - thefuck
   - vim
   - zsh
+  - python
+  - htop
 
 apt_packages:
   - curl

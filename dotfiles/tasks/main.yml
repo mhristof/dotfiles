@@ -1,6 +1,6 @@
 ---
 
-- include_tasks: '{{ ansible_system|lower }}.yml'
+- import_tasks: 'darwin.yml'
 
 - name: setup links
   become: false
@@ -113,6 +113,7 @@
     - zsh
 
 - name: disable viber adds
+  become: true
   lineinfile:
     line: '127.0.0.1 {{ item }}'
     dest: /etc/hosts

@@ -4,6 +4,8 @@
 
 - name: check available commands
   shell: source ~/.zshrc && which {{ item }}
+  environment:
+    DOTFILES_SKIP_SSH_ADD: 1
   changed_when: false
   args:
     executable: /bin/zsh
@@ -12,3 +14,5 @@
     - fzf
     - vim
     - pip
+  tags:
+    - test
