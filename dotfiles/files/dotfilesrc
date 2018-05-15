@@ -35,6 +35,7 @@ export PATH=~/umbrella/bin:$PATH
 export PATH=/usr/local/opt/coreutils/libexec/gnubin:$PATH
 export PATH=/usr/local/opt/findutils/libexec/gnubin:$PATH
 export PATH=/usr/local/opt/gettext/bin:$PATH
+export PATH=/usr/local/opt/grep/libexec/gnubin:$PATH
 export PATH=~/bin:$PATH
 
 (set -o pipefail which go | grep -v alias &> /dev/null) && {
