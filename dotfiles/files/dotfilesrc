@@ -62,6 +62,5 @@ export HISTTIMEFORMAT='%F %T '
 export LESSOPEN="| highlight %s -O xterm256"
 
 if [[ -z $DOTFILES_SKIP_SSH_ADD ]]; then
-    echo Loading ssh key
     ssh-add -l | grep id_rsa &> /dev/null || ssh-add ~/.ssh/id_rsa
 fi
