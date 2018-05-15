@@ -22,7 +22,9 @@ brew_packages:
   - gettext
   - git
   - gnu-getopt
+  - grep
   - grip
+  - htop
   - httpie
   - hub
   - ipcalc
@@ -30,13 +32,12 @@ brew_packages:
   - make
   - mtr
   - nmap
+  - python
   - shellcheck
   - the_silver_searcher
   - vim
+  - watch
   - zsh
-  - python
-  - htop
-
 apt_packages:
   - curl
   - git
