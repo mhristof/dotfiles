@@ -4,7 +4,6 @@
   command: '{{ item }}'
   with_items:
     - vim +PluginInstall +qall
-    - ag -au -G config 'https.*mhristof.*.git' -l | xargs -n1 perl -p -i -e 's!url = https://github.com/mhristof(.*)!url = git\@github.com:mhristof$1!'
 
 - name: install fzf
   shell: 'yes | ./install'

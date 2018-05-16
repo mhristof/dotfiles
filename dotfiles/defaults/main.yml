@@ -2,6 +2,7 @@ home: '{{ ansible_env.HOME }}'
 bin: '{{ home }}/bin'
 user: '{{ lookup("pipe", "whoami") }}'
 git_email: '{{ lookup("env", "GIT_EMAIL") }}'
+disable_viber_adds: true
 
 brew_casks:
   - caskroom/cask/alfred
@@ -45,3 +46,4 @@ apt_packages:
   - vim
   - wget
   - zsh
+  - silversearcher-ag

@@ -4,10 +4,10 @@
 set -euo pipefail
 
 AP='ansible-playbook'
-SUDO='sudo'
 
-if [[ -f /.dockerenv ]]; then
-    SUDO=''
+if [ "$EUID" -eq 0 ]; then
+  echo Dont run as root
+  exit 1
 fi
 
 if [[ ! -f ~/bin/dotfiles/dotfiles.yml ]]; then
@@ -34,12 +34,13 @@ case $(uname) in
         PYTHON=python
         PIP=pip
         which python &> /dev/null || {
-            $SUDO apt-get update
-            $SUDO apt-get install -y python-minimal
+            sudo apt-get update
+            sudo apt-get install -y python-minimal
         }
         which pip &> /dev/null || {
-            $SUDO apt-get install -y python-pip
+            sudo apt-get install -y python-pip
         }
+        export PATH=~/.local/bin:$PATH
         ;;
     Darwin)
         PYTHON=python2.7

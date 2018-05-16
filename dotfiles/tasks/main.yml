@@ -1,6 +1,10 @@
 ---
 
 - import_tasks: 'darwin.yml'
+  when: ansible_system == 'Darwin'
+
+- import_tasks: 'linux.yml'
+  when: ansible_system == 'Linux'
 
 - name: setup links
   become: false
@@ -114,6 +118,7 @@
 
 - name: disable viber adds
   become: true
+  when: disable_viber_adds
   lineinfile:
     line: '127.0.0.1 {{ item }}'
     dest: /etc/hosts
