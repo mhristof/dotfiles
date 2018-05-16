@@ -47,3 +47,11 @@ apt_packages:
   - wget
   - zsh
   - silversearcher-ag
+  - python3
+
+pip_items:
+  - sh
+  - readline
+
+pip3_items:
+  - pycodestyle

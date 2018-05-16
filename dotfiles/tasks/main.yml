@@ -100,6 +100,18 @@
   tags:
     - pip
 
+- name: pip3 install some stuff
+  pip:
+    name: '{{ item }}'
+    state: present
+    extra_args: '--user'
+    executable: pip3
+  with_items:
+    - '{{ pip3_items }}'
+    - '{{ pip_items }}'
+  tags:
+    - pip
+
 - name: 'check if {{ bin }} is an ssh checkout'
   shell: git remote -v
   register: git_remote
