@@ -1,8 +1,0 @@
-{
-  "alfredsnippet" : {
-    "snippet" : "git rev-parse HEAD",
-    "uid" : "8BD850FA-589B-4AF1-8FFF-226390C3DE70",
-    "name" : "hgid",
-    "keyword" : "£hgid"
-  }
-}

@@ -1,8 +1,0 @@
-{
-  "alfredsnippet" : {
-    "snippet" : "git rev-parse --show-toplevel",
-    "uid" : "137D386A-074A-48CB-8F16-3121314D32F5",
-    "name" : "hgroot",
-    "keyword" : "£hgroot"
-  }
-}

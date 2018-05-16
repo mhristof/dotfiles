@@ -1,8 +1,0 @@
-{
-  "alfredsnippet" : {
-    "snippet" : "curl -s http://169.254.169.254/latest/meta-data/ami-id",
-    "uid" : "AE05D724-5A5F-4EC9-90E7-A25AA4D9B6A8",
-    "name" : "ami",
-    "keyword" : "£ami"
-  }
-}
