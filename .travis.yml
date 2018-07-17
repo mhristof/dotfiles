@@ -1,5 +1,5 @@
 sudo: true
 
 script:
-  - ln -s . ~/bin
+  - ln -s $PWD ~/bin
   - ~/bin/dfl
