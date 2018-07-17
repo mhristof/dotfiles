@@ -5,6 +5,20 @@ set -euo pipefail
 
 AP='ansible-playbook'
 
+function ubuntu_install {
+    local prog=$1
+    local apt=${2:-$prog}
+    which $prog &> /dev/null || {
+        echo Installing $prog: apt-get install $apt
+        sudo apt-get install -y $apt 2> /tmp/apt-get-install-$prog.txt || {
+            grep "E: Unable to locate package $apt" /tmp/apt-get-install-$prog.txt  && {
+                sudo apt-get update
+                sudo apt-get install -y $apt
+            }
+        }
+    }
+}
+
 if [ "$EUID" -eq 0 ]; then
   echo Dont run as root
   exit 1
@@ -13,14 +27,8 @@ fi
 if [[ ! -f ~/bin/dotfiles/dotfiles.yml ]]; then
     # this is the first time that we are running dfl, so clone the
     # repository and then start that dfl.
-    which git &> /dev/null || {
-        apt-get install -y git 2> /tmp/apt-get-install-git.txt || {
-            grep 'E: Unable to locate package git' /tmp/apt-get-install-git.txt  && {
-                apt-get update
-                apt-get install -y git
-            }
-        }
-    }
+    ubuntu_install git
+    ubuntu_install ssh-keyscan ssh
     [[ -d ~/.ssh ]] || mkdir -p ~/.ssh
     chmod 700 ~/.ssh
     ssh-keyscan github.com >> ~/.ssh/known_hosts
@@ -33,13 +41,8 @@ case $(uname) in
     Linux)
         PYTHON=python
         PIP=pip
-        which python &> /dev/null || {
-            sudo apt-get update
-            sudo apt-get install -y python-minimal
-        }
-        which pip &> /dev/null || {
-            sudo apt-get install -y python-pip
-        }
+        ubuntu_install python
+        ubuntu_install python python-pip
         export PATH=~/.local/bin:$PATH
         ;;
     Darwin)

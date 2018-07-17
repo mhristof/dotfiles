@@ -39,6 +39,7 @@ brew_packages:
   - vim
   - watch
   - zsh
+
 apt_packages:
   - curl
   - git
