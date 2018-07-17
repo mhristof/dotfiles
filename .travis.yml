@@ -1,4 +1,5 @@
 sudo: true
 
 script:
+  - ln -s . ./bin
   - ./dfl

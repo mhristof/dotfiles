@@ -42,7 +42,7 @@ case $(uname) in
         PYTHON=python
         PIP=pip
         ubuntu_install python
-        ubuntu_install python python-pip
+        ubuntu_install pip python-pip
         export PATH=~/.local/bin:$PATH
         ;;
     Darwin)
