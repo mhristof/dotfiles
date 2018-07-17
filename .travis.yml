@@ -1,11 +1,5 @@
 sudo: true
 
 script:
-  - ls -al
-  - pwd
-  - echo $HOME
-  - readlink -f ~/
   - cp -r . ~/bin
-  - ls -al $HOME/
-  - ls -al $HOME/bin
   - ~/bin/dfl
