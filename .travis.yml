@@ -6,4 +6,6 @@ script:
   - echo $HOME
   - readlink -f ~/
   - ln -s $PWD ~/bin
+  - ls -al $HOME/
+  - ls -al $HOME/bin
   - ~/bin/dfl
