@@ -49,6 +49,12 @@ apt_packages:
   - silversearcher-ag
   - python3
 
+apt_awesome:
+  - xorg
+  - lightdm-gtk-greeter
+  - lightdm
+  - awesome
+
 pip_items:
   - sh
   - readline
