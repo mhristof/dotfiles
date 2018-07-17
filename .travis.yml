@@ -1,4 +1,5 @@
 sudo: true
 
 script:
-  - ./dfl
+  - cp -r . ~/bin
+  - ~/bin/dfl
