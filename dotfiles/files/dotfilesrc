@@ -64,6 +64,15 @@ export HISTTIMEFORMAT='%F %T '
 
 export LESSOPEN="| highlight %s -O xterm256"
 
-if [[ -z $DOTFILES_SKIP_SSH_ADD ]]; then
-    ssh-add -l | grep id_rsa &> /dev/null || ssh-add ~/.ssh/id_rsa
-fi
+#if [[ -z $DOTFILES_SKIP_SSH_ADD ]]; then
+    #ssh-add -l | grep id_rsa &> /dev/null || ssh-add ~/.ssh/id_rsa
+#fi
+
+#export GPG_TTY=$(tty)
+#gpg-connect-agent updatestartuptty /bye
+#unset SSH_AGENT_PID
+#export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+(
+    cd ~/.ssh
+    ~/bin/yubi-sshkey load
+)
