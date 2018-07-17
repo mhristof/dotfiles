@@ -105,7 +105,7 @@
     name: '{{ item }}'
     state: present
     extra_args: '--user'
-    executable: pip3.6
+    executable: pip3
   with_items:
     - '{{ pip3_items }}'
     - '{{ pip_items }}'
