@@ -3,5 +3,7 @@ sudo: true
 script:
   - ls -al
   - pwd
+  - echo $HOME
+  - readlink -f ~/
   - ln -s $PWD ~/bin
   - ~/bin/dfl
