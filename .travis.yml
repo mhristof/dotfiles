@@ -2,3 +2,7 @@ sudo: true
 
 script:
   - ./dfl
+
+language: python
+python:
+  - "3.6"
