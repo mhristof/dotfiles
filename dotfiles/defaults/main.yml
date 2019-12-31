@@ -39,6 +39,7 @@ brew_packages:
   - vim
   - watch
   - zsh
+
 apt_packages:
   - curl
   - git
@@ -48,6 +49,7 @@ apt_packages:
   - zsh
   - silversearcher-ag
   - python3
+  - python3-pip
 
 apt_awesome:
   - xorg
