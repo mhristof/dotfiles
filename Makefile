@@ -1,43 +1,33 @@
 #
 #
 
-SHELL := bash
+SHELL := /bin/bash
 .SHELLFLAGS := -eu -o pipefail -c
 .ONESHELL:
 
-default: up
+help:  ## Show this help.
+	@fgrep -h "##" Makefile* | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//' | column -t -s':' | sort -u
 
-test: test-linux
+UNAME := $(shell uname)
+include dotfiles/Makefile.$(UNAME)
+include dotfiles/progs/*.mk
 
-test-linux:
-	docker run -it -v $$PWD:/work -w /work ubuntu ./dotfiles/install.sh
+.docker-build: dotfiles/Dockerfile
+	docker build -t dotfiles -f dotfiles/Dockerfile .
+	touch .docker-build
 
-bash:
-	docker run -it -v $$PWD:/work -w /work ubuntu bash
+bash: .docker-build
+	docker run -it -v $$PWD:/work -w /work dotfiles bash
 
-macos:
-	BOXES=gobadiah/macos-sierra vagrant up
+git: $(GIT_BIN) ~/.gitignore
+.PHONY: git
 
-brew /usr/local/bin/brew: /usr/local/Homebrew/bin/brew
-.PHONY: brew
+~/.%:
+	@find ~/.$* -type l -xtype d &> /dev/null || ln -s $(PWD)/dotfiles/files/$* ~/.$*
 
-/usr/local/Homebrew/bin/brew:
-	/usr/bin/ruby -e "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-
-vim: brew /usr/local/bin/vim ~/.vim ~/.vimrm ~/.vim/bundle
-
-~/.vim/bundle:
-	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-	vim +PluginInstall +qall
-
-~/.vimrm:
-	@find /Users/mhristof/.vimrc -type l -xtype d || ln -s $(PWD)/dotfiles/files/vimrc ~/.vimrc
-
-~/.vim:
-	mkdir -p ~/.vim
-
-/usr/local/bin/vim:
-	brew install vim
+pip: $(PIP_BIN) ~/.irbrc  ~/.pythonrc.py
+	pip3 install --user sh readline  pycodestyle
+.PHONY: pip
 
 clean:
 	-vagrant destroy -f

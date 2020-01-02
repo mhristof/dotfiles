@@ -1,0 +1,18 @@
+GIT_BIN := /usr/local/bin/git
+VIM_BIN := /usr/local/bin/vim
+
+brew:  ## installs brew
+/usr/local/bin/brew: /usr/local/Homebrew/bin/brew
+.PHONY: brew
+
+/usr/local/Homebrew/bin/brew:
+	/usr/bin/ruby -e "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+less: /usr/local/bin/source-highlight
+
+/usr/local/bin/%:
+	brew install $*
+
+brew-%:
+	brew install %*
+

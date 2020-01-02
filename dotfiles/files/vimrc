@@ -37,7 +37,7 @@ Plugin 'ngmy/vim-rubocop'
 Plugin 'tommcdo/vim-lion'
 Plugin 'w0rp/ale'
 Plugin 'elzr/vim-json'
-Plugin 'scrooloose/nerdtree'
+" Plugin 'scrooloose/nerdtree'
 Plugin 'zimbatm/haproxy.vim'
 
 

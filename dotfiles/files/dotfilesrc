@@ -62,17 +62,10 @@ export HISTSIZE=99999999
 export HISTFILESIZE=
 export HISTTIMEFORMAT='%F %T '
 
-export LESSOPEN="| highlight %s -O xterm256"
-
-#if [[ -z $DOTFILES_SKIP_SSH_ADD ]]; then
-    #ssh-add -l | grep id_rsa &> /dev/null || ssh-add ~/.ssh/id_rsa
-#fi
-
-#export GPG_TTY=$(tty)
-#gpg-connect-agent updatestartuptty /bye
-#unset SSH_AGENT_PID
-#export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
-(
-    cd ~/.ssh
-    ~/bin/yubi-sshkey load
-)
+case "$(uname)" in
+    Darwin) export LESSOPEN="| /usr/local/bin/src-hilite-lesspipe.sh %s"
+    ;;
+    *) export LESSOPEN="| /usr/share/source-highlight/src-hilite-lesspipe.sh %s"
+    ;;
+esac
+export LESS=' -R '
