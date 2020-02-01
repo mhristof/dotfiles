@@ -2,11 +2,10 @@
 # :vi ft=bash:
 
 
-set -eo pipefail
+set -euo pipefail
 
-git_cmd="git push"
-if [[ "--force" == "$1" ]]; then
-    git_cmd="$git_cmd --force"
-    shift
+if [[ $(git config "branch.$(git rev-parse --abbrev-ref HEAD).merge") = '' ]]; then
+    git push -u
+else
+    git push
 fi
-$git_cmd "$@"
