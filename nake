@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [[ -f Makefile ]]; then
+    make "$@"
+    exit 0
+fi
+
+
+TF=$(find ./ -name '*.tf' | wc -l)
+if [[ $TF -gt 0 ]]; then
+    cat << EOF >> Makefile
+
+TF_SRC := \$(shell find ./ -maxdepth 1 -name "*.tf")
+default: terraform.tfstate
+
+.terraform:
+	terraform init
+
+tf.plan: \$(TF_SRC) .terraform
+	terraform plan -out tf.plan
+
+terraform.tfstate: tf.plan
+	terraform apply "tf.plan"
+
+clean:
+	terraform destroy -auto-approve
+	rm terraform.tfstate* tf.plan
+	rm terraform.tfvars
+.PHONY: clean
+EOF
+fi
+
+make

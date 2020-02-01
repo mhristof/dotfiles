@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+
+ref=$(git rev-parse HEAD)
+repo=$(basename "$(git config --get remote.origin.url)")
+
+git archive --format=tar -o $repo-$ref.tar $ref
