@@ -72,6 +72,11 @@ dock: ~/.brew/opt/findutils/libexec/gnubin/xargs ~/.brew/bin/dockutil
 ~/.tmux.conf:
 	ln -sf $(PWD)/.tmux.conf ~/.tmux.conf
 
+docker: /Applications/Docker.app/Contents/MacOS/Docker
+
+/Applications/Docker.app/Contents/MacOS/Docker:
+	brew cask install docker
+
 ~/.brew/bin/wget:
 	brew install wget
 
