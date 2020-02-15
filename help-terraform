@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-open "https://duckduckgo.com/?q=!%20$1+site%3Aterraform.io%2Fdocs&ia=web"
