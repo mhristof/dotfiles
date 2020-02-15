@@ -97,8 +97,12 @@ docker: /Applications/Docker.app/Contents/MacOS/Docker
 ~/.brew/bin/wget:
 	brew install wget
 
-alfred: ~/.brew/bin/wget /tmp/alfred-tf-snippets.alfredworkflow
+alfred: ~/.brew/bin/wget /tmp/alfred-tf-snippets.alfredworkflow /tmp/alfred-pbpaste.alfredworkflow
 	open /tmp/alfred-tf-snippets.alfredworkflow
+	open /tmp/alfred-pbpaste.alfredworkflow
+
+/tmp/alfred-pbpaste.alfredworkflow:
+	wget https://github.com/mhristof/alfred-pbpaste/releases/download/0.2.3/alfred-pbpaste.alfredworkflow -O alfred-pbpaste.alfredworkflow
 
 ~/.brew/bin/jq:
 	brew install jq
