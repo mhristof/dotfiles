@@ -15,6 +15,15 @@ vim: ~/.vimrc ~/.vim ~/.brew/bin/ag
 
 less: ~/.brew/bin/src-hilite-lesspipe.sh
 
+git: ~/.gitignore_global ~/.gitconfig
+
+
+~/.gitignore_global:
+	ln -sf $(PWD)/.gitignore_global ~/.gitignore_global
+
+~/.gitconfig:
+	ln -sf $(PWD)/.gitconfig ~/.gitconfig
+
 ~/.brew/bin/src-hilite-lesspipe.sh:
 	brew install source-highlight
 
