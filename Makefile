@@ -13,6 +13,11 @@ default: brew vim
 
 vim: ~/.vimrc ~/.vim ~/.brew/bin/ag
 
+less: ~/.brew/bin/src-hilite-lesspipe.sh
+
+~/.brew/bin/src-hilite-lesspipe.sh:
+	brew install source-highlight
+
 ~/.brew/bin/ag:
 	brew install ag
 
