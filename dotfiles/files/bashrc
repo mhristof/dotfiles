@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-source $HOME/.dotfilesrc
-
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash

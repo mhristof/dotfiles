@@ -1,0 +1,126 @@
+# vim: ft=sh
+
+if [[ ! -z $BASH ]]; then
+    THIS_SHELL=bash
+else
+    THIS_SHELL=$(basename $SHELL)
+fi
+
+export GIT_EMAIL="mhristof@gmail.com"
+export EDITOR="vim -X"
+
+# allow the next section to re-arrange paths
+export PATH=$HOME/.brew/bin:/usr/local/sbin:/usr/local/bin:$PATH
+export PATH=$HOME/.brew/opt/python/libexec/bin:$PATH
+export PATH=$HOME/.brew/opt/findutils/libexec/gnubin:$PATH
+export PATH=$HOME/.brew/opt/grep/libexec/gnubin:$PATH
+export PATH=$HOME/.brew/opt/make/libexec/gnubin:$PATH
+export PATH=$HOME/.brew/opt/coreutils/libexec/gnubin:$PATH
+export PATH=$HOME/.local/bin:$PATH
+export PATH=~/bin:$PATH
+
+(set -o pipefail which go | grep -v alias &> /dev/null) && {
+    export GOPATH=$(go env GOPATH)
+    export PATH=$GOPATH/bin:$PATH
+}
+
+export PATH=$(echo -n $PATH | awk -v RS=: -v ORS=: '!arr[$0]++') # remove duplicates
+
+export PYTHONSTARTUP=~/.pythonrc.py
+
+export HISTCONTROL=ignoredups:erasedups
+
+if [[ $THIS_SHELL == "bash" ]]; then
+    # When the shell exits, append to the history file instead of overwriting it
+    shopt -s histappend
+fi
+
+
+# After each command, append to the history file and reread it
+export HISTSIZE=99999999
+export HISTFILESIZE=
+export HISTTIMEFORMAT='%F %T '
+
+case "$(uname)" in
+    Darwin) export LESSOPEN="| /usr/local/bin/src-hilite-lesspipe.sh %s"
+    ;;
+    *) export LESSOPEN="| /usr/share/source-highlight/src-hilite-lesspipe.sh %s"
+    ;;
+esac
+export LESS=' -R '
+[ -f $HOME/.brew/etc/profile.d/autojump.sh ] && . $HOME/.brew/etc/profile.d/autojump.sh
+
+alias ..='c ../'
+alias ...='c ../../'
+alias ....='c ../../../'
+alias .....='c ../../../../'
+alias vrc='vim ~/.vimrc'
+alias history_populate="history | tr -s ' ' | cut -d ' ' -f3 | sort | uniq -c | sort -rn  | head"
+alias k='ls'
+alias lt='ls -alt'
+alias grep='grep --color=auto'
+alias df='df -h'
+alias ctmp='mkdir -p ~/tmp/$(date +"%Y%m%d_%H%M%S") && cd $_'
+alias m='make'
+alias f='find'
+alias rl='readlink -f'
+alias ff='find . -type f -printf "%T@ %p\n" | sort -n | tail -5 | cut -f2- -d" "'
+alias fff='find . -type f -printf "%T@ %p\n" | sort -n | tail -10 | cut -f2- -d" "'
+alias al='ansible-playbook -i "localhost," -c local'
+alias ap='ansible-playbook'
+alias gg='git pull'
+alias gp='git push'
+alias s='git status'
+alias d='git diff'
+alias ga='git add'
+alias gs='git stash'
+alias gsa='git stash apply'
+alias dr='git diff --cached'
+alias gm='git checkout'
+alias gmm='git checkout master'
+alias wget100='wget -O /dev/null http://speedtest.london.linode.com/100MB-london.bin'
+alias dc='docker-compose'
+alias tf='terraform'
+which thefuck &> /dev/null
+if [[  $? -eq 0 ]]; then
+    eval "$(thefuck --alias)"
+fi
+which hub &> /dev/null
+if [[ $? -eq 0 ]]; then
+    eval "$(hub alias -s)"
+fi
+alias agh='ag --hidden'
+alias tfp='terraform plan'
+alias kcc='kubectl create'
+alias kcd='kubectl delete'
+alias drit='docker run -it'
+alias drwork='docker run -it -v $PWD:/work -w /work'
+alias fu='fuck'
+
+case $(uname) in
+    Darwin)
+    alias ls='ls --color=auto'
+    alias l='ls -lah'
+    alias yoink='open -a Yoink'
+    ;;
+esac
+# vi: ft=sh
+
+# function c () {
+#     [ ! "$1" ] && cd ~ && ls && return 0;
+#     cd "$1" && ls
+# }
+
+function c() {
+    cd $* && ls
+}
+
+function mkansible {
+    local name=
+    name=$1
+    if [[ -z $name ]]; then
+        echo 'Error, role name must be provided'
+        return
+    fi
+    cookiecutter --no-input gh:mhristof/cookiecutter-ansible-role role_name=$name
+}

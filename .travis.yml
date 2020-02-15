@@ -1,5 +1,0 @@
-sudo: true
-
-script:
-  - cp -r . ~/bin
-  - ~/bin/dfl

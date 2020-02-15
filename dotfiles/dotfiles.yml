@@ -1,7 +1,0 @@
----
-- hosts: all
-  become: false
-  force_handlers: true
-
-  roles:
-    - dotfiles
