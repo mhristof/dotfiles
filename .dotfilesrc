@@ -55,6 +55,7 @@ alias ..='c ../'
 alias ...='c ../../'
 alias ....='c ../../../'
 alias .....='c ../../../../'
+alias v='vim'
 alias vrc='vim ~/.vimrc'
 alias history_populate="history | tr -s ' ' | cut -d ' ' -f3 | sort | uniq -c | sort -rn  | head"
 alias k='ls'
