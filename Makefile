@@ -11,7 +11,10 @@ help:  ## Show this help.
 
 default: brew vim
 
-vim: ~/.vimrc ~/.vim
+vim: ~/.vimrc ~/.vim ~/.brew/bin/ag
+
+~/.brew/bin/ag:
+	brew install ag
 
 ~/.vim:
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
