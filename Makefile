@@ -18,6 +18,12 @@ less: ~/.brew/bin/src-hilite-lesspipe.sh
 git: ~/.gitignore_global ~/.gitconfig
 
 
+~/.brew/bin/watch:
+	brew install watch
+
+~/.brew/bin/htop:
+	brew install htop
+
 ~/.gitignore_global:
 	ln -sf $(PWD)/.gitignore_global ~/.gitignore_global
 
