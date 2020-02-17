@@ -85,6 +85,7 @@ iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app
 
 ~/.iterm2_shell_integration.zsh:
 	curl -L https://iterm2.com/shell_integration/install_shell_integration_and_utilities.sh | bash
+	patch -p1 -R < data/iterm-zsh.patch
 
 /Applications/iTerm.app: ~/.brew/bin/python3
 	brew cask install iterm2
