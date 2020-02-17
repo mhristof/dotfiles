@@ -3,37 +3,14 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-#-- Script to automate https://help.github.com/articles/why-is-git-always-asking-for-my-password
+REMOTE="$(git config --get remote.origin.url)"
 
-REPO_URL=`git remote -v | grep -m1 '^origin' | sed -Ene's#.*(https://[^[:space:]]*).*#\1#p'`
-if [ -z "$REPO_URL" ]; then
-  echo "-- ERROR:  Could not identify Repo url."
-  echo "   It is possible this repo is already using SSH instead of HTTPS."
-  exit
+if [[ $REMOTE =~ 'git@github' ]]; then
+    echo "Remote $REMOTE seems to be ssh, aborting"
+    exit 0
 fi
 
-USER=`echo $REPO_URL | sed -Ene's#https://github.com/([^/]*)/(.*).git#\1#p'`
-if [ -z "$USER" ]; then
-  echo "-- ERROR:  Could not identify User."
-  exit
-fi
+REPO="git@github.com:$(git config --get remote.origin.url | sed 's!https://github.com/!!').git"
 
-REPO=`echo $REPO_URL | sed -Ene's#https://github.com/([^/]*)/(.*).git#\2#p'`
-if [ -z "$REPO" ]; then
-  echo "-- ERROR:  Could not identify Repo."
-  exit
-fi
-
-NEW_URL="git@github.com:$USER/$REPO.git"
-echo "Changing repo url from "
-echo "  '$REPO_URL'"
-echo "      to "
-echo "  '$NEW_URL'"
-echo ""
-
-CHANGE_CMD="git remote set-url origin $NEW_URL"
-`$CHANGE_CMD`
-
-echo "Success"
-
-exit 0
+git remote set-url --add origin $REPO
+git remote set-url --delete origin $REMOTE
