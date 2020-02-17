@@ -100,6 +100,12 @@ fuck: ~/.brew/bin/thefuck ~/.config/thefuck/rules ~/.brew/Cellar/thefuck/3.29_1/
 ~/.brew/bin/thefuck:
 	brew install thefuck
 
+aws-azure-login: ~/.brew/bin/node
+	npm install -g aws-azure-login
+
+~/.brew/bin/node:
+	brew install node
+
 iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app
 
 ~/.iterm2_shell_integration.zsh:
