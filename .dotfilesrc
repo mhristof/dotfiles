@@ -11,6 +11,7 @@ export EDITOR="vim -X"
 
 # allow the next section to re-arrange paths
 export PATH=$HOME/.brew/bin:/usr/local/sbin:/usr/local/bin:$PATH
+export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 export PATH=$HOME/.brew/opt/python/libexec/bin:$PATH
 export PATH=$HOME/Library/Python/3.7/bin:$PATH
 export PATH=$HOME/.brew/opt/findutils/libexec/gnubin:$PATH
@@ -23,6 +24,10 @@ export PATH=~/bin:$PATH
 (set -o pipefail which go | grep -v alias &> /dev/null) && {
     export GOPATH=$(go env GOPATH)
     export PATH=$GOPATH/bin:$PATH
+}
+
+command -v thefuck &> /dev/null && {
+    eval $(thefuck --alias --enable-experimental-instant-mode)
 }
 
 export PATH=$(echo -n $PATH | awk -v RS=: -v ORS=: '!arr[$0]++') # remove duplicates
@@ -53,7 +58,6 @@ alias .....='c ../../../../'
 alias v='vim'
 alias vrc='vim ~/.vimrc'
 alias history_populate="history | tr -s ' ' | cut -d ' ' -f3 | sort | uniq -c | sort -rn  | head"
-alias k='ls'
 alias lt='ls -alt'
 alias grep='grep --color=auto'
 alias df='df -h'
@@ -88,37 +92,31 @@ if [[ $? -eq 0 ]]; then
     eval "$(hub alias -s)"
 fi
 alias agh='ag --hidden'
-alias tfp='terraform plan'
+alias tpl='terraform plan -out plan.out'
+alias tfp='terraform plan -out plan.out'
 alias kcc='kubectl create'
 alias kcd='kubectl delete'
 alias drit='docker run -it'
 alias drwork='docker run -it -v $PWD:/work -w /work'
 alias fu='fuck'
+alias k=kubectl
 
 case $(uname) in
     Darwin)
-    alias ls='ls --color=auto'
     alias l='ls -lah'
     alias yoink='open -a Yoink'
     ;;
 esac
-# vi: ft=sh
 
-# function c () {
-#     [ ! "$1" ] && cd ~ && ls && return 0;
-#     cd "$1" && ls
-# }
+if ls --color=auto &> /dev/null; then
+    alias ls='ls --color=auto'
+fi
 
 function c() {
     cd $* && ls
 }
 
-function mkansible {
-    local name=
-    name=$1
-    if [[ -z $name ]]; then
-        echo 'Error, role name must be provided'
-        return
-    fi
-    cookiecutter --no-input gh:mhristof/cookiecutter-ansible-role role_name=$name
-}
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+export VAULT_DEV_ROOT_TOKEN_ID=root
+export VAULT_TOKEN=root
+export AWS_SDK_LOAD_CONFIG=1

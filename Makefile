@@ -17,7 +17,6 @@ less: ~/.brew/bin/src-hilite-lesspipe.sh
 
 git: ~/.gitignore_global ~/.gitconfig
 
-
 ~/.brew/bin/watch:
 	brew install watch
 
@@ -75,6 +74,17 @@ python3: ~/.brew/bin/python3
 
 ~/.brew/opt/findutils/libexec/gnubin/xargs:
 	brew install findutils
+
+~/.brew/opt/coreutils:
+	brew install coreutils
+
+~/.brew/bin/thefuck:
+	brew install thefuck
+
+iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app
+
+~/.iterm2_shell_integration.zsh:
+	curl -L https://iterm2.com/shell_integration/install_shell_integration_and_utilities.sh | bash
 
 /Applications/iTerm.app: ~/.brew/bin/python3
 	brew cask install iterm2
