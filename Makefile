@@ -11,11 +11,17 @@ help:  ## Show this help.
 
 default: brew vim
 
-vim: ~/.vimrc ~/.vim ~/.brew/bin/ag
+vim: ~/.vimrc ~/.vim ~/.brew/bin/ag ~/.brew/bin/shellcheck ~/.brew/bin/pycodestyle
 
 less: ~/.brew/bin/src-hilite-lesspipe.sh
 
 git: ~/.gitignore_global ~/.gitconfig
+
+~/.brew/bin/pycodestyle:
+	brew install pycodestyle
+
+~/.brew/bin/shellcheck:
+	brew install shellcheck
 
 ~/.brew/bin/watch:
 	brew install watch
