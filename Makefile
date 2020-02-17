@@ -89,7 +89,10 @@ python3: ~/.brew/bin/python3
 ~/.brew/opt/coreutils:
 	brew install coreutils
 
-fuck: ~/.brew/bin/thefuck ~/.config/thefuck/rules
+fuck: ~/.brew/bin/thefuck ~/.config/thefuck/rules ~/.brew/Cellar/thefuck/3.29_1/libexec/lib/python3.8/site-packages/kubernetes
+
+~/.brew/Cellar/thefuck/3.29_1/libexec/lib/python3.8/site-packages/kubernetes:
+	~/.brew/Cellar/thefuck/$(shell brew info --json thefuck | jq '.[0].installed[0].version')/libexec/bin/pip3 install kubernetes
 
 ~/.config/thefuck/rules:
 	ln -sf $(PWD)/.config/thefuck/rules ~/.config/thefuck/rules
