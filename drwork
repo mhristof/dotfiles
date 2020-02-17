@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+image="${1:-invalid}"
+
+die() { echo "$*" 1>&2 ; exit 1; }
+
+if [[ $image == "invalid" ]]; then
+    die "Error, please provide an image to run"
+fi
+
+ARGS=()
+
+if [[ ! -z $REQUESTS_CA_BUNDLE ]]; then
+    #statements
+    ARGS+=(-e REQUESTS_CA_BUNDLE=$REQUESTS_CA_BUNDLE -v $(readlink -f $REQUESTS_CA_BUNDLE):$REQUESTS_CA_BUNDLE)
+fi
+
+if [[ ! -z $NODE_EXTRA_CA_CERTS ]]; then
+    ARGS+=(-e NODE_EXTRA_CA_CERTS=$NODE_EXTRA_CA_CERTS -v $(readlink -f $NODE_EXTRA_CA_CERTS):$NODE_EXTRA_CA_CERTS)
+fi
+
+docker run -it \
+    -v $PWD:/work -w /work \
+    ${ARGS[@]} \
+    $*
