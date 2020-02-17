@@ -21,19 +21,9 @@ export PATH=$HOME/.brew/opt/coreutils/libexec/gnubin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 export PATH=~/bin:$PATH
 
-(set -o pipefail which go | grep -v alias &> /dev/null) && {
-    export GOPATH=$(go env GOPATH)
-    export PATH=$GOPATH/bin:$PATH
-}
-
-command -v thefuck &> /dev/null && {
-    eval $(thefuck --alias --enable-experimental-instant-mode)
-}
-
 export PATH=$(echo -n $PATH | awk -v RS=: -v ORS=: '!arr[$0]++') # remove duplicates
 
 export PYTHONSTARTUP=~/.pythonrc.py
-
 export HISTCONTROL=ignoredups:erasedups
 
 if [[ $THIS_SHELL == "bash" ]]; then
@@ -49,7 +39,6 @@ export HISTTIMEFORMAT='%F %T '
 
 export LESSOPEN="| $HOME/.brew/bin/src-hilite-lesspipe.sh %s"
 export LESS=' -R '
-[ -f $HOME/.brew/etc/profile.d/autojump.sh ] && . $HOME/.brew/etc/profile.d/autojump.sh
 
 alias ..='c ../'
 alias ...='c ../../'
@@ -83,10 +72,6 @@ alias gl='git log --graph --oneline --decorate --date=relative --all --pretty=fo
 alias wget100='wget -O /dev/null http://speedtest.london.linode.com/100MB-london.bin'
 alias dc='docker-compose'
 alias tf='terraform'
-which thefuck &> /dev/null
-if [[  $? -eq 0 ]]; then
-    eval "$(thefuck --alias)"
-fi
 which hub &> /dev/null
 if [[ $? -eq 0 ]]; then
     eval "$(hub alias -s)"
@@ -97,7 +82,6 @@ alias tfp='terraform plan -out plan.out'
 alias kcc='kubectl create'
 alias kcd='kubectl delete'
 alias drit='docker run -it'
-alias drwork='docker run -it -v $PWD:/work -w /work'
 alias fu='fuck'
 alias k=kubectl
 
@@ -117,6 +101,14 @@ function c() {
 }
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+test -e "${HOME}/.fzf.zsh" && source "${HOME}/.fzf.zsh"
+test -e "${HOME}/.brew/bin/thefuck" && eval $(thefuck --alias --enable-experimental-instant-mode)
+test -e "$HOME/.brew/etc/profile.d/autojump.sh" && source "$HOME/.brew/etc/profile.d/autojump.sh"
+(set -o pipefail which go | grep -v alias &> /dev/null) && {
+    export GOPATH=$(go env GOPATH)
+    export PATH=$GOPATH/bin:$PATH
+}
+
 export VAULT_DEV_ROOT_TOKEN_ID=root
 export VAULT_TOKEN=root
 export AWS_SDK_LOAD_CONFIG=1

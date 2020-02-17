@@ -61,6 +61,11 @@ zsh: ~/.zshrc ~/.dotfilesrc ~/.oh-my-zsh
 
 brew: ~/.brew
 
+fzf: ~/.brew/bin/fzf
+
+~/.fzf.zsh:
+	$(shell brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc
+
 ~/.brew/bin/fzf:
 	brew install fzf
 
