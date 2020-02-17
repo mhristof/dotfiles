@@ -78,6 +78,11 @@ python3: ~/.brew/bin/python3
 ~/.brew/opt/coreutils:
 	brew install coreutils
 
+fuck: ~/.brew/bin/thefuck ~/.config/thefuck/rules
+
+~/.config/thefuck/rules:
+	ln -sf $(PWD)/.config/thefuck/rules ~/.config/thefuck/rules
+
 ~/.brew/bin/thefuck:
 	brew install thefuck
 

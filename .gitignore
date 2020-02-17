@@ -2,3 +2,4 @@
 *.DS_Store
 vault
 terraform
+.config/thefuck/rules/__pycache__/
