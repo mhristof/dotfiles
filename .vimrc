@@ -152,6 +152,7 @@ if has("autocmd")
     autocmd BufReadPost,WinEnter *.py :set makeprg=pep8\ %
     autocmd BufEnter *.mkf :set ft=make
     autocmd BufEnter *.dsl :set ft=groovy
+    autocmd BufEnter Jenkinsfile :set ft=groovy
     autocmd BufEnter *.yml :set ft=ansible
     autocmd BufEnter haproxy.cfg* :set ft=haproxy
     autocmd BufEnter .travis.yml :set ft=yaml
