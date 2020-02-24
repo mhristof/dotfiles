@@ -5,29 +5,20 @@ SHELL := /bin/bash
 .SHELLFLAGS := -eu -o pipefail -c
 .ONESHELL:
 
-help:  ## Show this help.
-	@fgrep -h "##" Makefile* | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//' | column -t -s':' | sort -u
 
+default: brew vim essentials
 
-default: brew vim
+essentials: ~/.brew/bin/htop ~/.brew/bin/watch less
 
-vim: ~/.vimrc ~/.vim ~/.brew/bin/ag ~/.brew/bin/shellcheck ~/.brew/bin/pycodestyle
+dev: ~/.brew/bin/go vim
+
+vim: ~/.vim
 
 less: ~/.brew/bin/src-hilite-lesspipe.sh
 
 git: ~/.gitignore_global ~/.gitconfig
 
-~/.brew/bin/pycodestyle:
-	brew install pycodestyle
-
-~/.brew/bin/shellcheck:
-	brew install shellcheck
-
-~/.brew/bin/watch:
-	brew install watch
-
-~/.brew/bin/htop:
-	brew install htop
+dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbrc ~/.pythonrc.py ~/.config/thefuck/rules ~/.tmux.conf
 
 ~/.gitignore_global:
 	ln -sf $(PWD)/.gitignore_global ~/.gitignore_global
@@ -38,10 +29,7 @@ git: ~/.gitignore_global ~/.gitconfig
 ~/.brew/bin/src-hilite-lesspipe.sh:
 	brew install source-highlight
 
-~/.brew/bin/ag:
-	brew install ag
-
-~/.vim:
+~/.vim: ~/.vimrc ~/.brew/bin/shellcheck ~/.brew/bin/pycodestyle ~/.brew/bin/ag ~/.brew/bin/shellcheck ~/.brew/bin/pycodestyle
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 	vim +PluginInstall +qall
 
@@ -61,13 +49,10 @@ zsh: ~/.zshrc ~/.dotfilesrc ~/.oh-my-zsh
 
 brew: ~/.brew
 
-fzf: ~/.brew/bin/fzf
+fzf: ~/.brew/bin/fzf ~/.fzf.zsh
 
 ~/.fzf.zsh:
 	$(shell brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc
-
-~/.brew/bin/fzf:
-	brew install fzf
 
 ~/.brew/bin/autojump:
 	brew install autojump
@@ -78,10 +63,7 @@ fzf: ~/.brew/bin/fzf
 ~/.pythonrc.py:
 	ln -sf $(PWD)/.pythonrc.py ~/.pythonrc.py
 
-python3: ~/.brew/bin/python3
-
-~/.brew/bin/python3: ~/.irbrc ~/.pythonrc.py
-	brew install python3
+python3: ~/.brew/bin/python3 ~/.irbrc ~/.pythonrc.py
 
 ~/.brew/opt/findutils/libexec/gnubin/xargs:
 	brew install findutils
@@ -95,16 +77,11 @@ fuck: ~/.brew/bin/thefuck ~/.config/thefuck/rules ~/.brew/Cellar/thefuck/3.29_1/
 	~/.brew/Cellar/thefuck/$(shell brew info --json thefuck | jq '.[0].installed[0].version')/libexec/bin/pip3 install kubernetes
 
 ~/.config/thefuck/rules:
+	mkdir -p ~/.config/thefuck
 	ln -sf $(PWD)/.config/thefuck/rules ~/.config/thefuck/rules
-
-~/.brew/bin/thefuck:
-	brew install thefuck
 
 aws-azure-login: ~/.brew/bin/node
 	npm install -g aws-azure-login
-
-~/.brew/bin/node:
-	brew install node
 
 iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app
 
@@ -115,11 +92,8 @@ iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app
 /Applications/iTerm.app: ~/.brew/bin/python3
 	brew cask install iterm2
 
-~/.brew/bin/dockutil:
-	brew install dockutil
-
 dock: ~/.brew/opt/findutils/libexec/gnubin/xargs ~/.brew/bin/dockutil
-	dockutil --list | sed 's/file:.*//g' | xargs -n1 -d'\n' dockutil --remove
+	dockutil --list | sed 's/file:.*//g' | xargs --no-run-if-empty -n1 -d'\n' dockutil --remove
 
 /Applications/Alfred 4.app:
 	brew cask install alfred
@@ -136,12 +110,6 @@ docker: /Applications/Docker.app/Contents/MacOS/Docker
 /Applications/Docker.app/Contents/MacOS/Docker:
 	brew cask install docker
 
-~/.brew/bin/wget:
-	brew install wget
-
-~/.brew/bin/go:
-	brew install golang
-
 pbpaste: /tmp/alfred-pbpaste.alfredworkflow
 	open /tmp/alfred-pbpaste.alfredworkflow
 
@@ -150,9 +118,6 @@ alfred: ~/.brew/bin/wget /tmp/alfred-tf-snippets.alfredworkflow pbpaste
 
 /tmp/alfred-pbpaste.alfredworkflow:
 	wget https://github.com/mhristof/alfred-pbpaste/releases/download/0.2.3/alfred-pbpaste.alfredworkflow -O alfred-pbpaste.alfredworkflow
-
-~/.brew/bin/jq:
-	brew install jq
 
 /tmp/alfred-tf-snippets.alfredworkflow: ~/.brew/bin/jq
 	wget https://github.com/mhristof/alfred-tf-snippets/releases/download/0.7.0/alfred-tf-snippets.alfredworkflow -O /tmp/alfred-tf-snippets.alfredworkflow
@@ -168,6 +133,9 @@ pterm:
 
 ~/.brew:
 	git clone https://github.com/Homebrew/brew.git ~/.brew
+
+~/.brew/bin/%:
+	brew install $*
 
 # vim:ft=make
 #
