@@ -139,6 +139,9 @@ docker: /Applications/Docker.app/Contents/MacOS/Docker
 ~/.brew/bin/wget:
 	brew install wget
 
+~/.brew/bin/go:
+	brew install golang
+
 pbpaste: /tmp/alfred-pbpaste.alfredworkflow
 	open /tmp/alfred-pbpaste.alfredworkflow
 
@@ -159,6 +162,9 @@ slack:
 
 bin:
 	ln -sf $(PWD) ~/bin
+
+pterm:
+	pip3 install -U pterm
 
 ~/.brew:
 	git clone https://github.com/Homebrew/brew.git ~/.brew
