@@ -10,6 +10,8 @@ default: brew vim essentials
 
 essentials: ~/.brew/bin/htop ~/.brew/bin/watch less
 
+dev: ~/.brew/bin/go vim
+
 vim: ~/.vim
 
 less: ~/.brew/bin/src-hilite-lesspipe.sh
@@ -125,6 +127,9 @@ slack:
 
 bin:
 	ln -sf $(PWD) ~/bin
+
+pterm:
+	pip3 install -U pterm
 
 ~/.brew:
 	git clone https://github.com/Homebrew/brew.git ~/.brew
