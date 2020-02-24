@@ -1,7 +1,7 @@
-# This is Git's per-user configuration file.
-[user]
-# Please adapt and uncomment the following lines:
-name = Mike Christofilopoulos
-email = mhristof@gmail.com
 [core]
 	excludesfile = ~/.gitignore_global
+[alias]
+	undo = reset --soft HEAD~1
+
+[include]
+    path = ~/.gitconfig_local
