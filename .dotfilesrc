@@ -77,6 +77,7 @@ if [[ $? -eq 0 ]]; then
     eval "$(hub alias -s)"
 fi
 alias agh='ag --hidden'
+alias agt='ag --terraform'
 alias tpl='terraform plan -out plan.out'
 alias tfp='terraform plan -out plan.out'
 alias kcc='kubectl create'
@@ -104,7 +105,7 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 test -e "${HOME}/.fzf.zsh" && source "${HOME}/.fzf.zsh"
 test -e "${HOME}/.brew/bin/thefuck" && eval $(thefuck --alias --enable-experimental-instant-mode)
 test -e "$HOME/.brew/etc/profile.d/autojump.sh" && source "$HOME/.brew/etc/profile.d/autojump.sh"
-(set -o pipefail which go | grep -v alias &> /dev/null) && {
+test -e "${HOME}/.brew/bin/go" && {
     export GOPATH=$(go env GOPATH)
     export PATH=$GOPATH/bin:$PATH
 }
