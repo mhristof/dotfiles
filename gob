@@ -5,15 +5,7 @@
 set -euo pipefail
 
 CACHE=/tmp/gob.txt
-ARGS=''
-while getopts "t" OPTION
-do
-     case $OPTION in
-         t)
-             ARGS='-t';;
-     esac
-done
 
 git for-each-ref --sort=-committerdate refs/heads/ | cut -d '/' -f3- | head -30 > $CACHE
 git branch -a | cut -c 3- >> $CACHE
-git checkout $ARGS "$(fzf < $CACHE)"
+git checkout --track "$(fzf < $CACHE)"
