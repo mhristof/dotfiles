@@ -39,6 +39,7 @@ Plugin 'w0rp/ale'
 Plugin 'elzr/vim-json'
 " Plugin 'scrooloose/nerdtree'
 Plugin 'zimbatm/haproxy.vim'
+Plugin 'fatih/vim-go'
 
 
 " All of your Plugins must be added before the following line
@@ -97,6 +98,7 @@ set expandtab "use spaces instead of tabs
 set tabstop=4
 set shiftwidth=4
 set clipboard=unnamed
+set wildignorecase
 let g:netrw_sort_sequence = '[\/]$,\<core\%(\.\d\+\)\=\>,\.h$,\.c$,\.cpp$,\~\=\*$,*,\.o$,\.obj$,\.info$,\.swp$,\.bak$,\.clean$,\.rej,\.orig,\~$'
 
 " delete text without entering the registers. Usefull when you what to replace
@@ -161,7 +163,6 @@ if has("autocmd")
     autocmd WinEnter,BufEnter Vagrantfile,*.rb,*.erb call SetupRuby()
     autocmd FileType ruby,eruby call SetupRuby()
     autocmd VimResized * wincmd =
-    autocmd BufEnter,WinEnter *.tf nnoremap <buffer> <silent> K :silent !help-terraform <cword><cr>:redraw!<cr>
     autocmd BufWrite * :diffupdate
     autocmd FileType markdown set makeprg=grip\ -b\ %\ &>\ /dev/null
 endif
@@ -199,6 +200,7 @@ set statusline+=%*
 
 " hide vim swap files from the file browser
 let g:netrw_list_hide= '.*\.swp$,\~$,\.orig$'
+let g:terraform_fmt_on_save=1
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -228,7 +230,6 @@ if has("user_commands")
     command! -bang Qa qa<bang>
     command! -bang Set set<bang>
     command! -bang Vs vs<bang>
-    command! Squash :call Squash()
 endif
 
 function! SessionCreate()
@@ -257,13 +258,6 @@ function! FailedRake()
     silent make
     copen
     let &makeprg=oldro
-endfunction
-
-function! Squash()
-    execute "normal! ggj"
-    execute ".,$s/^pick/squash"
-    execute "normal! ggj"
-    execute "noh"
 endfunction
 
 nmap <C-]> :call TagsOrAck()<cr>
