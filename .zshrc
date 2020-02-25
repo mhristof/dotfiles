@@ -1,7 +1,7 @@
 # If you come from bash you might have to change your $PATH.
 
 # Path to your oh-my-zsh installation.
-source ~/.zshrc_local
+test -e "${HOME}/.zshrc_local" && source ~/.zshrc_local
 export ZSH=~/.oh-my-zsh
 export EDITOR=vim
 
