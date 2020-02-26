@@ -8,7 +8,7 @@ SHELL := /bin/bash
 
 default: brew vim essentials
 
-essentials: ~/.brew/bin/htop ~/.brew/bin/watch less
+essentials: ~/.brew/bin/htop ~/.brew/bin/watch less grep
 
 dev: ~/.brew/bin/go vim
 
@@ -19,6 +19,11 @@ less: ~/.brew/bin/src-hilite-lesspipe.sh
 git: ~/.gitignore_global ~/.gitconfig
 
 dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbrc ~/.pythonrc.py ~/.config/thefuck/rules ~/.tmux.conf
+
+grep: ~/.brew/opt/grep/libexec/gnubin/grep
+
+~/.brew/opt/grep/libexec/gnubin/grep:
+	brew install grep
 
 ~/.gitignore_global:
 	ln -sf $(PWD)/.gitignore_global ~/.gitignore_global
@@ -113,7 +118,7 @@ docker: /Applications/Docker.app/Contents/MacOS/Docker
 pbpaste: /tmp/alfred-pbpaste.alfredworkflow
 	open /tmp/alfred-pbpaste.alfredworkflow
 
-alfred: ~/.brew/bin/wget /tmp/alfred-tf-snippets.alfredworkflow pbpaste
+alfred: ~/.brew/bin/wget /tmp/alfred-tf-snippets.alfredworkflow pbpaste grep
 	open /tmp/alfred-tf-snippets.alfredworkflow
 
 /tmp/alfred-pbpaste.alfredworkflow:
