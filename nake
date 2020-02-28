@@ -5,6 +5,9 @@ set -euo pipefail
 if [[ -f Makefile ]]; then
     make "$@"
     exit 0
+else
+    cat ~/.vim/bundle/vim-template/templates/=template=GNUmakefile > Makefile
+    sed -i'' -e 's/^    /	/g' Makefile
 fi
 
 
@@ -15,24 +18,32 @@ if [[ $TF -gt 0 ]]; then
 TF_SRC := \$(shell find ./ -maxdepth 1 -name "*.tf")
 default: terraform.tfstate
 
-.terraform:
+.terraform:  ## Runs 'terraform init' and creates .terraform folder
 	terraform init
 
-tf.plan: \$(TF_SRC) .terraform
+tf.plan: \$(TF_SRC) .terraform  ## Runs 'terraform plan' and creates a plan file
 	terraform plan -out tf.plan
 
-terraform.tfstate: tf.plan
+terraform.tfstate: tf.plan  ## Runs 'terraform apply' and applies the previously created plan file.
 	terraform apply "tf.plan"
 
-README.md: *.tf
+README.md: *.tf  ## Update README.md with 'terraform-docs'
 	sed -i'' -e '/^## Providers\$\$/,\$\$d' README.md
 	terraform-docs md . >> README.md
 
-clean:
+clean:  ## Runs 'terraform destroy' and deletes all resources
 	terraform destroy -auto-approve
 	rm terraform.tfstate* tf.plan
-	rm terraform.tfvars
 .PHONY: clean
+EOF
+fi
+
+PY=$(find ./ -name '*.py' | wc -l)
+if [[ $PY -gt 0 ]]; then
+    cat << EOF >> Makefile
+pep8:  ## Runs pep8 for curent directory
+	pycodestyle --ignore=E501 .
+.PHONY: pep8
 EOF
 fi
 
