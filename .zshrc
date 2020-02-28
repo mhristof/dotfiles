@@ -12,3 +12,5 @@ plugins=(git docker aws)
 source $ZSH/oh-my-zsh.sh
 
 source ~/.dotfilesrc
+
+source /Users/Mike.Christofilopoulos/Library/Preferences/org.dystroy.broot/launcher/bash/br

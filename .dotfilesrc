@@ -19,6 +19,7 @@ export PATH=$HOME/.brew/opt/grep/libexec/gnubin:$PATH
 export PATH=$HOME/.brew/opt/make/libexec/gnubin:$PATH
 export PATH=$HOME/.brew/opt/coreutils/libexec/gnubin:$PATH
 export PATH=$HOME/.local/bin:$PATH
+export PATH=$HOME/.bash-my-aws/bin:$PATH
 export PATH=~/bin:$PATH
 
 export PATH=$(echo -n $PATH | awk -v RS=: -v ORS=: '!arr[$0]++') # remove duplicates
@@ -109,10 +110,14 @@ function c() {
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 test -e "${HOME}/.fzf.zsh" && source "${HOME}/.fzf.zsh"
 test -e "${HOME}/.brew/bin/thefuck" && eval $(thefuck --alias --enable-experimental-instant-mode)
-test -e "$HOME/.brew/etc/profile.d/autojump.sh" && source "$HOME/.brew/etc/profile.d/autojump.sh"
+test -e "${HOME}/.brew/etc/profile.d/autojump.sh" && source "$HOME/.brew/etc/profile.d/autojump.sh"
 test -e "${HOME}/.brew/bin/go" && {
     export GOPATH=$(go env GOPATH)
     export PATH=$GOPATH/bin:$PATH
+}
+test -e "${HOME}/.bash-my-aws/aliases" && {
+    source "${HOME}/.bash-my-aws/aliases"
+    source "${HOME}/.bash-my-aws/bash_completion.sh"
 }
 
 export VAULT_DEV_ROOT_TOKEN_ID=root

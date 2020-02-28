@@ -12,6 +12,11 @@ essentials: ~/.brew/bin/htop ~/.brew/bin/watch less grep
 
 dev: ~/.brew/bin/go vim
 
+aws: bash-my-aws ~/.brew/bin/aws
+
+~/.brew/bin/aws:
+	pip install aws --user
+
 vim: ~/.vim
 
 less: ~/.brew/bin/src-hilite-lesspipe.sh
@@ -135,6 +140,11 @@ bin:
 
 pterm:
 	pip3 install -U pterm
+
+bash-my-aws: ~/.bash-my-aws
+
+~/.bash-my-aws:
+	git clone https://github.com/bash-my-aws/bash-my-aws.git ~/.bash-my-aws
 
 ~/.brew:
 	git clone https://github.com/Homebrew/brew.git ~/.brew
