@@ -24,6 +24,10 @@ tf.plan: \$(TF_SRC) .terraform
 terraform.tfstate: tf.plan
 	terraform apply "tf.plan"
 
+README.md: *.tf
+	sed -i'' -e '/^## Providers\$\$/,\$\$d' README.md
+	terraform-docs md . >> README.md
+
 clean:
 	terraform destroy -auto-approve
 	rm terraform.tfstate* tf.plan
