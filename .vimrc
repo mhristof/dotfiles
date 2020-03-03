@@ -21,6 +21,8 @@ Plugin 'junegunn/fzf.vim'
 Plugin 'MarcWeber/vim-addon-mw-utils.git'
 Plugin 'tomtom/tlib_vim.git'
 Plugin 'mhristof/vim-snipmate.git'
+"Plugin 'SirVer/ultisnips'
+"Plugin 'honza/vim-snippets'
 Plugin 'serialdoom/vcscommand.vim.git'
 Plugin 'serialdoom/VisIncr.git'
 Plugin 'serialdoom/vim-ansible-yaml.git'
@@ -37,7 +39,6 @@ Plugin 'ngmy/vim-rubocop'
 Plugin 'tommcdo/vim-lion'
 Plugin 'w0rp/ale'
 Plugin 'elzr/vim-json'
-" Plugin 'scrooloose/nerdtree'
 Plugin 'zimbatm/haproxy.vim'
 Plugin 'fatih/vim-go'
 
@@ -116,6 +117,12 @@ let g:ale_linters = {
 \   'python': ['pycodestyle'],
 \}
 
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
+
 
 
 
@@ -164,6 +171,8 @@ if has("autocmd")
     autocmd FileType ruby,eruby call SetupRuby()
     autocmd VimResized * wincmd =
     autocmd BufWrite * :diffupdate
+    autocmd BufWrite *.py silent! execute "ctags -R --fields=+l --languages=python --python-kinds=-iv -f ./tags ." | redraw!
+    autocmd BufEnter,BufWritePost *.tf silent! !ctags -R --languages=terraform .
     autocmd FileType markdown set makeprg=grip\ -b\ %\ &>\ /dev/null
 endif
 
@@ -200,6 +209,11 @@ set statusline+=%*
 
 " hide vim swap files from the file browser
 let g:netrw_list_hide= '.*\.swp$,\~$,\.orig$'
+let g:netrw_liststyle = 3
+let g:netrw_banner = 0
+let g:netrw_browse_split = 2
+
+
 let g:terraform_fmt_on_save=1
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

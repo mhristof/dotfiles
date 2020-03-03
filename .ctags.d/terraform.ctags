@@ -1,0 +1,8 @@
+--langdef=terraform
+--langmap=terraform:.tf
+--regex-terraform=/^resource "(.*)" "(.*)" {/\1/v,Variable/
+--regex-terraform=/^resource "(.*)" "(.*)" {/\2/v,Variable/
+--regex-terraform=/^variable "(.*)" {/\1/v,Variable/
+--regex-terraform=/^data "(.*)" "(.*)" {/\1/v,Variable/
+--regex-terraform=/^data "(.*)" "(.*)" {/\2/v,Variable/
+--regex-terraform=/^output "(.*)" {/\1/v,Variable/

@@ -17,7 +17,7 @@ aws: bash-my-aws ~/.brew/bin/aws
 ~/.brew/bin/aws:
 	pip install aws --user
 
-vim: ~/.vim
+vim: ~/.vim python3
 
 less: ~/.brew/bin/src-hilite-lesspipe.sh
 
@@ -39,7 +39,7 @@ grep: ~/.brew/opt/grep/libexec/gnubin/grep
 ~/.brew/bin/src-hilite-lesspipe.sh:
 	brew install source-highlight
 
-~/.vim: ~/.vimrc ~/.brew/bin/shellcheck ~/.brew/bin/pycodestyle ~/.brew/bin/ag ~/.brew/bin/shellcheck ~/.brew/bin/pycodestyle
+~/.vim: ~/.vimrc ~/.brew/bin/shellcheck ~/.brew/bin/pycodestyle ~/.brew/bin/ag ~/.brew/bin/shellcheck ~/.brew/bin/pycodestyle ~/.ctags.d
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 	vim +PluginInstall +qall
 
@@ -51,6 +51,9 @@ grep: ~/.brew/opt/grep/libexec/gnubin/grep
 
 ~/.dotfilesrc:
 	ln -sf $(PWD)/.dotfilesrc ~/.dotfilesrc
+
+~/.ctags.d:
+	ln -sf $(PWD)/.ctags.d ~/.ctags.d
 
 ~/.oh-my-zsh:
 	git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh
@@ -145,6 +148,9 @@ bash-my-aws: ~/.bash-my-aws
 
 ~/.bash-my-aws:
 	git clone https://github.com/bash-my-aws/bash-my-aws.git ~/.bash-my-aws
+
+~/.brew/bin/ctags:
+	brew install --HEAD universal-ctags/universal-ctags/universal-ctags
 
 ~/.brew:
 	git clone https://github.com/Homebrew/brew.git ~/.brew
