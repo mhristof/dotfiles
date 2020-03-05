@@ -117,14 +117,6 @@ let g:ale_linters = {
 \   'python': ['pycodestyle'],
 \}
 
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-" If you want :UltiSnipsEdit to split your window.
-let g:UltiSnipsEditSplit="vertical"
-
-
-
 
 if filereadable(glob('~/.vim/bundle/molokai/colors/molokai.vim'))
   colorscheme molokai
@@ -208,7 +200,7 @@ set statusline+=%#warningmsg#
 set statusline+=%*
 
 " hide vim swap files from the file browser
-let g:netrw_list_hide= '.*\.swp$,\~$,\.orig$'
+" let g:netrw_list_hide= '.*\.swp$,\~$,\.orig$'
 let g:netrw_liststyle = 3
 let g:netrw_banner = 0
 let g:netrw_browse_split = 2
