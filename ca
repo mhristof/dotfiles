@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+die() { echo "$*" 1>&2 ; exit 1; }
+
+
+if [[ -z ${1:-} ]]; then
+    die "Please provide a file to cat"
+fi
+
+case $(file "$1") in
+    *"PEM certificate")
+        openssl x509 -in "$1" -noout -text
+        ;;
+    *)
+        cat "$1"
+        ;;
+esac
+
