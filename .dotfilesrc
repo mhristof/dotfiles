@@ -17,6 +17,7 @@ export PATH=$HOME/Library/Python/3.7/bin:$PATH
 export PATH=$HOME/.brew/opt/findutils/libexec/gnubin:$PATH
 export PATH=$HOME/.brew/opt/grep/libexec/gnubin:$PATH
 export PATH=$HOME/.brew/opt/make/libexec/gnubin:$PATH
+export PATH=$HOME/.brew/opt/gettext/bin:$PATH
 export PATH=$HOME/.brew/opt/coreutils/libexec/gnubin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.bash-my-aws/bin:$PATH
@@ -122,4 +123,5 @@ test -e "${HOME}/.bash-my-aws/aliases" && {
 
 export VAULT_DEV_ROOT_TOKEN_ID=root
 export VAULT_TOKEN=root
+export VAULT_ADDR='http://127.0.0.1:8200'
 export AWS_SDK_LOAD_CONFIG=1
