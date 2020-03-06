@@ -27,11 +27,15 @@ tf.plan: \$(TF_SRC) .terraform  ## Runs 'terraform plan' and creates a plan file
 terraform.tfstate: tf.plan  ## Runs 'terraform apply' and applies the previously created plan file.
 	terraform apply "tf.plan"
 
+force:
+	touch *.tf
+	make terraform.tfstate
+
 README.md: *.tf  ## Update README.md with 'terraform-docs'
 	sed -i'' -e '/^## Providers\$\$/,\$\$d' README.md
 	terraform-docs md . >> README.md
 
-clean:  ## Runs 'terraform destroy' and deletes all resources
+clean: .terraform  ## Runs 'terraform destroy' and deletes all resources
 	terraform destroy -auto-approve
 	rm terraform.tfstate* tf.plan
 .PHONY: clean
