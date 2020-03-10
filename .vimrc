@@ -203,7 +203,7 @@ set statusline+=%*
 " let g:netrw_list_hide= '.*\.swp$,\~$,\.orig$'
 let g:netrw_liststyle = 3
 let g:netrw_banner = 0
-let g:netrw_browse_split = 2
+let g:netrw_browse_split = 0
 
 
 let g:terraform_fmt_on_save=1
