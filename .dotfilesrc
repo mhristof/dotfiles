@@ -121,7 +121,5 @@ test -e "${HOME}/.bash-my-aws/aliases" && {
     source "${HOME}/.bash-my-aws/bash_completion.sh"
 }
 
-export VAULT_DEV_ROOT_TOKEN_ID=root
-export VAULT_TOKEN=root
 export VAULT_ADDR='http://127.0.0.1:8200'
 export AWS_SDK_LOAD_CONFIG=1
