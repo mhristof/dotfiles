@@ -11,6 +11,7 @@ if [[ $REMOTE =~ 'git@github' ]]; then
 fi
 
 REPO="git@github.com:$(git config --get remote.origin.url | sed 's!https://github.com/!!').git"
+REPO="${REPO/.git.git/.git}"
 
 git remote set-url --add origin $REPO
 git remote set-url --delete origin $REMOTE
