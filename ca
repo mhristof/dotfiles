@@ -9,6 +9,9 @@ if [[ -z ${1:-} ]]; then
 fi
 
 case $(file "$1") in
+    *"PEM certificate request")
+        openssl req -in "$1" -noout -text
+        ;;
     *"PEM certificate")
         openssl x509 -in "$1" -noout -text
         ;;
