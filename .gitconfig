@@ -4,6 +4,7 @@
 [alias]
 	undo = reset --soft HEAD~1
 	squash-all = "!~/bin/squash.sh"
+    co = commit
 
 [include]
     path = ~/.gitconfig_local
