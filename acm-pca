@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+
+set -euo pipefail
+
+aws acm-pca list-certificate-authorities | jq '.CertificateAuthorities[] | [.CertificateAuthorityConfiguration.Subject.CommonName, .Arn, .Status] | @csv' -r | column -s, -t
