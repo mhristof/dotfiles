@@ -12,7 +12,7 @@ essentials: ~/.brew/bin/htop ~/.brew/bin/watch less grep
 
 dev: ~/.brew/bin/go vim
 
-aws: bash-my-aws ~/.brew/bin/aws
+aws: bash-my-aws ~/.brew/bin/aws ~/brew/bin/kubectx
 
 ~/.brew/bin/aws:
 	pip install aws --user
