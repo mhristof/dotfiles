@@ -39,9 +39,12 @@ grep: ~/.brew/opt/grep/libexec/gnubin/grep
 ~/.brew/bin/src-hilite-lesspipe.sh:
 	brew install source-highlight
 
-~/.vim: ~/.vimrc ~/.brew/bin/shellcheck ~/.brew/bin/pycodestyle ~/.brew/bin/ag ~/.brew/bin/shellcheck ~/.brew/bin/pycodestyle ~/.ctags.d
+~/.vim: ~/.vimrc ~/.brew/bin/shellcheck ~/.brew/bin/pycodestyle ~/.brew/bin/ag ~/.brew/bin/shellcheck ~/.ctags.d ~/Library/Python/3.7/bin/pylint
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 	vim +PluginInstall +qall
+
+~/Library/Python/3.7/bin/pylint:
+	pip install pylint
 
 ~/.vimrc:
 	ln -sf $(PWD)/.vimrc ~/.vimrc

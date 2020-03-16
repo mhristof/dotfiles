@@ -114,7 +114,7 @@ cnoremap mk. !mkdir -p <c-r>=expand("%:h")<cr>/
 let g:lion_squeeze_spaces = 1
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_linters = {
-\   'python': ['pycodestyle'],
+\   'python': ['pycodestyle', 'pylint'],
 \}
 
 
