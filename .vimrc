@@ -154,6 +154,7 @@ if has("autocmd")
     autocmd BufEnter *.mkf :set ft=make
     autocmd BufEnter *.dsl :set ft=groovy
     autocmd BufEnter Jenkinsfile :set ft=groovy
+    autocmd BufEnter Jenkinsfile :setlocal shiftwidth=2
     autocmd BufEnter *.yml :set ft=ansible
     autocmd BufEnter haproxy.cfg* :set ft=haproxy
     autocmd BufEnter .travis.yml :set ft=yaml
@@ -163,10 +164,15 @@ if has("autocmd")
     autocmd FileType ruby,eruby call SetupRuby()
     autocmd VimResized * wincmd =
     autocmd BufWrite * :diffupdate
-    autocmd BufWrite *.py silent! execute "ctags -R --fields=+l --languages=python --python-kinds=-iv -f ./tags ." | redraw!
-    autocmd BufEnter,BufWritePost *.tf silent! !ctags -R --languages=terraform .
+    autocmd WinEnter,BufWritePost *.py silent! !ctags -R --fields=+l --languages=python --python-kinds=-iv .
+    autocmd BufEnter,BufWritePost *.tf call TerraformCtags()
     autocmd FileType markdown set makeprg=grip\ -b\ %\ &>\ /dev/null
 endif
+
+function TerraformCtags()
+    silent! !ctags -R --languages=terraform .
+    redraw!
+endfunction
 
 if s:uname == "Darwin\n"
     map <tab>t :FZF<cr>
