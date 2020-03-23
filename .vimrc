@@ -108,6 +108,7 @@ nmap X "_d
 nmap XX "_dd
 vmap X "_d
 vmap x "_d
+nmap t :FZF<cr>
 
 cnoremap rf. :call FailedRake()<cr>
 cnoremap mk. !mkdir -p <c-r>=expand("%:h")<cr>/
@@ -175,7 +176,6 @@ function TerraformCtags()
 endfunction
 
 if s:uname == "Darwin\n"
-    map <tab>t :FZF<cr>
     map `r :History:<cr>
     map `b :Buffers<cr>
     map `a :Ag<cr>
