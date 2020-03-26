@@ -100,6 +100,7 @@ set tabstop=4
 set shiftwidth=4
 set clipboard=unnamed
 set wildignorecase
+set smartindent
 let g:netrw_sort_sequence = '[\/]$,\<core\%(\.\d\+\)\=\>,\.h$,\.c$,\.cpp$,\~\=\*$,*,\.o$,\.obj$,\.info$,\.swp$,\.bak$,\.clean$,\.rej,\.orig,\~$'
 
 " delete text without entering the registers. Usefull when you what to replace
@@ -155,7 +156,7 @@ if has("autocmd")
     autocmd BufEnter *.mkf :set ft=make
     autocmd BufEnter *.dsl :set ft=groovy
     autocmd BufEnter Jenkinsfile :set ft=groovy
-    autocmd BufEnter Jenkinsfile :setlocal shiftwidth=2
+    autocmd BufEnter Jenkinsfile :setlocal shiftwidth=2 tabstop=2
     autocmd BufEnter *.yml :set ft=ansible
     autocmd BufEnter haproxy.cfg* :set ft=haproxy
     autocmd BufEnter .travis.yml :set ft=yaml
@@ -280,4 +281,8 @@ function TagsOrAck()
     catch
         exe ":Ack! " l:word
     endtry
+endfunction
+
+function Snippets()
+    exe ":vsplit ~/.vim/bundle/vim-snipmate/snippets/" . &filetype . ".snippets"
 endfunction
