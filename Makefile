@@ -42,6 +42,16 @@ grep: ~/.brew/opt/grep/libexec/gnubin/grep
 ~/.vim: ~/.vimrc ~/.brew/bin/shellcheck ~/.brew/bin/pycodestyle ~/.brew/bin/ag ~/.brew/bin/shellcheck ~/.ctags.d ~/Library/Python/3.7/bin/pylint
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 	vim +PluginInstall +qall
+	# this requires plugins to be installed since it creates a subfolder in there
+	make ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim
+
+~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim: ~/.brew/opt/curl/bin/curl
+	mkdir -p ~/.vim/bundle/ale/ale_linters/groovy/
+	cd ~/.vim/bundle/ale/ale_linters/groovy/
+	curl -sLO https://raw.githubusercontent.com/mhristof/ale-jenkinsfile/master/ale_jenkinsfile.vim
+
+~/.brew/opt/curl/bin/curl:
+	brew install curl
 
 ~/Library/Python/3.7/bin/pylint:
 	pip install pylint
@@ -101,7 +111,7 @@ aws-azure-login: ~/.brew/bin/node
 
 iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app
 
-~/.iterm2_shell_integration.zsh:
+~/.iterm2_shell_integration.zsh: ~/.brew/opt/curl/bin/curl
 	curl -L https://iterm2.com/shell_integration/install_shell_integration_and_utilities.sh | bash
 	patch -p1 -R < data/iterm-zsh.patch
 
