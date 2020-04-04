@@ -90,6 +90,7 @@ fzf: ~/.brew/bin/fzf ~/.fzf.zsh
 	ln -sf $(PWD)/.pythonrc.py ~/.pythonrc.py
 
 python3: ~/.brew/bin/python3 ~/.irbrc ~/.pythonrc.py
+	pip3 install -r requirements.yml
 
 ~/.brew/opt/findutils/libexec/gnubin/xargs:
 	brew install findutils
