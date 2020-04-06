@@ -119,7 +119,6 @@ let g:ale_linters = {
 \   'python': ['pycodestyle', 'pylint', 'pydocstyle'],
 \}
 
-
 if filereadable(glob('~/.vim/bundle/molokai/colors/molokai.vim'))
   colorscheme molokai
 endif
