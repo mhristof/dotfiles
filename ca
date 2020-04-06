@@ -8,6 +8,17 @@ if [[ -z ${1:-} ]]; then
     die "Please provide a file to cat"
 fi
 
+case $1 in
+    *accessKeys*.csv)
+        echo export AWS_ACCESS_KEY_ID=$(tail -1 "$1" | cut -d',' -f1)
+        echo export AWS_SECRET_ACCESS_KEY=$(tail -1 "$1" | cut -d',' -f2)
+        exit 0;;
+    *credentials*.csv)
+        echo export AWS_ACCESS_KEY_ID=$(tail -1 "$1"   | cut -d',' -f3)
+        echo export AWS_SECRET_ACCESS_KEY=$(tail -1 "$1" | cut -d',' -f4)
+        exit 0;;
+esac
+
 case $(file "$1") in
     *"PEM certificate request")
         openssl req -in "$1" -noout -text
