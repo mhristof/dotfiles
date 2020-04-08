@@ -165,14 +165,17 @@ if has("autocmd")
     autocmd FileType ruby,eruby call SetupRuby()
     autocmd VimResized * wincmd =
     autocmd BufWrite * :diffupdate
-    autocmd WinEnter,BufWritePost *.py silent! !ctags -R --fields=+l --languages=python --python-kinds=-iv .
-    autocmd BufEnter,BufWritePost *.tf call TerraformCtags()
+    autocmd WinEnter,BufWritePost *.py call PythonCtags()
+    autocmd WinEnter,BufWritePost *.tf call TerraformCtags()
     autocmd FileType markdown set makeprg=grip\ -b\ %\ &>\ /dev/null
 endif
 
+function PythonCtags()
+    let pyctags = job_start(["ctags", "-R", "--fields=+l", "--languages=python", "--python-kinds=-iv", "."])
+endfunction
+
 function TerraformCtags()
-    silent! !ctags -R --languages=terraform .
-    redraw!
+    let tfctags = job_start(["ctags", "-R", "--languages=terraform", "."])
 endfunction
 
 if s:uname == "Darwin\n"
@@ -181,14 +184,6 @@ if s:uname == "Darwin\n"
     map `a :Ag<cr>
     map `e :GBrowse<cr>
 endif
-
-let g:ackprg = 'ag --path-to-ignore ~/.ignore --skip-vcs-ignores --nogroup --nocolor --column'
-nmap _a :Ack! <cword><cr>
-nmap _c :Ack! --cc <cword><cr>
-nmap _x :Ack! --xml <cword><cr>
-nmap _C :Ack! --cc --xml <cword><cr>
-nmap _M :Ack! --make <cword><cr>
-nmap _p :Ack! --python <cword><cr>
 
 nmap + :ts <C-R>=expand("<cword>")<cr><cr>
 
@@ -226,12 +221,8 @@ if has("user_commands")
     command! -bang -nargs=? -complete=file Vs vs<bang> <args>
     command! -bang -nargs=? -complete=file VS vs<bang> <args>
     cabbrev Set set
-    cabbrev ack Ack!
-    cabbrev acl Ack!
-    cabbrev acl Ack!
-    cabbrev ag Ack!
-    cabbrev AG Ack!
-    cabbrev Ag Ack!
+    cabbrev ack Ag
+    cabbrev ag Ag
     cabbrev Call call
     " map the damn :W so that you dont type it twice. Or even 3 times. Fucking noob.
     command! -bang Wqa wqa<bang>
@@ -285,3 +276,7 @@ endfunction
 function Snippets()
     exe ":vsplit ~/.vim/bundle/vim-snipmate/snippets/" . &filetype . ".snippets"
 endfunction
+
+if filereadable(expand("~/.vimrc.local"))
+    source ~/.vimrc.local
+endif
