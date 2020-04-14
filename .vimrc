@@ -41,7 +41,7 @@ Plugin 'w0rp/ale'
 Plugin 'elzr/vim-json'
 Plugin 'zimbatm/haproxy.vim'
 Plugin 'fatih/vim-go'
-
+Plugin 'tpope/vim-obsession'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -111,7 +111,6 @@ vmap X "_d
 vmap x "_d
 nmap t :FZF<cr>
 
-cnoremap rf. :call FailedRake()<cr>
 cnoremap mk. !mkdir -p <c-r>=expand("%:h")<cr>/
 let g:lion_squeeze_spaces = 1
 let g:ale_lint_on_text_changed = 'never'
@@ -149,7 +148,6 @@ if has("autocmd")
     autocmd WinLeave * setlocal nocursorline
     autocmd WinLeave * setlocal nocursorcolumn
     autocmd WinLeave * setlocal cc=0
-    autocmd VimLeave * :call SessionCreate()
     autocmd FileType python :set makeprg=pep8\ %
     autocmd BufReadPost,WinEnter *.py :set makeprg=pep8\ %
     autocmd BufEnter *.mkf :set ft=make
@@ -168,6 +166,7 @@ if has("autocmd")
     autocmd WinEnter,BufWritePost *.py call PythonCtags()
     autocmd WinEnter,BufWritePost *.tf call TerraformCtags()
     autocmd FileType markdown set makeprg=grip\ -b\ %\ &>\ /dev/null
+    autocmd VimEnter * call SetupObsession()
 endif
 
 function PythonCtags()
@@ -235,17 +234,6 @@ if has("user_commands")
     command! -bang Vs vs<bang>
 endif
 
-function! SessionCreate()
-    let r_name = $HOME . "/.vim_sessions/" . substitute(getcwd(), "\/", "_", "g") . ".vim"
-    exe "mksession! " . r_name
-endfunction
-
-function! SessionRestore()
-    let r_name = $HOME . "/.vim_sessions/" . substitute(getcwd(), "\/", "_", "g") . ".vim"
-    exe "source " . r_name
-endfunction
-command! -nargs=* RS call SessionRestore()
-
 function! SetupRuby()
     setlocal tabstop=2
     setlocal shiftwidth=2
@@ -255,21 +243,13 @@ function! SetupRuby()
     setlocal nornu
 endfunction
 
-function! FailedRake()
-    let oldro=&makeprg
-    set makeprg=cat\ ~/.rake-failure.txt\ |\ exit 1
-    silent make
-    copen
-    let &makeprg=oldro
-endfunction
-
 nmap <C-]> :call TagsOrAck()<cr>
 function TagsOrAck()
     let l:word = expand('<cword>')
     try
         exe ":tag " l:word
     catch
-        exe ":Ack! " l:word
+        exe ":Ag! " l:word
     endtry
 endfunction
 
@@ -280,3 +260,20 @@ endfunction
 if filereadable(expand("~/.vimrc.local"))
     source ~/.vimrc.local
 endif
+
+function SetupObsession()
+    if argc() != 0
+        " vim invoked with args, so dont try to restore session
+        return
+    endif
+
+    let l:file = $HOME . "/.vim/sessions/"  . substitute(getcwd(), "/", "-", "g")
+    if filereadable(l:file)
+        execute "source " . l:file
+    endif
+
+    execute "silent! mkdir -p ~/.vim/sessions/"
+    execute ":Obsession " . l:file
+endfunction
+
+set sessionoptions+=localoptions
