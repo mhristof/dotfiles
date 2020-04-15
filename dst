@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+repos=(
+    "$HOME/dotfiles"
+    "$HOME/.vim"
+)
+
+
+for repo in ${repos[@]}; do
+    for r in $(find $repo -name '*.git'); do
+        if [[ "$(git -C $r/.. status --porcelain)" == "" ]]; then
+            continue
+        fi
+        dir=$(dirname $r)
+        echo "$dir  >>> git -C $dir commit -am"
+        git -C $r/.. status --porcelain
+    done
+done

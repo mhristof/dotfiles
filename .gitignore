@@ -3,3 +3,4 @@
 vault
 terraform
 .config/thefuck/rules/__pycache__/
+*github-url
