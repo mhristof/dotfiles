@@ -91,6 +91,7 @@ alias kens=kubens
 alias acm-pca-active="aws acm-pca list-certificate-authorities | jq '.CertificateAuthorities[] | select(.Status == \"ACTIVE\") | [.CertificateAuthorityConfiguration.Subject.CommonName, .Arn, .Status] | @csv' -r | column -s, -t"
 alias acm-pca-disabled="aws acm-pca list-certificate-authorities | jq '.CertificateAuthorities[] | select(.Status == \"DISABLED\") | [.CertificateAuthorityConfiguration.Subject.CommonName, .Arn, .Status] | @csv' -r | column -s, -t"
 alias mkgo='cookiecutter gh:mhristof/cookiecutter-golang-cmd'
+alias dmas='git diff master -- .'
 
 unalias gp
 unalias gap
