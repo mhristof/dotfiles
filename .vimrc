@@ -217,6 +217,7 @@ if has("user_commands")
     command! -bang -nargs=? -complete=file WQ wq<bang> <args>
     command! -bang -nargs=? -complete=file Vs vs<bang> <args>
     command! -bang -nargs=? -complete=file VS vs<bang> <args>
+    command! -bang -nargs=? -complete=file E e<bang> <args>
     cabbrev Set set
     cabbrev ack Ag
     cabbrev ag Ag
