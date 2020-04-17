@@ -126,3 +126,6 @@ test -e "${HOME}/.bash-my-aws/aliases" && {
 
 export VAULT_ADDR='http://127.0.0.1:8200'
 export AWS_SDK_LOAD_CONFIG=1
+
+
+test -e "${HOME}/.dotfilesrc.local" && source "${HOME}/.dotfilesrc.local"
