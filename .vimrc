@@ -70,11 +70,6 @@ set nocompatible
 set nowrap
 set history=9999
 inoremap j<space> <esc>
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
-map Q <Nop>
 set modeline
 set ls=2
 set so=999 " center the window
@@ -99,22 +94,55 @@ set shiftwidth=4
 set clipboard=unnamed
 set wildignorecase
 set smartindent
-let g:netrw_sort_sequence = '[\/]$,\<core\%(\.\d\+\)\=\>,\.h$,\.c$,\.cpp$,\~\=\*$,*,\.o$,\.obj$,\.info$,\.swp$,\.bak$,\.clean$,\.rej,\.orig,\~$'
+set sessionoptions+=localoptions
+set statusline+=%#warningmsg#
+set statusline+=%*
 
+let VCSCommandVCSTypePreference='git'
+let g:CommandTMaxCachedDirectories=0
+let g:DirDiffExcludes = "*.pyc"
+let g:VCSCommandDeleteOnHide=66
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_linters = {'python': ['pycodestyle', 'pylint', 'pydocstyle'],}
+let g:go_fmt_command = "goimports"
+let g:lion_squeeze_spaces = 1
+let g:netrw_banner = 0
+let g:netrw_browse_split = 0
+let g:netrw_liststyle = 3
+let g:netrw_sort_sequence = '[\/]$,\<core\%(\.\d\+\)\=\>,\.h$,\.c$,\.cpp$,\~\=\*$,*,\.o$,\.obj$,\.info$,\.swp$,\.bak$,\.clean$,\.rej,\.orig,\~$'
+let g:terraform_fmt_on_save=1
+
+
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+map Q <Nop>
 " delete text without entering the registers. Usefull when you what to replace
 " something
 nmap X "_d
 nmap XX "_dd
+nmap t :FZF<cr>
+nmap ed :e %:h<cr>
+nmap <Space> <PageDown>
+nmap + :ts <C-R>=expand("<cword>")<cr><cr>
+nmap <leader>n :cnext<cr>
+nmap <leader>m :cprev<cr>
+nmap <leader>b :Gbrowse<cr>
+nmap <C-]> :call TagsOrAck()<cr>
+if s:uname == "Darwin\n"
+    map `r :History:<cr>
+    map `b :Buffers<cr>
+    map `a :Ag<cr>
+    map `e :GBrowse<cr>
+endif
+
+
+
 vmap X "_d
 vmap x "_d
-nmap t :FZF<cr>
 
 cnoremap mk. !mkdir -p <c-r>=expand("%:h")<cr>/
-let g:lion_squeeze_spaces = 1
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_linters = {
-\   'python': ['pycodestyle', 'pylint', 'pydocstyle'],
-\}
 
 if filereadable(glob('~/.vim/bundle/molokai/colors/molokai.vim'))
   colorscheme molokai
@@ -135,8 +163,6 @@ hi SpellRare term=underline cterm=underline
 hi clear SpellLocal
 hi SpellLocal term=underline cterm=underline
 
-nmap ed :e %:h<cr>
-nmap <Space> <PageDown>
 
 if has("autocmd")
     autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
@@ -175,40 +201,6 @@ function TerraformCtags()
     let tfctags = job_start(["ctags", "-R", "--languages=terraform", "."])
 endfunction
 
-if s:uname == "Darwin\n"
-    map `r :History:<cr>
-    map `b :Buffers<cr>
-    map `a :Ag<cr>
-    map `e :GBrowse<cr>
-endif
-
-nmap + :ts <C-R>=expand("<cword>")<cr><cr>
-
-let g:VCSCommandDeleteOnHide=66
-let g:CommandTMaxCachedDirectories=0
-let VCSCommandVCSTypePreference='git'
-let g:DirDiffExcludes = "*.pyc"
-
-nmap <leader>n :cnext<cr>
-nmap <leader>m :cprev<cr>
-nmap <leader>b :Gbrowse<cr>
-
-
-set statusline+=%#warningmsg#
-set statusline+=%*
-
-" hide vim swap files from the file browser
-" let g:netrw_list_hide= '.*\.swp$,\~$,\.orig$'
-let g:netrw_liststyle = 3
-let g:netrw_banner = 0
-let g:netrw_browse_split = 0
-
-
-let g:terraform_fmt_on_save=1
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
 if has("user_commands")
     command! -bang -nargs=? -complete=file E e<bang> <args>
     command! -bang -nargs=? Cs cs<bang> <args>
@@ -242,7 +234,6 @@ function! SetupRuby()
     setlocal nornu
 endfunction
 
-nmap <C-]> :call TagsOrAck()<cr>
 function TagsOrAck()
     let l:word = expand('<cword>')
     try
@@ -255,10 +246,6 @@ endfunction
 function Snippets()
     exe ":vsplit ~/.vim/bundle/vim-snipmate/snippets/" . &filetype . ".snippets"
 endfunction
-
-if filereadable(expand("~/.vimrc.local"))
-    source ~/.vimrc.local
-endif
 
 function SetupObsession()
     if argc() != 0
@@ -275,4 +262,6 @@ function SetupObsession()
     execute ":Obsession " . l:file
 endfunction
 
-set sessionoptions+=localoptions
+if filereadable(expand("~/.vimrc.local"))
+    source ~/.vimrc.local
+endif
