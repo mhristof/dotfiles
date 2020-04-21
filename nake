@@ -16,7 +16,7 @@ if [[ $TF -gt 0 ]]; then
     cat << EOF >> Makefile
 
 TF_SRC := \$(shell find ./ -maxdepth 1 -name "*.tf")
-default: terraform.tfstate
+.DEFAULT_GOAL = terraform.tfstate
 
 .terraform:  ## Runs 'terraform init' and creates .terraform folder
 	terraform init
