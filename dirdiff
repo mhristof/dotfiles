@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+folder=$1
+dest=$2
+
+if [[ -z $folder ]]; then
+    folder=$PWD
+fi
+
+if [[ -z $dest ]]; then
+    dest=$PWD
+fi
+
+if [[ -f $folder ]]; then
+    dest=$(echo $1 | sed -e "s!$2!$3!g")
+    diff -Npaur $folder $dest | source-highlight --out-format=esc --src-lang=diff
+    exit 0
+fi
+
+find $folder -type f | fzf --preview "$0 {} $folder $dest"
