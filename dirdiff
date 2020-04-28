@@ -17,4 +17,4 @@ if [[ -f $folder ]]; then
     exit 0
 fi
 
-find $folder -type f | fzf --preview "$0 {} $folder $dest"
+find $folder -type f | fzf --preview-window="right:70%" --preview "$0 {} $folder $dest"
