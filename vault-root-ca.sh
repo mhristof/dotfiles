@@ -50,7 +50,7 @@ if [[ -z $VAULT_ADDR ]]; then
     die "Error, VAULT_ADDR is not set"
 fi
 
-if [[ -z $VAULT_TOKEN ]] && ! vault secrets list &> /dev/null; then
+if [[ -z ${VAULT_TOKEN:-} ]] && ! vault secrets list &> /dev/null; then
     die "Error, VAULT_TOKEN is not set"
 fi
 
