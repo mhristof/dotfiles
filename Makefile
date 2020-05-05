@@ -108,7 +108,7 @@ fuck: ~/.brew/bin/thefuck ~/.config/thefuck/rules ~/.brew/Cellar/thefuck/3.29_1/
 	ln -sf $(PWD)/.config/thefuck/rules ~/.config/thefuck/rules
 
 aws-azure-login: ~/.brew/bin/node
-	npm install -g aws-azure-login
+	npm install -g aws-azure-login@1.13.0
 
 iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app
 
