@@ -8,9 +8,9 @@ SHELL := /bin/bash
 
 default: brew vim essentials
 
-essentials: ~/.brew/bin/htop ~/.brew/bin/watch less grep
+essentials: ~/.brew/bin/htop ~/.brew/bin/watch less grep ~/.brew/bin/sponge
 
-dev: ~/.brew/bin/go vim
+dev: ~/.brew/bin/go vim ~/go/bin/gojson
 
 aws: bash-my-aws ~/.brew/bin/aws ~/brew/bin/kubectx
 
@@ -149,6 +149,9 @@ alfred: ~/.brew/bin/wget /tmp/alfred-tf-snippets.alfredworkflow pbpaste grep
 /tmp/alfred-tf-snippets.alfredworkflow: ~/.brew/bin/jq
 	wget https://github.com/mhristof/alfred-tf-snippets/releases/download/0.7.0/alfred-tf-snippets.alfredworkflow -O /tmp/alfred-tf-snippets.alfredworkflow
 
+~/go/bin/gojson:
+	go get github.com/ChimeraCoder/gojson/gojson
+
 slack:
 	brew cask install slack
 
@@ -162,6 +165,9 @@ bash-my-aws: ~/.bash-my-aws
 
 ~/.bash-my-aws:
 	git clone https://github.com/bash-my-aws/bash-my-aws.git ~/.bash-my-aws
+
+~/.brew/bin/sponge:
+	brew install moreutils
 
 ~/.brew/bin/ctags:
 	brew install --HEAD universal-ctags/universal-ctags/universal-ctags
