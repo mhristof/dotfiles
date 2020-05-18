@@ -265,3 +265,7 @@ endfunction
 if filereadable(expand("~/.vimrc.local"))
     source ~/.vimrc.local
 endif
+
+function Jq()
+    execute ":%!jq '.'"
+endfunction
