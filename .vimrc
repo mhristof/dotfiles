@@ -255,11 +255,11 @@ function SetupObsession()
 
     let l:file = $HOME . "/.vim/sessions/"  . substitute(getcwd(), "/", "-", "g")
     if filereadable(l:file)
-        execute "source " . l:file
+        execute "silent! source " . l:file
     endif
 
     execute "silent! mkdir -p ~/.vim/sessions/"
-    execute ":Obsession " . l:file
+    execute ":silent! Obsession " . l:file
 endfunction
 
 if filereadable(expand("~/.vimrc.local"))
