@@ -17,5 +17,5 @@
 [includeIf "gitdir:~/code/github/"]
    path = .gitconfig_github
 
-[includeIf "gitdir:~/dotfiles"]
+[includeIf "gitdir:~/dotfiles/"]
    path = .gitconfig_github
