@@ -7,5 +7,15 @@
     co = commit
     owners = "!~/bin/git-owners.sh"
 
+[user]
+	email = mhristof@gmail.com
+	name = Mike Christofilopoulos
+
 [include]
     path = ~/.gitconfig_local
+
+[includeIf "gitdir:~/code/github/"]
+   path = .gitconfig_github
+
+[includeIf "gitdir:~/dotfiles"]
+   path = .gitconfig_github

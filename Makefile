@@ -21,7 +21,7 @@ vim: ~/.vim python3
 
 less: ~/.brew/bin/src-hilite-lesspipe.sh
 
-git: ~/.gitignore_global ~/.gitconfig
+git: ~/.gitignore_global ~/.gitconfig ~/.gitconfig_github
 
 dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbrc ~/.pythonrc.py ~/.config/thefuck/rules ~/.tmux.conf
 
@@ -35,6 +35,9 @@ grep: ~/.brew/opt/grep/libexec/gnubin/grep
 
 ~/.gitconfig:
 	ln -sf $(PWD)/.gitconfig ~/.gitconfig
+
+~/.gitconfig_github:
+	ln -sf $(PWD)/$(shell basename $@) $@
 
 ~/.brew/bin/src-hilite-lesspipe.sh:
 	brew install source-highlight
