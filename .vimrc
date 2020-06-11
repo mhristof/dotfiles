@@ -102,6 +102,8 @@ let VCSCommandVCSTypePreference='git'
 let g:CommandTMaxCachedDirectories=0
 let g:DirDiffExcludes = "*.pyc"
 let g:VCSCommandDeleteOnHide=66
+let g:ackprg = 'ag --nogroup --nocolor --column'
+let g:ale_dockerfile_hadolint_use_docker  = "always"
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_linters = {'python': ['pycodestyle', 'pylint', 'pydocstyle'],}
 let g:go_fmt_command = "goimports"
@@ -211,7 +213,7 @@ if has("user_commands")
     command! -bang -nargs=? -complete=file VS vs<bang> <args>
     command! -bang -nargs=? -complete=file E e<bang> <args>
     cabbrev Set set
-    cabbrev ack Ag
+    cabbrev ack Ack
     cabbrev ag Ag
     cabbrev Call call
     " map the damn :W so that you dont type it twice. Or even 3 times. Fucking noob.
@@ -268,4 +270,8 @@ endif
 
 function Jq()
     execute ":%!jq '.'"
+endfunction
+
+function Rl()
+    echo expand('%:p')
 endfunction
