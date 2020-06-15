@@ -114,7 +114,6 @@ let g:netrw_liststyle = 3
 let g:netrw_sort_sequence = '[\/]$,\<core\%(\.\d\+\)\=\>,\.h$,\.c$,\.cpp$,\~\=\*$,*,\.o$,\.obj$,\.info$,\.swp$,\.bak$,\.clean$,\.rej,\.orig,\~$'
 let g:terraform_fmt_on_save=1
 
-
 map <C-j> <C-W>j
 map <C-k> <C-W>k
 map <C-h> <C-W>h
@@ -193,6 +192,7 @@ if has("autocmd")
     autocmd WinEnter,BufWritePost *.tf call TerraformCtags()
     autocmd FileType markdown set makeprg=grip\ -b\ %\ &>\ /dev/null
     autocmd VimEnter * call SetupObsession()
+    autocmd FileType terraform :nnoremap K :call TerraformMan()<CR>
 endif
 
 function PythonCtags()
@@ -275,3 +275,10 @@ endfunction
 function Rl()
     echo expand('%:p')
 endfunction
+
+function TerraformMan()
+    let line=getline('.')
+    exec "silent !~/bin/man-terraform.sh " . line
+    exec ":redraw!"
+endfunction
+
