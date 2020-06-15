@@ -193,6 +193,7 @@ if has("autocmd")
     autocmd FileType markdown set makeprg=grip\ -b\ %\ &>\ /dev/null
     autocmd VimEnter * call SetupObsession()
     autocmd FileType terraform :nnoremap K :call TerraformMan()<CR>
+    autocmd FileType yaml :nnoremap K :call AnsibleMan()<CR>
 endif
 
 function PythonCtags()
@@ -282,3 +283,14 @@ function TerraformMan()
     exec ":redraw!"
 endfunction
 
+function AnsibleMan()
+    let save_pos = getpos(".")
+    normal $
+    normal mi
+    normal {
+    normal y'i
+    call setpos('.', save_pos)
+
+    execute "silent !pbpaste | ~/bin/man-ansible.sh"
+    exec ":redraw!"
+endfunction
