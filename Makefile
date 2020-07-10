@@ -178,6 +178,9 @@ bash-my-aws: ~/.bash-my-aws
 build: Dockerfile
 	docker build -t dotfiles .
 
+linux-test:
+	docker run dotfiles make vim
+
 run:
 	docker run -v $(PWD):/home/mhristof/dotfiles:ro -it dotfiles bash
 

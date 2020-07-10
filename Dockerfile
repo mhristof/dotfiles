@@ -14,13 +14,6 @@ RUN apt-get update && \
     make && \
   rm -rf /var/lib/apt/lists/*
 
-RUN groupadd -g 999 mhristof && \
-    useradd -r -u 999 -g mhristof -g users --create-home --home /home/mhristof mhristof
-
-WORKDIR /home/mhristof/dotfiles
-
-COPY . /home/mhristof/dotfiles
-
 ENV PATH /home/mhristof/.brew/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 RUN curl --silent https://github.com/tianon/gosu/releases/download/1.12/gosu-amd64 -L > /usr/bin/gosu &&\
@@ -31,6 +24,11 @@ RUN curl --silent https://github.com/tianon/gosu/releases/download/1.12/gosu-amd
     echo 'gosu root $@' >> /usr/bin/sudo &&\
     chmod 0755 /usr/bin/sudo
 
+RUN groupadd -g 999 mhristof && \
+    useradd -r -u 999 -g mhristof -g users --create-home --home /home/mhristof mhristof
+
+COPY . /home/mhristof/dotfiles
+WORKDIR /home/mhristof/dotfiles
 RUN chown mhristof:mhristof -R /home/mhristof/
 
 USER mhristof
