@@ -102,6 +102,8 @@ let VCSCommandVCSTypePreference='git'
 let g:CommandTMaxCachedDirectories=0
 let g:DirDiffExcludes = "*.pyc"
 let g:VCSCommandDeleteOnHide=66
+let g:ackprg = 'ag --nogroup --nocolor --column'
+let g:ale_dockerfile_hadolint_use_docker  = "always"
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_linters = {'python': ['pycodestyle', 'pylint', 'pydocstyle'],}
 let g:go_fmt_command = "goimports"
@@ -111,7 +113,6 @@ let g:netrw_browse_split = 0
 let g:netrw_liststyle = 3
 let g:netrw_sort_sequence = '[\/]$,\<core\%(\.\d\+\)\=\>,\.h$,\.c$,\.cpp$,\~\=\*$,*,\.o$,\.obj$,\.info$,\.swp$,\.bak$,\.clean$,\.rej,\.orig,\~$'
 let g:terraform_fmt_on_save=1
-
 
 map <C-j> <C-W>j
 map <C-k> <C-W>k
@@ -191,6 +192,8 @@ if has("autocmd")
     autocmd WinEnter,BufWritePost *.tf call TerraformCtags()
     autocmd FileType markdown set makeprg=grip\ -b\ %\ &>\ /dev/null
     autocmd VimEnter * call SetupObsession()
+    autocmd FileType terraform :nnoremap K :call TerraformMan()<CR>
+    autocmd FileType yaml :nnoremap K :call AnsibleMan()<CR>
 endif
 
 function PythonCtags()
@@ -211,7 +214,7 @@ if has("user_commands")
     command! -bang -nargs=? -complete=file VS vs<bang> <args>
     command! -bang -nargs=? -complete=file E e<bang> <args>
     cabbrev Set set
-    cabbrev ack Ag
+    cabbrev ack Ack
     cabbrev ag Ag
     cabbrev Call call
     " map the damn :W so that you dont type it twice. Or even 3 times. Fucking noob.
@@ -268,4 +271,26 @@ endif
 
 function Jq()
     execute ":%!jq '.'"
+endfunction
+
+function Rl()
+    echo expand('%:p')
+endfunction
+
+function TerraformMan()
+    let line=getline('.')
+    exec "silent !~/bin/man-terraform.sh " . line
+    exec ":redraw!"
+endfunction
+
+function AnsibleMan()
+    let save_pos = getpos(".")
+    normal $
+    normal mi
+    normal {
+    normal y'i
+    call setpos('.', save_pos)
+
+    execute "silent !pbpaste | ~/bin/man-ansible.sh"
+    exec ":redraw!"
 endfunction

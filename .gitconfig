@@ -19,3 +19,9 @@
 
 [includeIf "gitdir:~/dotfiles/"]
    path = .gitconfig_github
+
+[includeIf "gitdir:~/go/src/github.com/"]
+   path = .gitconfig_github
+
+[includeIf "gitdir:~/.vim/"]
+   path = .gitconfig_github

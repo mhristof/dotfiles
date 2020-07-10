@@ -66,5 +66,6 @@ vault secrets enable -path="${MOUNT}_int" pki
 vault write -format json "${MOUNT}_int/intermediate/generate/internal" common_name="$DOMAIN Intermediate Authority" ttl=43800h | jq .data.csr -r > "${MOUNT}_int".csr
 vault write -format json "${MOUNT}/root/sign-intermediate" csr=@"${MOUNT}_int.csr" format=pem_bundle ttl=43800h | jq .data.certificate -r > signed_certificate.pem
 vault write "${MOUNT}_int/intermediate/set-signed" certificate=@signed_certificate.pem
+vault write "${MOUNT}_int/roles/${DOMAIN}" allowed_domains="$DOMAIN" allow_subdomains=true max_ttl=72h
 
 exit 0

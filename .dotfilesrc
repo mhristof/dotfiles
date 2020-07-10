@@ -60,7 +60,7 @@ alias ff='find . -type f -printf "%T@ %p\n" | sort -n | tail -5 | cut -f2- -d" "
 alias fff='find . -type f -printf "%T@ %p\n" | sort -n | tail -10 | cut -f2- -d" "'
 alias al='ansible-playbook -i "localhost," -c local'
 alias ap='ansible-playbook'
-alias gg='git pull && git fetch -p'
+alias gg='git pull && git fetch --prune'
 alias gp='git push'
 alias s='git status'
 alias d='git diff'
@@ -69,7 +69,7 @@ alias gs='git stash'
 alias gsa='git stash apply'
 alias dr='git diff --cached'
 alias gcm='git checkout master'
-alias gcmp='git checkout master && git pull'
+alias gcmp='git checkout master && git pull && git fetch --prune'
 alias gl='git log --graph --oneline --decorate --date=relative --all --pretty=format:"%C(yellow)%h%C(reset) %ar %C(green)(%cn)%C(reset) %C(red)%x09%d%C(reset) %w(80, 1, 20) %s%n" --color'
 alias wget100='wget -O /dev/null http://speedtest.london.linode.com/100MB-london.bin'
 alias dc='docker-compose'
@@ -95,6 +95,7 @@ alias dmas='git diff master -- .'
 
 unalias gp
 unalias gap
+unalias gam
 
 case $(uname) in
     Darwin)
@@ -123,6 +124,7 @@ test -e "${HOME}/.bash-my-aws/aliases" && {
     source "${HOME}/.bash-my-aws/aliases"
     source "${HOME}/.bash-my-aws/bash_completion.sh"
 }
+test -e "${HOME}/.brew/etc/profile.d/bash_completion.sh" && source "${HOME}/.brew/etc/profile.d/bash_completion.sh"
 
 export VAULT_ADDR='http://127.0.0.1:8200'
 export AWS_SDK_LOAD_CONFIG=1
