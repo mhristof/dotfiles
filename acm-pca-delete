@@ -3,5 +3,6 @@
 cert=$(~/bin/acm-pca | fzf | awk '{print $2}')
 
 cert=$(echo $cert | tr -d '"')
-aws acm-pca update-certificate-authority --certificate-authority-arn $cert --status DISABLED
-aws acm-pca delete-certificate-authority --certificate-authority-arn $cert
+region=$(echo $cert | cut -d: -f4)
+aws acm-pca --region $region update-certificate-authority --certificate-authority-arn $cert --status DISABLED
+aws acm-pca --region $region delete-certificate-authority --certificate-authority-arn $cert
