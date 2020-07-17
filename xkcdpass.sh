@@ -2,10 +2,9 @@
 # http://redsymbol.net/articles/unofficial-bash-strict-mode/
 set -euo pipefail
 
-PATH=/usr/local/bin:$PATH
-xkcdpassword -ds '-' $@ || {
-  pip2 install xkcdpassword
-  xkcdpassword -ds '-' $@
-}
+EXE=$(readlink -f $(python3 -c 'import site; print(site.getusersitepackages())')/../../../bin/xkcdpass)
+[ -f  "$EXE" ] || pip3 install --user xkcdpass
+
+xkcdpass -d '-' $@
 
 exit 0

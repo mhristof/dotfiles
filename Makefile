@@ -6,29 +6,28 @@ SHELL := /bin/bash
 .ONESHELL:
 
 
+include Makefile.$(shell uname -s)
+
 default: brew vim essentials
 
-essentials: ~/.brew/bin/htop ~/.brew/bin/watch less grep ~/.brew/bin/sponge
+essentials: $(HTOP) $(WATCH) less $(GREP) $(SPONGE)
 
-dev: ~/.brew/bin/go vim ~/go/bin/gojson
+dev: $(GO) vim ~/go/bin/gojson
 
 aws: bash-my-aws ~/.brew/bin/aws ~/brew/bin/kubectx
 
 ~/.brew/bin/aws:
-	pip install aws --user
+	pip3 install aws --user
 
-vim: ~/.vim python3
+vim: $(VIM) ~/.vim $(PYTHON3)
 
-less: ~/.brew/bin/src-hilite-lesspipe.sh
+less: $(SRCHILITE)
 
 git: ~/.gitignore_global ~/.gitconfig ~/.gitconfig_github
 
+ln: dots
+
 dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbrc ~/.pythonrc.py ~/.config/thefuck/rules ~/.tmux.conf
-
-grep: ~/.brew/opt/grep/libexec/gnubin/grep
-
-~/.brew/opt/grep/libexec/gnubin/grep:
-	brew install grep
 
 ~/.gitignore_global:
 	ln -sf $(PWD)/.gitignore_global ~/.gitignore_global
@@ -40,24 +39,24 @@ grep: ~/.brew/opt/grep/libexec/gnubin/grep
 	ln -sf $(PWD)/$(shell basename $@) $@
 
 ~/.brew/bin/src-hilite-lesspipe.sh:
-	brew install source-highlight
+	$(BREW) install source-highlight
 
-~/.vim: ~/.vimrc ~/.brew/bin/shellcheck ~/.brew/bin/pycodestyle ~/.brew/bin/ag ~/.brew/bin/shellcheck ~/.ctags.d ~/Library/Python/3.7/bin/pylint
+~/.vim: ~/.vimrc $(SHELLCHECK) $(PYCODESTYLE) $(AG) ~/.ctags.d $(PYLINT) $(VIM)
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 	vim +PluginInstall +qall
 	# this requires plugins to be installed since it creates a subfolder in there
 	make ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim
 
-~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim: ~/.brew/opt/curl/bin/curl
+~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim: $(CURL)
 	mkdir -p ~/.vim/bundle/ale/ale_linters/groovy/
 	cd ~/.vim/bundle/ale/ale_linters/groovy/
 	curl -sLO https://raw.githubusercontent.com/mhristof/ale-jenkinsfile/master/ale_jenkinsfile.vim
 
 ~/.brew/opt/curl/bin/curl:
-	brew install curl
+	$(BREW) install curl
 
-~/Library/Python/3.7/bin/pylint:
-	pip install pylint
+$(PYLINT):
+	pip3 install pylint
 
 ~/.vimrc:
 	ln -sf $(PWD)/.vimrc ~/.vimrc
@@ -68,7 +67,7 @@ grep: ~/.brew/opt/grep/libexec/gnubin/grep
 ~/.dotfilesrc:
 	ln -sf $(PWD)/.dotfilesrc ~/.dotfilesrc
 
-~/.ctags.d:
+~/.ctags.d: $(CTAGS)
 	ln -sf $(PWD)/.ctags.d ~/.ctags.d
 
 ~/.oh-my-zsh:
@@ -84,7 +83,7 @@ fzf: ~/.brew/bin/fzf ~/.fzf.zsh
 	$(shell brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc
 
 ~/.brew/bin/autojump:
-	brew install autojump
+	$(BREW) install autojump
 
 ~/.irbrc:
 	ln -sf $(PWD)/.irbrc ~/.irbrc
@@ -92,14 +91,14 @@ fzf: ~/.brew/bin/fzf ~/.fzf.zsh
 ~/.pythonrc.py:
 	ln -sf $(PWD)/.pythonrc.py ~/.pythonrc.py
 
-python3: ~/.brew/bin/python3 ~/.irbrc ~/.pythonrc.py
+python3: $(PYTHON3) ~/.irbrc ~/.pythonrc.py
 	pip3 install -r requirements.yml
 
 ~/.brew/opt/findutils/libexec/gnubin/xargs:
-	brew install findutils
+	$(BREW) install findutils
 
 ~/.brew/opt/coreutils:
-	brew install coreutils
+	$(BREW) install coreutils
 
 fuck: ~/.brew/bin/thefuck ~/.config/thefuck/rules ~/.brew/Cellar/thefuck/3.29_1/libexec/lib/python3.8/site-packages/kubernetes
 
@@ -130,7 +129,7 @@ dock: ~/.brew/opt/findutils/libexec/gnubin/xargs ~/.brew/bin/dockutil
 	open /Applications/Alfred\ 4.app/Contents/MacOS/Alfred
 
 ~/.brew/opt/make/libexec/gnubin/make:
-	brew install make
+	$(BREW) install make
 
 ~/.tmux.conf:
 	ln -sf $(PWD)/.tmux.conf ~/.tmux.conf
@@ -143,7 +142,7 @@ docker: /Applications/Docker.app/Contents/MacOS/Docker
 pbpaste: /tmp/alfred-pbpaste.alfredworkflow
 	open /tmp/alfred-pbpaste.alfredworkflow
 
-alfred: ~/.brew/bin/wget /tmp/alfred-tf-snippets.alfredworkflow pbpaste grep
+alfred: ~/.brew/bin/wget /tmp/alfred-tf-snippets.alfredworkflow pbpaste $(GREP)
 	open /tmp/alfred-tf-snippets.alfredworkflow
 
 /tmp/alfred-pbpaste.alfredworkflow:
@@ -169,17 +168,22 @@ bash-my-aws: ~/.bash-my-aws
 ~/.bash-my-aws:
 	git clone https://github.com/bash-my-aws/bash-my-aws.git ~/.bash-my-aws
 
-~/.brew/bin/sponge:
-	brew install moreutils
-
-~/.brew/bin/ctags:
-	brew install --HEAD universal-ctags/universal-ctags/universal-ctags
-
 ~/.brew:
 	git clone https://github.com/Homebrew/brew.git ~/.brew
 
 ~/.brew/bin/%:
-	brew install $*
+	$(BREW) install $*
+
+
+build: Dockerfile
+	docker build -t dotfiles .
+
+linux-test:
+	docker run dotfiles make vim
+
+run:
+	docker run -v $(PWD):/home/mhristof/dotfiles:ro -it dotfiles bash
 
 # vim:ft=make
 #
+

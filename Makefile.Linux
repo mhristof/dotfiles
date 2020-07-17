@@ -1,0 +1,66 @@
+
+AG := /usr/bin/ag
+CTAGS := /usr/bin/ctags
+CURL := /usr/bin/curl
+GO := ~/.go/bin/go
+GREP :=
+HTOP := /usr/bin/htop
+PYCODESTYLE := ~/.local/bin/pycodestyle
+PYLINT := ~/.local/bin/pylint
+PYTHON3 := /usr/bin/python3
+SHELLCHECK := ~/.local/bin/shellcheck
+SPONGE := /usr/bin/sponge
+SRCHILITE := /usr/share/source-highlight/src-hilite-lesspipe.sh
+VIM := /usr/bin/vim
+WATCH := 
+
+
+update: /var/cache/apt/archives/lock
+	sudo apt-get update
+
+$(SPONGE): update
+	sudo apt-get install -y moreutils
+
+$(SRCHILITE): update
+	sudo apt-get install -y source-highlight
+
+$(CURL): update
+	sudo apt-get install -y curl
+
+
+$(HTOP): update
+	sudo apt-get install -y htop
+
+$(PYTHON3): update
+	sudo apt-get install -y python3
+
+/usr/bin/pip3: update
+	sudo apt-get install -y python3-pip
+
+/usr/share/doc/xz-utils: update
+	sudo apt-get install -y xz-utils
+
+$(VIM): update
+	sudo apt-get install -y vim
+
+$(SHELLCHECK): /usr/bin/pip3 /usr/share/doc/xz-utils
+	cd /tmp/
+	curl -L --silent "https://github.com/koalaman/shellcheck/releases/download/stable/shellcheck-stable.linux.x86_64.tar.xz" | tar -xJv
+	mkdir -p ~/.local/bin
+	cp "shellcheck-stable/shellcheck" ~/.local/bin/
+
+
+$(PYCODESTYLE): /usr/bin/pip3 
+	pip3 install --user pycodestyle
+
+
+/usr/bin/ag: update
+	sudo apt-get install silversearcher-ag
+
+$(GO):
+	cd ~/
+	curl -L --silent https://golang.org/dl/go1.14.4.linux-amd64.tar.gz | tar xfz -
+	mv go .go
+
+$(CTAGS): update
+	sudo apt-get install -y exuberant-ctags
