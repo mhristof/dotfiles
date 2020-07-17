@@ -51,4 +51,62 @@ pep8:  ## Runs pep8 for curent directory
 EOF
 fi
 
-make
+
+function  dockerAdds {
+    while read -r line; do
+        echo -e "\$(wildcard $line)"
+    done < <(grep ^ADD Dockerfile | cut -d' ' -f2)
+}
+
+if [[ -f Dockerfile ]]; then
+    cat << EOF >> Makefile
+
+IMAGE := $(basename "$(PWD)" | tr '[:upper:]' '[:lower:]' )
+build: .build
+.PHONY: build
+
+.build: $(dockerAdds)
+	docker build -t \$(IMAGE) .
+	touch .build
+
+bash: .build
+	docker run --rm -it \$(IMAGE) /bin/bash
+.PHONY: bash
+
+run: .build
+	docker run --rm -it \$(IMAGE)
+.PHONY: run
+
+clean:
+	rm -rf .build
+.PHONY: clean
+
+EOF
+fi
+
+
+if [[ -f docker-compose.yml ]]; then
+    cat << EOF >> Makefile
+up:
+	docker-compose up
+.PHONY: up
+
+down:
+	docker-compose down
+.PHONY: down
+
+up-d:
+	docker-compose up --detach
+.PHONY: up-d
+
+clean:
+	docker-compose down --rmi local --volumes --remove-orphans
+.PHONY: clean
+
+nuke: clean
+	docker-compose down --rmi all
+.PHONY: nuke
+
+EOF
+fi
+make "$@"
