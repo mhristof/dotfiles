@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+if [[ -n $AWS_PROFILE ]]; then
+    echo "export \$AWS_PROFILE=$AWS_PROFILE"
+fi
+
+if [[ -n ${1:-} ]]; then
+    root="."
+else
+    root=$(git rev-parse --show-toplevel)
+fi
+
+
+echo "git clone $(git config --get remote.origin.url)" "$root"
+
+if [[ "$root" != "." ]]; then
+    echo "cd $root"
+fi
+
+echo "git checkout --track $(git rev-parse --abbrev-ref --symbolic-full-name @{u})"
+echo "# git checkout $(git rev-parse HEAD)"
+
