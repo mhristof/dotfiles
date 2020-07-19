@@ -75,7 +75,7 @@ $(PYLINT):
 ~/.oh-my-zsh:
 	git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh
 
-zsh: ~/.zshrc ~/.dotfilesrc ~/.oh-my-zsh
+zsh: $(ZSH) ~/.zshrc ~/.dotfilesrc ~/.oh-my-zsh
 
 brew: ~/.brew
 

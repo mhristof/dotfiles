@@ -1,4 +1,5 @@
 # vim: ft=Dockerfile
 FROM dotfiles
 
-RUN make dev
+RUN make dev zsh
+CMD /usr/bin/zsh

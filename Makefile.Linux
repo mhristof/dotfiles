@@ -13,10 +13,14 @@ SPONGE := /usr/bin/sponge
 SRCHILITE := /usr/share/source-highlight/src-hilite-lesspipe.sh
 VIM := /usr/bin/vim
 WATCH := 
+ZSH := /usr/bin/zsh
 
 
 update: /var/cache/apt/archives/lock
 	sudo apt-get update
+
+$(ZSH): update
+	sudo apt-get install -y zsh
 
 $(SPONGE): update
 	sudo apt-get install -y moreutils
