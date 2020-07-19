@@ -1,0 +1,13 @@
+name: dockerhub
+
+on:
+  - push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: build
+        run: make hub
+      - name: push
+        run: make push

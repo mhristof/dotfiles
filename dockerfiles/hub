@@ -1,0 +1,4 @@
+# vim: ft=Dockerfile
+FROM dotfiles
+
+RUN make dev
