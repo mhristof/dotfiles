@@ -10,5 +10,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: build
         run: make hub
+      - name: docker login
+        run: docker login --username = ${{ secrets.DOCKER_TOKEN }}
       - name: push
         run: make push
