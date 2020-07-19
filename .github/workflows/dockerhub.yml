@@ -11,6 +11,9 @@ jobs:
       - name: build
         run: make hub
       - name: docker login
-        run: docker login --username = ${{ secrets.DOCKER_TOKEN }}
+        run: docker login
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       - name: push
         run: make push
