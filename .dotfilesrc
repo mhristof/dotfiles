@@ -94,7 +94,9 @@ alias mkgo='cookiecutter gh:mhristof/cookiecutter-golang-cmd'
 alias dmas='git diff master -- .'
 
 unalias gp
+alias gap=ls
 unalias gap
+alias gam=ls
 unalias gam
 
 case $(uname) in
@@ -112,10 +114,10 @@ function c() {
     cd $* && ls
 }
 
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-test -e "${HOME}/.fzf.zsh" && source "${HOME}/.fzf.zsh"
+src "${HOME}/.iterm2_shell_integration.zsh"
+src "${HOME}/.fzf.zsh"
+src "$HOME/.brew/etc/profile.d/autojump.sh"
 test -e "${HOME}/.brew/bin/thefuck" && eval $(thefuck --alias --enable-experimental-instant-mode)
-test -e "${HOME}/.brew/etc/profile.d/autojump.sh" && source "$HOME/.brew/etc/profile.d/autojump.sh"
 test -e "${HOME}/.brew/bin/go" && {
     export GOPATH=$(go env GOPATH)
     export PATH=$GOPATH/bin:$PATH
@@ -124,10 +126,10 @@ test -e "${HOME}/.bash-my-aws/aliases" && {
     source "${HOME}/.bash-my-aws/aliases"
     source "${HOME}/.bash-my-aws/bash_completion.sh"
 }
-test -e "${HOME}/.brew/etc/profile.d/bash_completion.sh" && source "${HOME}/.brew/etc/profile.d/bash_completion.sh"
+src "${HOME}/.brew/etc/profile.d/bash_completion.sh"
 
 export VAULT_ADDR='http://127.0.0.1:8200'
 export AWS_SDK_LOAD_CONFIG=1
 
 
-test -e "${HOME}/.dotfilesrc.local" && source "${HOME}/.dotfilesrc.local"
+src "${HOME}/.dotfilesrc.local"
