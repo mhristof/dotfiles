@@ -194,6 +194,8 @@ if has("autocmd")
     autocmd VimEnter * call SetupObsession()
     autocmd FileType terraform :nnoremap K :call TerraformMan()<CR>
     autocmd FileType yaml :nnoremap K :call AnsibleMan()<CR>
+    autocmd BufEnter *.github/workflows/*.yml :set ft=github-actions
+    autocmd FileType github-actions call SetupGithubActions()
 endif
 
 function PythonCtags()
@@ -293,4 +295,8 @@ function AnsibleMan()
 
     execute "silent !pbpaste | ~/bin/man-ansible.sh"
     exec ":redraw!"
+endfunction
+
+function SetupGithubActions()
+    setlocal syntax=yaml
 endfunction

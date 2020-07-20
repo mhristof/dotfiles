@@ -12,6 +12,7 @@ SPONGE := ~/.brew/bin/sponge
 SRCHILITE :=  ~/.brew/bin/src-hilite-lesspipe.sh
 VIM := ~/.brew/bin/vim
 WATCH := ~/.brew/bin/watch 
+ZSH := ~/.brew/bin/zsh
 
 $(GREP): ~/.brew/opt/grep/libexec/gnubin/grep
 

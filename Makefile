@@ -12,7 +12,9 @@ default: brew vim essentials
 
 essentials: $(HTOP) $(WATCH) less $(GREP) $(SPONGE)
 
-dev: $(GO) vim ~/go/bin/gojson
+dev: vim git
+
+go: $(GO) ~/go/bin/gojson 
 
 aws: bash-my-aws ~/.brew/bin/aws ~/brew/bin/kubectx
 
@@ -73,7 +75,7 @@ $(PYLINT):
 ~/.oh-my-zsh:
 	git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh
 
-zsh: ~/.zshrc ~/.dotfilesrc ~/.oh-my-zsh
+zsh: $(ZSH) ~/.zshrc ~/.dotfilesrc ~/.oh-my-zsh
 
 brew: ~/.brew
 
@@ -174,12 +176,17 @@ bash-my-aws: ~/.bash-my-aws
 ~/.brew/bin/%:
 	$(BREW) install $*
 
-
-build: Dockerfile
-	docker build -t dotfiles .
+build: dockerfiles/linux
+	docker build -f dockerfiles/linux -t dotfiles .
 
 linux-test:
 	docker run dotfiles make vim
+
+hub: build
+	docker build -f dockerfiles/hub -t mhristof/dotfiles .
+
+push:
+	docker push mhristof/dotfiles
 
 run:
 	docker run -v $(PWD):/home/mhristof/dotfiles:ro -it dotfiles bash
