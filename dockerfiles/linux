@@ -8,11 +8,12 @@ ENV PYLINTHOME=/tmp
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && \
   apt-get install --yes --no-install-recommends \
-    curl \
     ca-certificates \
-    git \
+    curl \
     gcc \
-    make && \
+    git \
+    make \
+    wget && \
   rm -rf /var/lib/apt/lists/*
 
 ENV PATH /home/mhristof/.local/bin:/home/mhristof/.brew/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
