@@ -69,7 +69,6 @@ alias gs='git stash'
 alias gsa='git stash apply'
 alias dr='git diff --cached'
 alias gcm='git checkout master'
-alias gcmp='git checkout master && git pull && git fetch --prune'
 alias gl='git log --graph --oneline --decorate --date=relative --all --pretty=format:"%C(yellow)%h%C(reset) %ar %C(green)(%cn)%C(reset) %C(red)%x09%d%C(reset) %w(80, 1, 20) %s%n" --color'
 alias wget100='wget -O /dev/null http://speedtest.london.linode.com/100MB-london.bin'
 alias dc='docker-compose'
@@ -112,6 +111,14 @@ fi
 
 function c() {
     cd $* && ls
+}
+
+function gcmp() {
+    if [[ -f .mu_repo ]]; then
+        mu checkout master && mu pull && mu fetch --prune
+    else
+        git checkout master && git pull && git fetch --prune
+    fi
 }
 
 src "${HOME}/.iterm2_shell_integration.zsh"
