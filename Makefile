@@ -156,6 +156,9 @@ alfred: ~/.brew/bin/wget /tmp/alfred-tf-snippets.alfredworkflow pbpaste $(GREP)
 ~/go/bin/gojson:
 	go get github.com/ChimeraCoder/gojson/gojson
 
+terraform-docs:
+	curl --silent --location --output $@ https://github.com/terraform-docs/terraform-docs/releases/download/v0.9.1/terraform-docs-v0.9.1-$(shell tr '[:upper:]' '[:lower:]')-amd64
+
 slack:
 	brew cask install slack
 
