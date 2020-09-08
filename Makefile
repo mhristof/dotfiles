@@ -158,6 +158,7 @@ alfred: ~/.brew/bin/wget /tmp/alfred-tf-snippets.alfredworkflow pbpaste $(GREP)
 
 terraform-docs:
 	curl --silent --location --output $@ https://github.com/terraform-docs/terraform-docs/releases/download/v0.9.1/terraform-docs-v0.9.1-$(shell tr '[:upper:]' '[:lower:]')-amd64
+	chmod +x terraform-docs
 
 slack:
 	brew cask install slack
