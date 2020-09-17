@@ -12,7 +12,7 @@ default: brew vim essentials
 
 essentials: $(HTOP) $(WATCH) less $(GREP) $(SPONGE)
 
-dev: vim git
+dev: vim git semver
 
 go: $(GO) ~/go/bin/gojson 
 
@@ -114,7 +114,7 @@ fuck: ~/.brew/bin/thefuck ~/.config/thefuck/rules ~/.brew/Cellar/thefuck/3.29_1/
 aws-azure-login: ~/.brew/bin/node
 	npm install -g aws-azure-login@1.13.0
 
-iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app
+iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app ~/bin/germ
 
 ~/.iterm2_shell_integration.zsh: ~/.brew/opt/curl/bin/curl
 	curl -L https://iterm2.com/shell_integration/install_shell_integration_and_utilities.sh | bash
@@ -122,6 +122,10 @@ iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app
 
 /Applications/iTerm.app: ~/.brew/bin/python3
 	brew cask install iterm2
+
+~/bin/germ:
+	wget https://github.com/mhristof/germ/releases/download/v1.2.3/germ.darwin -O ~/bin/germ
+	chmod +x ~/bin/germ
 
 dock: ~/.brew/opt/findutils/libexec/gnubin/xargs ~/.brew/bin/dockutil
 	dockutil --list | sed 's/file:.*//g' | xargs --no-run-if-empty -n1 -d'\n' dockutil --remove
@@ -176,6 +180,11 @@ bash-my-aws: ~/.bash-my-aws
 
 ~/.brew:
 	git clone https://github.com/Homebrew/brew.git ~/.brew
+
+
+~/bin/semver:
+	wget https://github.com/mhristof/semver/releases/download/v0.3.2/semver.darwin -O ~/bin/semver
+	chmod +x ~/bin/semver
 
 ~/.brew/bin/%:
 	$(BREW) install $*
