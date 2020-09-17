@@ -10,6 +10,7 @@ export GIT_EMAIL="mhristof@gmail.com"
 export EDITOR="vim -X"
 
 # allow the next section to re-arrange paths
+export PATH=$HOME/.aws-cli/aws-cli:$PATH # aws has its own python in there, so add it to the bottom of the food chain
 export PATH=$HOME/.brew/bin:/usr/local/sbin:/usr/local/bin:$PATH
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 export PATH=$HOME/.brew/opt/python/libexec/bin:$PATH
@@ -127,7 +128,7 @@ src "$HOME/.brew/etc/profile.d/autojump.sh"
 test -e "${HOME}/.brew/bin/thefuck" && eval $(thefuck --alias --enable-experimental-instant-mode)
 test -e "${HOME}/.brew/bin/go" && {
     export GOPATH=$(go env GOPATH)
-    export PATH=$GOPATH/bin:$PATH
+    export PATH=$PATH:$GOPATH/bin
 }
 test -e "${HOME}/.bash-my-aws/aliases" && {
     source "${HOME}/.bash-my-aws/aliases"
@@ -137,6 +138,7 @@ src "${HOME}/.brew/etc/profile.d/bash_completion.sh"
 
 export VAULT_ADDR='http://127.0.0.1:8200'
 export AWS_SDK_LOAD_CONFIG=1
+export AWS_PAGER=""
 
 
 src "${HOME}/.dotfilesrc.local"
