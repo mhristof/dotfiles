@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+aws iam list-users | jq -r '.Users[] | "\(.UserName) \(.Arn) \(.CreateDate)"' | sort | column -t

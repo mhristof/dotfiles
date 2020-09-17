@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+aws iam list-roles  | jq '.Roles[] | "\(.RoleName) \(.Arn)"' -r  | column -t
