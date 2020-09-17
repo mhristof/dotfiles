@@ -126,6 +126,7 @@ iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app ~/bin/germ
 ~/bin/germ:
 	wget https://github.com/mhristof/germ/releases/download/v1.2.3/germ.darwin -O ~/bin/germ
 	chmod +x ~/bin/germ
+	~/bin/germ autocomplete > ~/.brew/share/zsh/site-functions/_germ
 
 dock: ~/.brew/opt/findutils/libexec/gnubin/xargs ~/.brew/bin/dockutil
 	dockutil --list | sed 's/file:.*//g' | xargs --no-run-if-empty -n1 -d'\n' dockutil --remove
@@ -185,6 +186,7 @@ bash-my-aws: ~/.bash-my-aws
 ~/bin/semver:
 	wget https://github.com/mhristof/semver/releases/download/v0.3.2/semver.darwin -O ~/bin/semver
 	chmod +x ~/bin/semver
+	~/bin/semver autocomplete > ~/.brew/share/zsh/site-functions/_semver
 
 ~/.brew/bin/%:
 	$(BREW) install $*
