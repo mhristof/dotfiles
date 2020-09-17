@@ -5,3 +5,5 @@ terraform
 .config/thefuck/rules/__pycache__/
 *github-url
 terraform-docs
+germ
+semver
