@@ -40,6 +40,8 @@ Plugin 'vim-scripts/DirDiff.vim.git'
 Plugin 'vim-scripts/DrawIt'
 Plugin 'w0rp/ale'
 Plugin 'zimbatm/haproxy.vim'
+Plugin 'benwainwright/fzf-project'
+
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -113,6 +115,9 @@ let g:netrw_browse_split = 0
 let g:netrw_liststyle = 3
 let g:netrw_sort_sequence = '[\/]$,\<core\%(\.\d\+\)\=\>,\.h$,\.c$,\.cpp$,\~\=\*$,*,\.o$,\.obj$,\.info$,\.swp$,\.bak$,\.clean$,\.rej,\.orig,\~$'
 let g:terraform_fmt_on_save=1
+let g:fzfSwitchProjectWorkspaces = [ '~/code']
+let g:fzfSwitchProjectAlwaysChooseFile = 0
+
 
 map <C-j> <C-W>j
 map <C-k> <C-W>k
@@ -130,6 +135,7 @@ nmap + :ts <C-R>=expand("<cword>")<cr><cr>
 nmap <leader>n :cnext<cr>
 nmap <leader>m :cprev<cr>
 nmap <leader>b :Gbrowse<cr>
+nmap <leader>t :FzfSwitchProject<cr>
 nmap <C-]> :call TagsOrAck()<cr>
 if s:uname == "Darwin\n"
     map `r :History:<cr>
@@ -196,6 +202,7 @@ if has("autocmd")
     autocmd FileType yaml :nnoremap K :call AnsibleMan()<CR>
     autocmd BufEnter *.github/workflows/*.yml :set ft=github-actions
     autocmd FileType github-actions call SetupGithubActions()
+    autocmd filetype netrw nnoremap <buffer> t :FZF<cr><cr>
 endif
 
 function PythonCtags()
@@ -219,6 +226,7 @@ if has("user_commands")
     cabbrev ack Ack
     cabbrev ag Ag
     cabbrev Call call
+    cabbrev bb :call GitBrowse()<cr>
     " map the damn :W so that you dont type it twice. Or even 3 times. Fucking noob.
     command! -bang Wqa wqa<bang>
     command! -bang Wa wa<bang>
@@ -299,4 +307,10 @@ endfunction
 
 function SetupGithubActions()
     setlocal syntax=yaml
+endfunction
+
+function GitBrowse()
+    let line=line(".") + 1
+    exec "silent !open $(gitbrowse " . expand('%') . " --line " . line . ")"
+    exec ":redraw!"
 endfunction
