@@ -20,6 +20,7 @@ export PATH=$HOME/.brew/opt/grep/libexec/gnubin:$PATH
 export PATH=$HOME/.brew/opt/make/libexec/gnubin:$PATH
 export PATH=$HOME/.brew/opt/gettext/bin:$PATH
 export PATH=$HOME/.brew/opt/coreutils/libexec/gnubin:$PATH
+export PATH=$HOME/.brew/opt/openvpn/sbin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.bash-my-aws/bin:$PATH
 export PATH=~/bin:$PATH
@@ -91,6 +92,7 @@ alias kens=kubens
 alias acm-pca-active="aws acm-pca list-certificate-authorities | jq '.CertificateAuthorities[] | select(.Status == \"ACTIVE\") | [.CertificateAuthorityConfiguration.Subject.CommonName, .Arn, .Status] | @csv' -r | column -s, -t"
 alias acm-pca-disabled="aws acm-pca list-certificate-authorities | jq '.CertificateAuthorities[] | select(.Status == \"DISABLED\") | [.CertificateAuthorityConfiguration.Subject.CommonName, .Arn, .Status] | @csv' -r | column -s, -t"
 alias mkgo='cookiecutter gh:mhristof/cookiecutter-golang-cmd'
+alias mkalfredgo='cookiecutter gh:mhristof/cookiecutter-alfred-go'
 alias dmas='git diff master -- .'
 
 unalias gp
@@ -139,6 +141,8 @@ src "${HOME}/.brew/etc/profile.d/bash_completion.sh"
 export VAULT_ADDR='http://127.0.0.1:8200'
 export AWS_SDK_LOAD_CONFIG=1
 export AWS_PAGER=""
+export HOMEBREW_NO_AUTO_UPDATE=1
 
 
 src "${HOME}/.dotfilesrc.local"
+
