@@ -8,6 +8,7 @@ if [[ -f Makefile ]]; then
 else
     cat ~/.vim/bundle/vim-template/templates/=template=GNUmakefile > Makefile
     sed -i '' -e 's/^    /	/g' Makefile
+    sed -i '' -e 's/%HERE%//g' Makefile
 fi
 
 
