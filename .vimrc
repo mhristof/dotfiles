@@ -108,6 +108,9 @@ let g:ackprg = 'ag --nogroup --nocolor --column'
 let g:ale_dockerfile_hadolint_use_docker  = "always"
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_linters = {'python': ['pycodestyle', 'pylint', 'pydocstyle'],}
+let g:fzfSwitchProjectAlwaysChooseFile = 0
+let g:fzfSwitchProjectWorkspaces = [ '~/code']
+let g:fzf_layout = { 'down': '40%' } " disable the weird center pop up window
 let g:go_fmt_command = "goimports"
 let g:lion_squeeze_spaces = 1
 let g:netrw_banner = 0
@@ -115,8 +118,7 @@ let g:netrw_browse_split = 0
 let g:netrw_liststyle = 3
 let g:netrw_sort_sequence = '[\/]$,\<core\%(\.\d\+\)\=\>,\.h$,\.c$,\.cpp$,\~\=\*$,*,\.o$,\.obj$,\.info$,\.swp$,\.bak$,\.clean$,\.rej,\.orig,\~$'
 let g:terraform_fmt_on_save=1
-let g:fzfSwitchProjectWorkspaces = [ '~/code']
-let g:fzfSwitchProjectAlwaysChooseFile = 0
+
 
 
 map <C-j> <C-W>j
