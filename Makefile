@@ -168,6 +168,10 @@ terraform-docs:
 slack:
 	brew cask install slack
 
+.PHONY: shortcut
+shortcut:
+	./setup-mac-shortcuts.sh
+
 bin:
 	ln -sf $(PWD) ~/bin
 
