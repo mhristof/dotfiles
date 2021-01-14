@@ -205,7 +205,12 @@ if has("autocmd")
     autocmd BufEnter *.github/workflows/*.yml :set ft=github-actions
     autocmd FileType github-actions call SetupGithubActions()
     autocmd filetype netrw nnoremap <buffer> t :FZF<cr><cr>
+    autocmd filetype gitrebase :nnoremap s :call Squash()<cr>
 endif
+
+function Squash()
+    exec ":2,$s/^pick/squash/g"
+endfunction
 
 function PythonCtags()
     let pyctags = job_start(["ctags", "-R", "--fields=+l", "--languages=python", "--python-kinds=-iv", "."])
