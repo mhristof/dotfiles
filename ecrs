@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+aws ecr describe-repositories | jq -r '.repositories[] | [.repositoryName, .imageTagMutability] | @csv' | column -s, -t
