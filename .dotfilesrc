@@ -1,4 +1,4 @@
-# vim: ft=sh
+# vim: ft=bash
 
 if [[ ! -z $BASH ]]; then
     THIS_SHELL=bash
@@ -23,9 +23,6 @@ export PATH=$HOME/.brew/opt/coreutils/libexec/gnubin:$PATH
 export PATH=$HOME/.brew/opt/openvpn/sbin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.bash-my-aws/bin:$PATH
-export PATH=~/bin:$PATH
-
-export PATH=$(echo -n $PATH | awk -v RS=: -v ORS=: '!arr[$0]++') # remove duplicates
 
 export PYTHONSTARTUP=~/.pythonrc.py
 export HISTCONTROL=ignoredups:erasedups
@@ -71,7 +68,7 @@ alias gs='git stash'
 alias gsa='git stash apply'
 alias dr='git diff --cached'
 alias gcm='git checkout master'
-alias gl='git log --graph --oneline --decorate --date=relative --all --pretty=format:"%C(yellow)%h%C(reset) %ar %C(green)(%cn)%C(reset) %C(red)%x09%d%C(reset) %w(80, 1, 20) %s%n" --color'
+alias gl='git log --graph --oneline --decorate --date=relative --all --pretty=format:"%C(yellow)%h%C(reset) %ar %C(green)(%cn) (%ae) %C(reset) %C(red)%x09%d%C(reset) %w(80, 1, 20) %s%n" --color'
 alias wget100='wget -O /dev/null http://speedtest.london.linode.com/100MB-london.bin'
 alias dc='docker-compose'
 alias tf='terraform'
@@ -93,7 +90,7 @@ alias acm-pca-active="aws acm-pca list-certificate-authorities | jq '.Certificat
 alias acm-pca-disabled="aws acm-pca list-certificate-authorities | jq '.CertificateAuthorities[] | select(.Status == \"DISABLED\") | [.CertificateAuthorityConfiguration.Subject.CommonName, .Arn, .Status] | @csv' -r | column -s, -t"
 alias mkgo='cookiecutter gh:mhristof/cookiecutter-golang-cmd'
 alias mkalfredgo='cookiecutter gh:mhristof/cookiecutter-alfred-go'
-alias dmas='git diff master -- .'
+alias dmas='git diff master -- . || git diff main -- .'
 
 unalias gp
 alias gap=ls
@@ -120,7 +117,7 @@ function gcmp() {
     if [[ -f .mu_repo ]]; then
         mu checkout master && mu pull && mu fetch --prune
     else
-        git checkout master && git pull && git fetch --prune
+        (git checkout main || git checkout master) && git pull && git fetch --prune
     fi
 }
 
@@ -132,6 +129,10 @@ test -e "${HOME}/.brew/bin/go" && {
     export GOPATH=$(go env GOPATH)
     export PATH=$GOPATH/bin:$PATH
 }
+
+export PATH=~/bin:$PATH
+export PATH=$(echo -n $PATH | awk -v RS=: -v ORS=: '!arr[$0]++') # remove duplicates
+
 test -e "${HOME}/.bash-my-aws/aliases" && {
     source "${HOME}/.bash-my-aws/aliases"
     source "${HOME}/.bash-my-aws/bash_completion.sh"
