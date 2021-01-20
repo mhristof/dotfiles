@@ -48,6 +48,14 @@ dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbr
 	vim +PluginInstall +qall
 	# this requires plugins to be installed since it creates a subfolder in there
 	make ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim
+	make ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim
+
+~/bin/checkov2vim:
+	curl -sL https://github.com/mhristof/checkov2vim/releases/latest/download/checkov2vim.$(shell uname | tr '[:upper:]' '[:lower:]') > $@
+	chmod +x $@
+
+~/.vim/bundle/ale/ale_linters/terraform/checkov.vim: ~/bin/checkov2vim
+	~/bin/checkov2vim generate --dest $@
 
 ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim: $(CURL)
 	mkdir -p ~/.vim/bundle/ale/ale_linters/groovy/
