@@ -50,7 +50,7 @@ dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbr
 	make ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim
 	make ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim
 
-~/bin/checkov2vim:
+~/bin/checkov2vim: ~/bin
 	curl -sL https://github.com/mhristof/checkov2vim/releases/latest/download/checkov2vim.$(shell uname | tr '[:upper:]' '[:lower:]') > $@
 	chmod +x $@
 
@@ -180,6 +180,9 @@ slack:
 shortcut:
 	./setup-mac-shortcuts.sh
 
+~/bin:
+	ln -sf $(PWD) ~/bin
+
 bin:
 	ln -sf $(PWD) ~/bin
 
@@ -206,8 +209,8 @@ bash-my-aws: ~/.bash-my-aws
 build: dockerfiles/linux
 	docker build -f dockerfiles/linux -t dotfiles .
 
-linux-test:
-	docker run dotfiles make vim
+sh: build
+	docker run -it dotfiles bash
 
 hub: build
 	docker build -f dockerfiles/hub -t mhristof/dotfiles .
