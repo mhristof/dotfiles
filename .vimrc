@@ -108,6 +108,7 @@ let g:ackprg = 'ag --nogroup --nocolor --column'
 let g:ale_dockerfile_hadolint_use_docker  = "always"
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_linters = {'python': ['pycodestyle', 'pylint', 'pydocstyle'],}
+let g:ale_history_log_output = 1
 let g:fzfSwitchProjectAlwaysChooseFile = 1
 let g:fzfSwitchProjectWorkspaces = [ '~/code']
 let g:fzf_layout = { 'down': '40%' } " disable the weird center pop up window
