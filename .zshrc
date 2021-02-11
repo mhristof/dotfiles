@@ -7,7 +7,7 @@ export EDITOR=vim
 
 ZSH_THEME="robbyrussell"
 HYPHEN_INSENSITIVE="true"
-plugins=(git docker)
+fpath=($fpath ~/.zsh.autoload)
 
 function src {
     test -f $1 && source $1
