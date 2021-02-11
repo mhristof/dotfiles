@@ -19,15 +19,21 @@ if [[ $TF -gt 0 ]]; then
 TF_SRC := \$(shell find ./ -maxdepth 1 -name "*.tf")
 .DEFAULT_GOAL = terraform.tfstate
 
+.PHONY: init
+init: ## Run 'terraform init' (force)
+    terraform init
+
 .terraform:  ## Runs 'terraform init' and creates .terraform folder
 	terraform init
 
-tf.plan: \$(TF_SRC) .terraform  ## Runs 'terraform plan' and creates a plan file
+terraform.tfplan: \$(TF_SRC) .terraform  ## Runs 'terraform plan' and creates a plan file
 	terraform plan -out tf.plan
 
-terraform.tfstate: tf.plan  ## Runs 'terraform apply' and applies the previously created plan file.
-	terraform apply "tf.plan"
+terraform.tfstate: terraform.tfplan  ## Runs 'terraform apply' and applies the previously created plan file.
+	terraform apply terraform.tfplan
+    rm -f terraform.tfplan
 
+.PHONY: force
 force:
 	touch *.tf
 	make terraform.tfstate
@@ -36,10 +42,10 @@ README.md: *.tf  ## Update README.md with 'terraform-docs'
 	sed -i'' -e '/^## Providers\$\$/,\$\$d' README.md
 	terraform-docs md . >> README.md
 
+.PHONY: clean
 clean: .terraform  ## Runs 'terraform destroy' and deletes all resources
 	terraform destroy -auto-approve
-	rm terraform.tfstate* tf.plan
-.PHONY: clean
+	rm -f terraform.tfstate terraform.tfplan
 EOF
 fi
 
