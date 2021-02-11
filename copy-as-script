@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+
+for f in "$@"; do
+    cat << EOF
+cat << DONE > $f
+$(sed 's/`/\\`/g' < "$f" | sed 's/\$/\\\$/g')
+DONE
+EOF
+done
+
