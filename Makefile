@@ -29,16 +29,16 @@ git: ~/.gitignore_global ~/.gitconfig ~/.gitconfig_github
 
 ln: dots
 
-dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbrc ~/.pythonrc.py ~/.config/thefuck/rules ~/.tmux.conf
+dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbrc ~/.pythonrc.py ~/.tmux.conf
 
 ~/.gitignore_global:
-	ln -sf $(PWD)/.gitignore_global ~/.gitignore_global
+	ln -sf $(PWD)/$@ $@
 
 ~/.gitconfig:
-	ln -sf $(PWD)/.gitconfig ~/.gitconfig
+	ln -sf $(PWD)/$@ $@
 
 ~/.gitconfig_github:
-	ln -sf $(PWD)/$(shell basename $@) $@
+	ln -sf $(PWD)/$@ $@
 
 ~/.brew/bin/src-hilite-lesspipe.sh:
 	$(BREW) install source-highlight
@@ -50,7 +50,7 @@ dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbr
 	make ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim
 	make ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim
 
-~/bin/checkov2vim: ~/bin
+~/bin/checkov2vim:
 	curl -sL https://github.com/mhristof/checkov2vim/releases/latest/download/checkov2vim.$(shell uname | tr '[:upper:]' '[:lower:]') > $@
 	chmod +x $@
 
@@ -69,19 +69,19 @@ $(PYLINT):
 	pip3 install pylint
 
 ~/.vimrc:
-	ln -sf $(PWD)/.vimrc ~/.vimrc
+	ln -sf $(PWD)/$@ $@
 
 ~/.zsh.autoload:
 	ln -sf $(PWD)/$@ $@
 
 ~/.zshrc: ~/.zsh.autoload
-	ln -sf $(PWD)/.zshrc ~/.zshrc
+	ln -sf $(PWD)/$@ $@
 
 ~/.dotfilesrc:
-	ln -sf $(PWD)/.dotfilesrc ~/.dotfilesrc
+	ln -sf $(PWD)/$@ $@
 
 ~/.ctags.d: $(CTAGS)
-	ln -sf $(PWD)/.ctags.d ~/.ctags.d
+	ln -sf $(PWD)/$@ $@
 
 ~/.oh-my-zsh:
 	git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh
@@ -99,10 +99,10 @@ fzf: ~/.brew/bin/fzf ~/.fzf.zsh
 	$(BREW) install autojump
 
 ~/.irbrc:
-	ln -sf $(PWD)/.irbrc ~/.irbrc
+	ln -sf $(PWD)/$@ $@
 
 ~/.pythonrc.py:
-	ln -sf $(PWD)/.pythonrc.py ~/.pythonrc.py
+	ln -sf $(PWD)/$@ $@
 
 python3: $(PYTHON3) ~/.irbrc ~/.pythonrc.py
 	pip3 install -r requirements.yml
@@ -112,15 +112,6 @@ python3: $(PYTHON3) ~/.irbrc ~/.pythonrc.py
 
 ~/.brew/opt/coreutils:
 	$(BREW) install coreutils
-
-fuck: ~/.brew/bin/thefuck ~/.config/thefuck/rules ~/.brew/Cellar/thefuck/3.29_1/libexec/lib/python3.8/site-packages/kubernetes
-
-~/.brew/Cellar/thefuck/3.29_1/libexec/lib/python3.8/site-packages/kubernetes:
-	~/.brew/Cellar/thefuck/$(shell brew info --json thefuck | jq '.[0].installed[0].version')/libexec/bin/pip3 install kubernetes
-
-~/.config/thefuck/rules:
-	mkdir -p ~/.config/thefuck
-	ln -sf $(PWD)/.config/thefuck/rules ~/.config/thefuck/rules
 
 aws-azure-login: ~/.brew/bin/node
 	npm install -g aws-azure-login@1.13.0
@@ -150,7 +141,7 @@ dock: ~/.brew/opt/findutils/libexec/gnubin/xargs ~/.brew/bin/dockutil
 	$(BREW) install make
 
 ~/.tmux.conf:
-	ln -sf $(PWD)/.tmux.conf ~/.tmux.conf
+	ln -sf $(PWD)/$@ $@
 
 docker: /Applications/Docker.app/Contents/MacOS/Docker
 
@@ -183,9 +174,6 @@ slack:
 shortcut:
 	./setup-mac-shortcuts.sh
 
-~/bin:
-	ln -sf $(PWD) ~/bin
-
 bin:
 	ln -sf $(PWD) ~/bin
 
@@ -212,8 +200,8 @@ bash-my-aws: ~/.bash-my-aws
 build: dockerfiles/linux
 	docker build -f dockerfiles/linux -t dotfiles .
 
-sh: build
-	docker run -it dotfiles bash
+linux-test:
+	docker run dotfiles make vim
 
 hub: build
 	docker build -f dockerfiles/hub -t mhristof/dotfiles .
