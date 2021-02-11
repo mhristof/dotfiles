@@ -47,7 +47,7 @@ $(PYTHON3): update
 $(VIM): update
 	sudo apt-get install -y vim
 
-$(SHELLCHECK): /usr/bin/pip3 /usr/share/doc/xz-utils
+$(SHELLCHECK): /usr/bin/pip3 /usr/share/doc/xz-utils $(CURL)
 	cd /tmp/
 	curl -L --silent "https://github.com/koalaman/shellcheck/releases/download/stable/shellcheck-stable.linux.x86_64.tar.xz" | tar -xJv
 	mkdir -p ~/.local/bin
