@@ -71,7 +71,10 @@ $(PYLINT):
 ~/.vimrc:
 	ln -sf $(PWD)/.vimrc ~/.vimrc
 
-~/.zshrc:
+~/.zsh.autoload:
+	ln -sf $(PWD)/$@ $@
+
+~/.zshrc: ~/.zsh.autoload
 	ln -sf $(PWD)/.zshrc ~/.zshrc
 
 ~/.dotfilesrc:

@@ -101,33 +101,22 @@ unalias gam
 case $(uname) in
     Darwin)
     alias l='ls -lah'
+    alias ls='ls --color=auto'
     alias yoink='open -a Yoink'
     ;;
 esac
 
-if ls --color=auto &> /dev/null; then
-    alias ls='ls --color=auto'
-fi
 
-function c() {
-    cd $* && ls
-}
-
-function gcmp() {
-    if [[ -f .mu_repo ]]; then
-        mu checkout master && mu pull && mu fetch --prune
-    else
-        (git checkout main || git checkout master) && git pull && git fetch --prune
-    fi
-}
+while read -r file; do
+    autoload $file
+done < <(find $HOME/.zsh.autoload/ -type f)
 
 src "${HOME}/.iterm2_shell_integration.zsh"
 src "${HOME}/.fzf.zsh"
 src "$HOME/.brew/etc/profile.d/autojump.sh"
-test -e "${HOME}/.brew/bin/thefuck" && eval $(thefuck --alias --enable-experimental-instant-mode)
 test -e "${HOME}/.brew/bin/go" && {
-    export GOPATH=$(go env GOPATH)
-    export PATH=$GOPATH/bin:$PATH
+     export GOPATH=$HOME/go
+     export PATH=$GOPATH/bin:$PATH
 }
 
 export PATH=~/bin:$PATH
@@ -144,6 +133,4 @@ export AWS_SDK_LOAD_CONFIG=1
 export AWS_PAGER=""
 export HOMEBREW_NO_AUTO_UPDATE=1
 
-
 src "${HOME}/.dotfilesrc.local"
-
