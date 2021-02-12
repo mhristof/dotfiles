@@ -31,14 +31,8 @@ ln: dots
 
 dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbrc ~/.pythonrc.py ~/.tmux.conf
 
-~/.gitignore_global:
-	ln -sf $(PWD)/$@ $@
-
-~/.gitconfig:
-	ln -sf $(PWD)/$@ $@
-
-~/.gitconfig_github:
-	ln -sf $(PWD)/$@ $@
+~/.%:
+	ln -sf $(PWD)/$(shell basename $@) $@
 
 ~/.brew/bin/src-hilite-lesspipe.sh:
 	$(BREW) install source-highlight
@@ -68,20 +62,8 @@ dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbr
 $(PYLINT):
 	pip3 install pylint
 
-~/.vimrc:
-	ln -sf $(PWD)/$@ $@
-
-~/.zsh.autoload:
-	ln -sf $(PWD)/$@ $@
-
 ~/.zshrc: ~/.zsh.autoload
-	ln -sf $(PWD)/$@ $@
-
-~/.dotfilesrc:
-	ln -sf $(PWD)/$@ $@
-
-~/.ctags.d: $(CTAGS)
-	ln -sf $(PWD)/$@ $@
+	ln -sf $(PWD)/$(shell basename $@) $@
 
 ~/.oh-my-zsh:
 	git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh
@@ -97,12 +79,6 @@ fzf: ~/.brew/bin/fzf ~/.fzf.zsh
 
 ~/.brew/bin/autojump:
 	$(BREW) install autojump
-
-~/.irbrc:
-	ln -sf $(PWD)/$@ $@
-
-~/.pythonrc.py:
-	ln -sf $(PWD)/$@ $@
 
 python3: $(PYTHON3) ~/.irbrc ~/.pythonrc.py
 	pip3 install -r requirements.yml
@@ -139,9 +115,6 @@ dock: ~/.brew/opt/findutils/libexec/gnubin/xargs ~/.brew/bin/dockutil
 
 ~/.brew/opt/make/libexec/gnubin/make:
 	$(BREW) install make
-
-~/.tmux.conf:
-	ln -sf $(PWD)/$@ $@
 
 docker: /Applications/Docker.app/Contents/MacOS/Docker
 
