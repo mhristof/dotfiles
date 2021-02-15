@@ -1,0 +1,4 @@
+cache=ccpr.$RANDOM
+branch=$(git rev-parse --abbrev-ref HEAD)
+first_commit=$(git log master..$branch --oneline | tail -1 | cut -d' ' -f2-)
+repo=$(basename "$(git rev-parse --show-toplevel)")

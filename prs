@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+
+# shellcheck source=./ccdata
+source "$(dirname "$0")/ccdata"
+
+while read -r pr; do
+    aws codecommit get-pull-request --pull-request-id "$pr" | jq -r '.pullRequest | "\(.pullRequestId) \(.pullRequestTargets[0].mergeMetadata.isMerged) \(.title)"' &
+done < <(aws codecommit list-pull-requests  --repository-name "$repo" | jq -r '.pullRequestIds[]') | grep false | sort
+
+wait

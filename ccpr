@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+
+# shellcheck source=ccdata
+source "$(dirname "$0")/ccdata"
+
+aws codecommit create-pull-request \
+    --title "$branch" \
+    --description "$first_commit" \
+    --targets "repositoryName=$repo,sourceReference=$branch,destinationReference=master" | tee $cache
+
+pr=$(jq .pullRequest.pullRequestId -r < $cache)
+cat << EOF
+
+https://eu-west-2.console.aws.amazon.com/codesuite/codecommit/repositories/$repo/pull-requests/$pr/changes?region=eu-west-2
+
+EOF
+
+rm $cache
