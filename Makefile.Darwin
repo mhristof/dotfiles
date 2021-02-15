@@ -1,3 +1,4 @@
+BREW := ~/.brew/bin/brew
 AG := ~/.brew/bin/ag 
 CTAGS := ~/.brew/bin/ctags
 CURL := ~/.brew/opt/curl/bin/curl

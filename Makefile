@@ -31,9 +31,6 @@ ln: dots
 
 dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbrc ~/.pythonrc.py ~/.tmux.conf
 
-~/.%:
-	ln -sf $(PWD)/$(shell basename $@) $@
-
 ~/.brew/bin/src-hilite-lesspipe.sh:
 	$(BREW) install source-highlight
 
@@ -167,10 +164,16 @@ bash-my-aws: ~/.bash-my-aws
 	chmod +x ~/bin/semver
 	~/bin/semver autocomplete > ~/.brew/share/zsh/site-functions/_semver
 
-~/.brew/bin/%:
+~/.brew/bin/%: ~/.brew
 	$(BREW) install $*
 
-build: dockerfiles/linux
+~/.%:
+	ln -sf $(PWD)/$(shell basename $@) $@
+
+.PHONY: build
+build: .build
+
+.build: dockerfiles/linux
 	docker build -f dockerfiles/linux -t dotfiles .
 
 linux-test:
