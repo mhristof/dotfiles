@@ -21,7 +21,7 @@ aws: bash-my-aws ~/.brew/bin/aws ~/brew/bin/kubectx
 ~/.brew/bin/aws:
 	pip3 install aws --user
 
-vim: $(VIM) ~/.vim $(PYTHON3)
+vim: $(VIM) # ~/.vim $(PYTHON3)
 
 less: $(SRCHILITE)
 
@@ -166,7 +166,7 @@ bash-my-aws: ~/.bash-my-aws
 	chmod +x ~/bin/semver
 	~/bin/semver autocomplete > ~/.brew/share/zsh/site-functions/_semver
 
-~/.brew/bin/%:
+~/.brew/bin/%: ~/.brew
 	$(BREW) install $*
 
 .PHONY: build
