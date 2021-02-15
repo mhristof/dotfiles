@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-echo “Killing racoon”
+echo "Killing racoon"
 sudo killall racoon
-echo “Killing configd”
+echo "Killing configd"
 sudo killall configd
-echo “Killing mDNSResponder”
+echo "Killing mDNSResponder"
 sudo killall mDNSResponder
-echo “Killing nesessionmanager”
+echo "Killing nesessionmanager"
 sudo killall nesessionmanager
-echo “Killing networkd”
+echo "Killing networkd"
 sudo killall networkd
