@@ -60,7 +60,7 @@ vault secrets enable -path "${MOUNT}" pki
 vault secrets tune -max-lease-ttl=8760h "${MOUNT}"
 vault write "${MOUNT}/root/generate/internal" common_name="$DOMAIN" ttl=8760h
 
-vault write "${MOUNT}/roles/${DOMAIN}" allowed_domains="$DOMAIN" allow_subdomains=true max_ttl=72h
+vault write "${MOUNT}/roles/${DOMAIN}" allowed_domains="$DOMAIN" allow_subdomains=true max_ttl=72h allowed_uri_sans="example1.com"
 
 vault secrets enable -path="${MOUNT}_int" pki
 vault write -format json "${MOUNT}_int/intermediate/generate/internal" common_name="$DOMAIN Intermediate Authority" ttl=43800h | jq .data.csr -r > "${MOUNT}_int".csr

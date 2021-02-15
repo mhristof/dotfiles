@@ -2,6 +2,7 @@
 
 
 for f in "$@"; do
+    # shellcheck disable=SC2016
     cat << EOF
 cat << DONE > $f
 $(sed 's/`/\\`/g' < "$f" | sed 's/\$/\\\$/g')

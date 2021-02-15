@@ -10,12 +10,12 @@ fi
 
 case $1 in
     *accessKeys*.csv)
-        echo export AWS_ACCESS_KEY_ID=$(tail -1 "$1" | cut -d',' -f1)
-        echo export AWS_SECRET_ACCESS_KEY=$(tail -1 "$1" | cut -d',' -f2)
+        echo export AWS_ACCESS_KEY_ID="$(tail -1 "$1" | cut -d',' -f1)"
+        echo export AWS_SECRET_ACCESS_KEY="$(tail -1 "$1" | cut -d',' -f2)"
         exit 0;;
     *credentials*.csv)
-        echo export AWS_ACCESS_KEY_ID=$(tail -1 "$1"   | cut -d',' -f3)
-        echo export AWS_SECRET_ACCESS_KEY=$(tail -1 "$1" | cut -d',' -f4)
+        echo export AWS_ACCESS_KEY_ID="$(tail -1 "$1"   | cut -d',' -f3)"
+        echo export AWS_SECRET_ACCESS_KEY="$(tail -1 "$1" | cut -d',' -f4)"
         exit 0;;
 esac
 

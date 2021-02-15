@@ -4,8 +4,8 @@ set -euo pipefail
 IFS=$'\n\t'
 
 if [[ -f ${1:-} ]]; then
-    echo export AWS_ACCESS_KEY_ID=$(tail -1 $1   | cut -d',' -f1)
-    echo export AWS_SECRET_ACCESS_KEY=$(tail -1 $1 | cut -d',' -f2)
+    echo "export AWS_ACCESS_KEY_ID=$(tail -1 "$1"   | cut -d',' -f1)"
+    echo "export AWS_SECRET_ACCESS_KEY=$(tail -1 "$1" | cut -d',' -f2)"
     exit
 fi
 
