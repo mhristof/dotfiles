@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ -n $1 ]]; then
+    file=$(readlink -f "$1")
+    dir="$(dirname "$(readlink -f "$1")")"
+    gitRoot="$(cd "$dir" && git rev-parse --show-toplevel)"
+    filePrefix="/--${file/$gitRoot/}"
+    cd "$gitRoot"
+else
+    filePrefix=""
+fi
+
+# shellcheck source=ccdata
+source "$(dirname "$(readlink -f "$0")")/ccdata"
+
+open "https://eu-west-2.console.aws.amazon.com/codesuite/codecommit/repositories/$repo/browse/refs/heads/$branch$filePrefix?region=eu-west-2"
