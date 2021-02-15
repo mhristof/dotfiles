@@ -9,15 +9,19 @@ SHELL := /bin/bash
 include Makefile.$(shell uname -s)
 
 UNAME := $(shell uname | tr '[:upper:]' '[:lower:]')
-
+.PHONY: default
 default: brew vim essentials
 
-essentials: $(HTOP) $(WATCH) less $(GREP) $(SPONGE) ~/.brew/bin/diff
+.PHONY: essentials
+essentials: $(HTOP) $(WATCH) less $(GREP) $(SPONGE)
 
-dev: vim git ~/bin/semver
+.PHONY: dev
+dev: vim git semver
 
+.PHONY: go
 go: $(GO) ~/go/bin/gojson 
 
+.PHONY: aws
 aws: bash-my-aws ~/.brew/bin/aws ~/brew/bin/kubectx
 
 ~/.brew/bin/aws:
@@ -26,14 +30,19 @@ aws: bash-my-aws ~/.brew/bin/aws ~/brew/bin/kubectx
 ~/.brew/bin/diff:
 	brew install diffutils
 
+.PHONY: vim
 vim: $(VIM) ~/.vim $(PYTHON3)
 
+.PHONY: less
 less: $(SRCHILITE)
 
+.PHONY: git
 git: ~/.gitignore_global ~/.gitconfig ~/.gitconfig_github
 
+.PHONY: ln
 ln: dots
 
+.PHONY: dots
 dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbrc ~/.pythonrc.py ~/.tmux.conf
 
 ~/.brew/bin/src-hilite-lesspipe.sh:
@@ -68,10 +77,13 @@ dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbr
 ~/.oh-my-zsh:
 	git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh
 
+.PHONY: zsh
 zsh: $(ZSH) ~/.zshrc ~/.dotfilesrc ~/.oh-my-zsh
 
+.PHONY: brew
 brew: ~/.brew
 
+.PHONY: fzf
 fzf: ~/.brew/bin/fzf ~/.fzf.zsh
 
 ~/.fzf.zsh:
@@ -92,6 +104,7 @@ python3: $(PYTHON3) ~/.irbrc ~/.pythonrc.py
 aws-azure-login: ~/.brew/bin/node
 	npm install -g aws-azure-login@1.13.0
 
+.PHONY: iterm
 iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app ~/bin/germ
 
 ~/.iterm2_shell_integration.zsh: ~/.brew/opt/curl/bin/curl
@@ -116,6 +129,7 @@ dock: ~/.brew/opt/findutils/libexec/gnubin/xargs ~/.brew/bin/dockutil
 ~/.brew/opt/make/libexec/gnubin/make:
 	$(BREW) install make
 
+.PHONY: docker
 docker: /Applications/Docker.app/Contents/MacOS/Docker
 
 /Applications/Docker.app/Contents/MacOS/Docker:
