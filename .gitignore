@@ -9,3 +9,5 @@ germ
 semver
 gitbrowse
 checkov2vim
+.build
+githubactions-docs
