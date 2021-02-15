@@ -44,7 +44,7 @@ dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbr
 	make ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim
 	make ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim
 
-~/bin/checkov2vim:
+~/bin/checkov2vim: ~/bin
 	curl -sL https://github.com/mhristof/checkov2vim/releases/latest/download/checkov2vim.$(shell uname | tr '[:upper:]' '[:lower:]') > $@
 	chmod +x $@
 
@@ -145,7 +145,7 @@ slack:
 shortcut:
 	./setup-mac-shortcuts.sh
 
-bin:
+~/bin:
 	ln -sf $(PWD) ~/bin
 
 pterm:
