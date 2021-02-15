@@ -11,8 +11,6 @@
 	email = mhristof@gmail.com
 	name = Mike Christofilopoulos
 
-[include]
-    path = ~/.gitconfig_local
 
 [includeIf "gitdir:~/code/github/"]
    path = .gitconfig_github
@@ -25,3 +23,6 @@
 
 [includeIf "gitdir:~/.vim/"]
    path = .gitconfig_github
+
+[include]
+    path = ~/.gitconfig_local
