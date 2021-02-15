@@ -68,3 +68,7 @@ $(GO):
 
 $(CTAGS): update
 	sudo apt-get install -y exuberant-ctags
+
+$(PYLINT):
+	sudo apt-get install python3-setuptools
+	pip3 install pylint

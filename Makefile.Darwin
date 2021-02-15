@@ -25,3 +25,5 @@ $(SPONGE):
 $(CTAGS):
 	$(BREW) install --HEAD universal-ctags/universal-ctags/universal-ctags
 
+$(PYLINT):
+	pip3 install pylint

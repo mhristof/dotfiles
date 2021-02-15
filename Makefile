@@ -59,8 +59,6 @@ dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbr
 ~/.brew/opt/curl/bin/curl:
 	$(BREW) install curl
 
-$(PYLINT):
-	pip3 install pylint
 
 ~/.zshrc: ~/.zsh.autoload
 	ln -sf $(PWD)/$(shell basename $@) $@
@@ -102,7 +100,7 @@ iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app ~/bin/germ
 	brew cask install iterm2
 
 ~/bin/germ:
-	wget https://github.com/mhristof/germ/releases/download/v1.2.3/germ.darwin -O ~/bin/germ
+	wget https://github.com/mhristof/germ/releases/download/v1.8.3/germ.darwin -O ~/bin/germ
 	chmod +x ~/bin/germ
 	~/bin/germ autocomplete > ~/.brew/share/zsh/site-functions/_germ
 
@@ -128,7 +126,7 @@ alfred: ~/.brew/bin/wget /tmp/alfred-tf-snippets.alfredworkflow pbpaste $(GREP)
 	open /tmp/alfred-tf-snippets.alfredworkflow
 
 /tmp/alfred-pbpaste.alfredworkflow:
-	wget https://github.com/mhristof/alfred-pbpaste/releases/download/0.2.3/alfred-pbpaste.alfredworkflow -O alfred-pbpaste.alfredworkflow
+	wget https://github.com/mhristof/alfred-pbpaste/releases/download/0.6.3/alfred-pbpaste.alfredworkflow -O alfred-pbpaste.alfredworkflow
 
 /tmp/alfred-tf-snippets.alfredworkflow: ~/.brew/bin/jq
 	wget https://github.com/mhristof/alfred-tf-snippets/releases/download/0.7.0/alfred-tf-snippets.alfredworkflow -O /tmp/alfred-tf-snippets.alfredworkflow
@@ -137,7 +135,7 @@ alfred: ~/.brew/bin/wget /tmp/alfred-tf-snippets.alfredworkflow pbpaste $(GREP)
 	go get github.com/ChimeraCoder/gojson/gojson
 
 terraform-docs:
-	curl --silent --location --output $@ https://github.com/terraform-docs/terraform-docs/releases/download/v0.9.1/terraform-docs-v0.9.1-$(shell tr '[:upper:]' '[:lower:]')-amd64
+	curl --silent --location --output $@ https://github.com/terraform-docs/terraform-docs/releases/download/v0.11.0/terraform-docs-v0.11.0-$(shell tr '[:upper:]' '[:lower:]')-amd64
 	chmod +x terraform-docs
 
 slack:
