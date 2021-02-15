@@ -170,7 +170,7 @@ bash-my-aws: ~/.bash-my-aws
 ~/.zsh.site-functions:
 	mkdir -p $@
 
-~/.brew/bin/%:
+~/.brew/bin/%: ~/.brew
 	$(BREW) install $*
 
 ~/.%:
