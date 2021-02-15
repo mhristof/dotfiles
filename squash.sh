@@ -7,7 +7,7 @@ JIRAS="$(git log --pretty=format:%s master.. | grep -oP '[A-Z]{1,}-[0-9]{1,}'| s
     JIRAS=""
 }
 
-git reset --soft $(git merge-base master $(git rev-parse --abbrev-ref HEAD))
+git reset --soft "$(git merge-base master "$(git rev-parse --abbrev-ref HEAD)")"
 git commit -am "${JIRAS}$(git rev-parse --abbrev-ref HEAD)"
 git rebase master
 

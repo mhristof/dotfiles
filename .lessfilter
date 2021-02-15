@@ -9,8 +9,7 @@ case "$1" in
         pygmentize -f 256 -l sh "$1"
         ;;
     *)
-        grep "#\!/bin/bash" "$1" > /dev/null
-        if [ "$?" -eq "0" ]; then
+        if grep "#\!/bin/bash" "$1" > /dev/null; then
             pygmentize -f 256 -l sh "$1"
         else
             exit 1

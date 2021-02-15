@@ -17,6 +17,7 @@ if [[ "$root" != "." ]]; then
     echo "cd $root"
 fi
 
+# shellcheck disable=SC1083
 echo "git checkout --track $(git rev-parse --abbrev-ref --symbolic-full-name @{u})"
 echo "# git checkout $(git rev-parse HEAD)"
 
