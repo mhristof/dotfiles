@@ -4,7 +4,7 @@
 export AWS_RETRY_MODE=adaptive
 
 while read -r repo; do
-    echo $repo $(aws codecommit get-repository  --repository-name $repo | jq -r .repositoryMetadata.cloneUrlHttp) &
+    echo "$repo $(aws codecommit get-repository  --repository-name "$repo" | jq -r .repositoryMetadata.cloneUrlHttp)" &
 done < <(aws codecommit list-repositories | jq '.repositories[].repositoryName' -r) | sort | column -t
 
 

@@ -12,9 +12,9 @@ if [[ -z $dest ]]; then
 fi
 
 if [[ -f $folder ]]; then
-    dest=$(echo $1 | sed -e "s!$2!$3!g")
-    diff -Npaur $folder $dest | source-highlight --out-format=esc --src-lang=diff
+    dest="${1//$2/$3}"
+    diff -Npaur "$folder" "$dest" | source-highlight --out-format=esc --src-lang=diff
     exit 0
 fi
 
-find $folder -type f | fzf --preview-window="right:70%" --preview "$0 {} $folder $dest"
+find "$folder" -type f | fzf --preview-window="right:70%" --preview "$0 {} $folder $dest"

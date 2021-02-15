@@ -4,7 +4,7 @@
 set -euo pipefail
 
 for region in $(aws ec2 describe-regions | jq '.Regions[].RegionName' -r); do
-    aws acm-pca --region $region list-certificate-authorities | jq '.CertificateAuthorities[] | [.CertificateAuthorityConfiguration.Subject.CommonName, .Arn, .Status] | @csv' -r &
+    aws acm-pca --region "$region" list-certificate-authorities | jq '.CertificateAuthorities[] | [.CertificateAuthorityConfiguration.Subject.CommonName, .Arn, .Status] | @csv' -r &
 done | column -s, -t
 
 wait
