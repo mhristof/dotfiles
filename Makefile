@@ -44,11 +44,12 @@ dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbr
 	make ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim
 	make ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim
 
-~/bin/checkov2vim:
+~/bin/checkov2vim: ~/bin
 	curl -sL https://github.com/mhristof/checkov2vim/releases/latest/download/checkov2vim.$(shell uname | tr '[:upper:]' '[:lower:]') > $@
 	chmod +x $@
 
 ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim: ~/bin/checkov2vim
+	mkdir -p $(shell dirname $@)
 	~/bin/checkov2vim generate --dest $@
 
 ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim: $(CURL)
@@ -147,7 +148,7 @@ slack:
 shortcut:
 	./setup-mac-shortcuts.sh
 
-bin:
+~/bin:
 	ln -sf $(PWD) ~/bin
 
 pterm:
@@ -163,15 +164,19 @@ bash-my-aws: ~/.bash-my-aws
 
 
 ~/bin/semver:
-	wget https://github.com/mhristof/semver/releases/download/v0.3.2/semver.darwin -O ~/bin/semver
+	wget https://github.com/mhristof/semver/releases/download/v0.5.0/semver.darwin -O ~/bin/semver
 	chmod +x ~/bin/semver
 	~/bin/semver autocomplete > ~/.brew/share/zsh/site-functions/_semver
 
 ~/.brew/bin/%:
 	$(BREW) install $*
 
-build: dockerfiles/linux
+.PHONY: build
+build: .build
+
+.build: dockerfiles/linux
 	docker build -f dockerfiles/linux -t dotfiles .
+	touch .build
 
 linux-test:
 	docker run dotfiles make vim
@@ -182,9 +187,10 @@ hub: build
 push:
 	docker push mhristof/dotfiles
 
-run:
-	docker run -v $(PWD):/home/mhristof/dotfiles:ro -it dotfiles bash
+run: .build
+	docker run -it dotfiles bash
 
 # vim:ft=make
 #
+
 
