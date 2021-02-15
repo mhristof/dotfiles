@@ -36,9 +36,6 @@ ln: dots
 
 dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbrc ~/.pythonrc.py ~/.tmux.conf
 
-~/.%:
-	ln -sf $(PWD)/$(shell basename $@) $@
-
 ~/.brew/bin/src-hilite-lesspipe.sh:
 	$(BREW) install source-highlight
 
@@ -175,6 +172,9 @@ bash-my-aws: ~/.bash-my-aws
 
 ~/.brew/bin/%:
 	$(BREW) install $*
+
+~/.%:
+	ln -sf $(PWD)/$(shell basename $@) $@
 
 build: dockerfiles/linux
 	docker build -f dockerfiles/linux -t dotfiles .
