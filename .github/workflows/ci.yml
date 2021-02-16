@@ -13,4 +13,4 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v2
-      - run: make hub
+      - run: make zsh dev

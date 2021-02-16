@@ -12,7 +12,7 @@ default: brew vim essentials
 
 essentials: $(HTOP) $(WATCH) less $(GREP) $(SPONGE)
 
-dev: vim git semver
+dev: vim git ~/bin/semver
 
 go: $(GO) ~/go/bin/gojson 
 
