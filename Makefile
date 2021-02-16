@@ -8,6 +8,8 @@ SHELL := /bin/bash
 
 include Makefile.$(shell uname -s)
 
+UNAME := $(shell uname | tr '[:upper:]' '[:lower:]')
+
 default: brew vim essentials
 
 essentials: $(HTOP) $(WATCH) less $(GREP) $(SPONGE)
@@ -45,7 +47,7 @@ dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbr
 	make ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim
 
 ~/bin/checkov2vim: ~/bin
-	curl -sL https://github.com/mhristof/checkov2vim/releases/latest/download/checkov2vim.$(shell uname | tr '[:upper:]' '[:lower:]') > $@
+	curl -sL https://github.com/mhristof/checkov2vim/releases/latest/download/checkov2vim.$(UNAME) > $@
 	chmod +x $@
 
 ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim: ~/bin/checkov2vim
@@ -99,10 +101,10 @@ iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app ~/bin/germ
 /Applications/iTerm.app: ~/.brew/bin/python3
 	brew cask install iterm2
 
-~/bin/germ:
-	wget https://github.com/mhristof/germ/releases/download/v1.8.3/germ.darwin -O ~/bin/germ
+~/bin/germ: ~/.zsh.site-functions
+	wget https://github.com/mhristof/germ/releases/download/v1.8.3/germ.$(UNAME) -O ~/bin/germ
 	chmod +x ~/bin/germ
-	~/bin/germ autocomplete > ~/.brew/share/zsh/site-functions/_germ
+	~/bin/germ autocomplete > ~/.zsh.site-functions/_germ
 
 dock: ~/.brew/opt/findutils/libexec/gnubin/xargs ~/.brew/bin/dockutil
 	dockutil --list | sed 's/file:.*//g' | xargs --no-run-if-empty -n1 -d'\n' dockutil --remove
@@ -160,10 +162,13 @@ bash-my-aws: ~/.bash-my-aws
 	git clone https://github.com/Homebrew/brew.git ~/.brew
 
 
-~/bin/semver:
-	wget https://github.com/mhristof/semver/releases/download/v0.3.2/semver.darwin -O ~/bin/semver
+~/bin/semver: ~/bin ~/.zsh.site-functions
+	wget https://github.com/mhristof/semver/releases/download/v0.3.2/semver.$(UNAME) -O ~/bin/semver
 	chmod +x ~/bin/semver
-	~/bin/semver autocomplete > ~/.brew/share/zsh/site-functions/_semver
+	~/bin/semver autocomplete > ~/.zsh.site-functions/_semver
+
+~/.zsh.site-functions:
+	mkdir -p $@
 
 ~/.brew/bin/%:
 	$(BREW) install $*
@@ -180,8 +185,8 @@ hub: build
 push:
 	docker push mhristof/dotfiles
 
-run:
-	docker run -v $(PWD):/home/mhristof/dotfiles:ro -it dotfiles bash
+run: build
+	docker run -it dotfiles bash
 
 # vim:ft=make
 #
