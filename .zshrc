@@ -7,7 +7,7 @@ export EDITOR=vim
 
 ZSH_THEME="robbyrussell"
 HYPHEN_INSENSITIVE="true"
-fpath=($fpath ~/.zsh.autoload)
+fpath=($fpath ~/.zsh.autoload ~/.zsh.site-functions)
 
 function src {
     test -f $1 && source $1
