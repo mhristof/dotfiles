@@ -12,7 +12,7 @@ UNAME := $(shell uname | tr '[:upper:]' '[:lower:]')
 
 default: brew vim essentials
 
-essentials: $(HTOP) $(WATCH) less $(GREP) $(SPONGE)
+essentials: $(HTOP) $(WATCH) less $(GREP) $(SPONGE) ~/.brew/bin/diff
 
 dev: vim git ~/bin/semver
 
@@ -22,6 +22,9 @@ aws: bash-my-aws ~/.brew/bin/aws ~/brew/bin/kubectx
 
 ~/.brew/bin/aws:
 	pip3 install aws --user
+
+~/.brew/bin/diff:
+	brew install diffutils
 
 vim: $(VIM) ~/.vim $(PYTHON3)
 
