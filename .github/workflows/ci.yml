@@ -15,3 +15,4 @@ jobs:
       - uses: actions/checkout@v2
       - run: make brew
       - run: brew install perl
+      - run: make vim
