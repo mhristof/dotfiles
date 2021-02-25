@@ -174,6 +174,7 @@ bash-my-aws: ~/.bash-my-aws
 
 ~/.brew:
 	git clone https://github.com/Homebrew/brew.git ~/.brew
+	$(BREW) tap homebrew/core
 	$(BREW) --version
 
 ~/bin/semver: ~/bin ~/.zsh.site-functions

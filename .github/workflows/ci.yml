@@ -15,4 +15,17 @@ jobs:
       - uses: actions/checkout@v2
       - run: make brew
       - run: brew install perl
-      - run: make vim
+      - run: brew install gettext
+      - run: brew install lua
+      - run: brew install perl
+      - run: brew install pkg-config
+      - run: brew install gdbm
+      - run: brew install openssl@1.1
+      - run: brew install readline
+      - run: brew install sqlite
+      - run: brew install tcl-tk
+      - run: brew install xz
+      - run: brew install python@3.9
+      - run: brew install libyaml
+      - run: brew install ruby
+      - run: make vim | cat /Users/runner/Library/Logs/Homebrew/perl/02.make
