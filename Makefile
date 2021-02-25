@@ -174,7 +174,7 @@ bash-my-aws: ~/.bash-my-aws
 
 ~/.brew:
 	git clone https://github.com/Homebrew/brew.git ~/.brew
-
+	$(BREW) --version
 
 ~/bin/semver: ~/bin ~/.zsh.site-functions
 	wget --quiet https://github.com/mhristof/semver/releases/download/v0.3.2/semver.$(UNAME) -O ~/bin/semver
