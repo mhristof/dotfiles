@@ -13,4 +13,5 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v2
-      - run: make brew # zsh dev
+      - run: make brew
+      - run: brew install perl
