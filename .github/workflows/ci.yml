@@ -8,9 +8,9 @@ jobs:
     strategy:
       matrix:
         platform:
-          - ubuntu-latest
+        #- ubuntu-latest
           - macos-latest
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v2
-      - run: make zsh dev
+      - run: make brew # zsh dev
