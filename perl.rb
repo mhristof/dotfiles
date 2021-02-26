@@ -23,6 +23,8 @@ class Perl < Formula
 
   # Prevent site_perl directories from being removed
   skip_clean "lib/perl5/site_perl"
+  depends_on "berkeley-db"
+  depends_on "gdbm"
 
   def install
     args = %W[
@@ -40,8 +42,6 @@ class Perl < Formula
       -Dusethreads
     ]
     on_macos do
-      depends_on "berkeley-db"
-      depends_on "gdbm"
       args << "-Dsed=/usr/bin/sed"
     end
 
