@@ -13,6 +13,8 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v2
-        # macos fix for https://github.com/Homebrew/homebrew-core/pull/71996
-      - run: mv .github/perl.rb /Users/runner/.brew/Library/Taps/homebrew/homebrew-core/Formula/perl.rb || true
+      - run: |
+          # macos fix for https://github.com/Homebrew/homebrew-core/pull/71996
+          make brew || true
+          mv .github/perl.rb /Users/runner/.brew/Library/Taps/homebrew/homebrew-core/Formula/perl.rb || true
       - run: make zsh dev
