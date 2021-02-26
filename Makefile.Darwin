@@ -15,8 +15,6 @@ VIM := ~/.brew/bin/vim
 WATCH := ~/.brew/bin/watch 
 ZSH := ~/.brew/bin/zsh
 
-BREW_DIR ?= /usr/local/
-
 $(GREP): ~/.brew/opt/grep/libexec/gnubin/grep
 
 $(SPONGE):

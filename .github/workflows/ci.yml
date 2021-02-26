@@ -8,11 +8,12 @@ jobs:
     strategy:
       matrix:
         platform:
-        #- ubuntu-latest
+          - ubuntu-latest
           - macos-latest
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v2
       - run: make brew
-      - run: mv perl.rb /Users/runner/.brew/Library/Taps/homebrew/homebrew-core/Formula/perl.rb
-      - run: make vim || cat /Users/runner/Library/Logs/Homebrew/perl/02.make
+        # macos fix for https://github.com/Homebrew/homebrew-core/pull/71996
+      - run: mv .github/perl.rb /Users/runner/.brew/Library/Taps/homebrew/homebrew-core/Formula/perl.rb || true
+      - run: make zsh dev
