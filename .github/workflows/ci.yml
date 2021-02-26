@@ -14,5 +14,5 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: make brew
-      - run: patch -p1 < 1.patch
+      - run: mv perl.rb /Users/runner/.brew/Library/Taps/homebrew/homebrew-core/Formula/perl.rb
       - run: make vim || cat /Users/runner/Library/Logs/Homebrew/perl/02.make
