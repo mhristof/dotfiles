@@ -27,5 +27,5 @@ jobs:
         #- run: brew reinstall --build-from-source python@3.9
         #- run: brew reinstall --build-from-source libyaml
         #- run: brew reinstall --build-from-source ruby
-      - run: brew reinstall --build-from-source gmp gdbm
+      - run: brew reinstall --build-from-source gmp gdbm berkeley-db
       - run: make vim || cat /Users/runner/Library/Logs/Homebrew/perl/02.make
