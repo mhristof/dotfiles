@@ -1,0 +1,13 @@
+diff --git a/Formula/perl.rb b/Formula/perl.rb
+index 2edb8cdc5f..a9080babf0 100644
+--- a/.brew/Library/Taps/homebrew/homebrew-core/Formula/perl.rb
++++ b/.brew/Library/Taps/homebrew/homebrew-core/Formula/perl.rb
+@@ -42,6 +42,8 @@ class Perl < Formula
+       -Dnoextensions=DB_File
+     ]
+     on_macos do
++      depends_on "berkeley-db"
++      depends_on "gdbm"
+       args << "-Dsed=/usr/bin/sed"
+     end
+ 

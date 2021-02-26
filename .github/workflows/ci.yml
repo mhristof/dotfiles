@@ -14,18 +14,5 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: make brew
-        #- run: brew reinstall --build-from-source gettext
-        #- run: brew reinstall --build-from-source lua
-        #- run: brew reinstall --build-from-source perl
-        #- run: brew reinstall --build-from-source pkg-config
-        #- run: brew reinstall --build-from-source gdbm
-        #- run: brew reinstall --build-from-source openssl@1.1
-        #- run: brew reinstall --build-from-source readline
-        #- run: brew reinstall --build-from-source sqlite
-        #- run: brew reinstall --build-from-source tcl-tk
-        #- run: brew reinstall --build-from-source xz
-        #- run: brew reinstall --build-from-source python@3.9
-        #- run: brew reinstall --build-from-source libyaml
-        #- run: brew reinstall --build-from-source ruby
-      - run: brew reinstall --build-from-source gmp gdbm berkeley-db
+      - run: patch -p1 < 1.patch
       - run: make vim || cat /Users/runner/Library/Logs/Homebrew/perl/02.make
