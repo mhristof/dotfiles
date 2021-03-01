@@ -1,4 +1,3 @@
-
 AG := /usr/bin/ag
 CTAGS := /usr/bin/ctags
 CURL := /usr/bin/curl
@@ -15,37 +14,9 @@ VIM := /usr/bin/vim
 WATCH := 
 ZSH := /usr/bin/zsh
 
-
-update: /var/cache/apt/archives/lock
-	sudo apt-get update
-
-$(ZSH): update
-	sudo apt-get install -y zsh
-
-$(SPONGE): update
-	sudo apt-get install -y moreutils
-
-$(SRCHILITE): update
-	sudo apt-get install -y source-highlight
-
-$(CURL): update
-	sudo apt-get install -y curl
-
-
-$(HTOP): update
-	sudo apt-get install -y htop
-
-$(PYTHON3): update
-	sudo apt-get install -y python3
-
-/usr/bin/pip3: update
-	sudo apt-get install -y python3-pip
-
-/usr/share/doc/xz-utils: update
-	sudo apt-get install -y xz-utils
-
-$(VIM): update
-	sudo apt-get install -y vim
+ifneq (, $(shell which apt-get))
+include Makefile.apt
+endif
 
 $(SHELLCHECK): /usr/bin/pip3 /usr/share/doc/xz-utils $(CURL)
 	cd /tmp/
@@ -53,22 +24,10 @@ $(SHELLCHECK): /usr/bin/pip3 /usr/share/doc/xz-utils $(CURL)
 	mkdir -p ~/.local/bin
 	cp "shellcheck-stable/shellcheck" ~/.local/bin/
 
-
 $(PYCODESTYLE): /usr/bin/pip3 
 	pip3 install --user pycodestyle
 
-
-/usr/bin/ag: update
-	sudo apt-get install silversearcher-ag
-
-$(GO):
+$(GO): $(CURL)
 	cd ~/
 	curl -L --silent https://golang.org/dl/go1.14.4.linux-amd64.tar.gz | tar xfz -
 	mv go .go
-
-$(CTAGS): update
-	sudo apt-get install -y exuberant-ctags
-
-$(PYLINT):
-	sudo apt-get install python3-setuptools
-	pip3 install pylint

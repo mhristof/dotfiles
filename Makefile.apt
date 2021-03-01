@@ -1,0 +1,27 @@
+update: /var/cache/apt/archives/lock
+	sudo apt-get update
+
+$(SPONGE): update
+	sudo apt-get install -y moreutils
+
+$(SRCHILITE): update
+	sudo apt-get install -y source-highlight
+
+/usr/bin/pip3: update
+	sudo apt-get install -y python3-pip
+
+/usr/share/doc/xz-utils: update
+	sudo apt-get install -y xz-utils
+
+/usr/bin/ag: update
+	sudo apt-get install silversearcher-ag
+
+$(CTAGS): update
+	sudo apt-get install -y exuberant-ctags
+
+$(PYLINT):
+	sudo apt-get install python3-setuptools
+	pip3 install pylint
+
+/usr/bin/%: update
+	sudo apt-get install -y $(shell basename $@)
