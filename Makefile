@@ -12,6 +12,8 @@ endif
 include Makefile.$(shell uname -s)
 
 UNAME := $(shell uname | tr '[:upper:]' '[:lower:]')
+PWD ?= $(shell pwd)
+
 .PHONY: default
 default: brew vim essentials
 
@@ -219,7 +221,10 @@ build.amazon: dockerfiles/linux.amazon
 	docker build -f dockerfiles/linux.amazon -t dotfiles-amazon .
 
 amazon: build.amazon
-	docker run -it dotfiles-amazon bash
+	docker run --rm -it dotfiles-amazon bash
+
+amazon-test: build.amazon
+	docker run --rm dotfiles-amazon make zsh dev
 
 # vim:ft=make
 #

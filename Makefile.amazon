@@ -9,7 +9,7 @@ $(PIP3): $(PYTHON3)
 	python3 get-pip.py --user
 
 /tmp/ag.rpm:
-	curl --silent -O /tmp/ag.rpm https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/t/the_silver_searcher-2.1.0-1.el7.x86_64.rpm
+	curl --silent https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/t/the_silver_searcher-2.1.0-1.el7.x86_64.rpm > $@
 
 /usr/bin/ag: /tmp/ag.rpm
 	sudo yum install /tmp/ag.rpm
