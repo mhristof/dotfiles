@@ -68,7 +68,7 @@ dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbr
 	curl -sLO https://raw.githubusercontent.com/mhristof/ale-jenkinsfile/master/ale_jenkinsfile.vim
 
 .PHONY: ctags
-ctags: ~/.brew/bin/ctags
+ctags: $(CTAGS)
 ~/.brew/bin/ctags: ~/.ctags.d
 	brew install --HEAD universal-ctags/universal-ctags/universal-ctags
 
