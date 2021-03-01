@@ -48,7 +48,7 @@ dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbr
 ~/.brew/bin/src-hilite-lesspipe.sh:
 	$(BREW) install source-highlight
 
-~/.vim: ~/.vimrc $(SHELLCHECK) $(PYCODESTYLE) $(AG) ~/.ctags.d $(PYLINT) $(VIM)
+~/.vim: ~/.vimrc $(SHELLCHECK) $(PYCODESTYLE) $(AG) ctags $(PYLINT) $(VIM)
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 	vim +PluginInstall +qall
 	# this requires plugins to be installed since it creates a subfolder in there
@@ -66,6 +66,11 @@ dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbr
 	mkdir -p ~/.vim/bundle/ale/ale_linters/groovy/
 	cd ~/.vim/bundle/ale/ale_linters/groovy/
 	curl -sLO https://raw.githubusercontent.com/mhristof/ale-jenkinsfile/master/ale_jenkinsfile.vim
+
+.PHONY: ctags
+ctags: ~/.brew/bin/ctags
+~/.brew/bin/ctags: ~/.ctags.d
+	brew install --HEAD universal-ctags/universal-ctags/universal-ctags
 
 ~/.brew/opt/curl/bin/curl:
 	$(BREW) install curl
