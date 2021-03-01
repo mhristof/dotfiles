@@ -16,7 +16,7 @@ jobs:
               mv .github/perl.rb /Users/runner/.brew/Library/Taps/homebrew/homebrew-core/Formula/perl.rb || true
           - image: ubuntu-latest
             cmdPrefix: "make amazon-test; docker run --rm dotfiles-amazon"
-    runs-on: ${{ matrix.platform }}
+    runs-on: ${{ matrix.image }}
     steps:
       - uses: actions/checkout@v2
       - run: ${{ matrix.fix }}
