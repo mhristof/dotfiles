@@ -1,10 +1,13 @@
 #
 #
 
+MAKEFLAGS += --warn-undefined-variables
 SHELL := /bin/bash
+ifeq ($(word 1,$(subst ., ,$(MAKE_VERSION))),4)
 .SHELLFLAGS := -eu -o pipefail -c
+endif
+.DEFAULT_GOAL := help
 .ONESHELL:
-
 
 include Makefile.$(shell uname -s)
 
@@ -196,20 +199,27 @@ bash-my-aws: ~/.bash-my-aws
 ~/.%:
 	ln -sf $(PWD)/$(shell basename $@) $@
 
-build: dockerfiles/linux
-	docker build -f dockerfiles/linux -t dotfiles .
+build: dockerfiles/linux.apt
+	docker build -f dockerfiles/linux.apt -t dotfiles-apt .
 
 linux-test:
-	docker run dotfiles make vim
+	docker run dotfiles-apt make vim
 
 hub: build
-	docker build -f dockerfiles/hub -t mhristof/dotfiles .
+	docker build -f dockerfiles/hub -t mhristof/dotfiles-apt .
 
 push:
-	docker push mhristof/dotfiles
+	docker push mhristof/dotfiles-apt
 
 run: build
-	docker run -it dotfiles bash
+	docker run -it dotfiles-apt bash
+
+.PHONY: build.amazon
+build.amazon: dockerfiles/linux.amazon
+	docker build -f dockerfiles/linux.amazon -t dotfiles-amazon .
+
+amazon: build.amazon
+	docker run -it dotfiles-amazon bash
 
 # vim:ft=make
 #
