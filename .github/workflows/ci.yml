@@ -7,14 +7,17 @@ jobs:
   build:
     strategy:
       matrix:
-        platform:
-          - ubuntu-latest
-          - macos-latest
-    runs-on: ${{ matrix.platform }}
+        include:
+          - image: ubuntu-latest
+          - image: macos-latest
+            fix: |
+              # macos fix for https://github.com/Homebrew/homebrew-core/pull/71996
+              make brew || true
+              mv .github/perl.rb /Users/runner/.brew/Library/Taps/homebrew/homebrew-core/Formula/perl.rb || true
+          - image: ubuntu-latest
+            cmdPrefix: "make amazon-test; docker run --rm dotfiles-amazon"
+    runs-on: ${{ matrix.image }}
     steps:
       - uses: actions/checkout@v2
-      - run: |
-          # macos fix for https://github.com/Homebrew/homebrew-core/pull/71996
-          make brew || true
-          mv .github/perl.rb /Users/runner/.brew/Library/Taps/homebrew/homebrew-core/Formula/perl.rb || true
-      - run: make zsh dev
+      - run: ${{ matrix.fix }}
+      - run: ${{ matrix.cmdPrefix }} make zsh dev
