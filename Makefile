@@ -9,6 +9,7 @@ endif
 .DEFAULT_GOAL := help
 .ONESHELL:
 
+BREW_BIN := /usr/local/bin
 include Makefile.$(shell uname -s)
 
 UNAME := $(shell uname | tr '[:upper:]' '[:lower:]')
@@ -21,18 +22,21 @@ default: brew vim essentials
 essentials: $(HTOP) $(WATCH) less $(GREP) $(SPONGE)
 
 .PHONY: dev
-dev: vim git ~/bin/semver $(JQ)
+dev: vim git ~/bin/semver ls $(BREW_BIN)/watch $(JQ)
+
+ls:
+	brew install coreutils
 
 .PHONY: go
 go: $(GO) ~/go/bin/gojson 
 
 .PHONY: aws
-aws: bash-my-aws ~/.brew/bin/aws ~/brew/bin/kubectx
+aws: bash-my-aws $(BREW_BIN)/aws $(BREW_BIN)/kubectx
 
-~/.brew/bin/aws:
+$(BREW_BIN)/aws:
 	pip3 install aws --user
 
-~/.brew/bin/diff:
+$(BREW_BIN)/diff:
 	brew install diffutils
 
 .PHONY: vim
@@ -50,11 +54,15 @@ ln: dots
 .PHONY: dots
 dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbrc ~/.pythonrc.py ~/.tmux.conf
 
-~/.brew/bin/src-hilite-lesspipe.sh:
+$(BREW_BIN)/src-hilite-lesspipe.sh:
 	$(BREW) install source-highlight
 
 ~/.vim: ~/.vimrc $(SHELLCHECK) $(PYCODESTYLE) $(AG) ctags $(PYLINT) $(VIM) ~/.tflint.d/plugins/tflint-ruleset-aws
+
+~/.vim/bundle/Vundle.vim:
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+
+~/.vim: ~/.vim/bundle/Vundle.vim ~/.vimrc $(SHELLCHECK) $(PYCODESTYLE) $(AG) ctags $(PYLINT) $(VIM)
 	vim +PluginInstall +qall
 	# this requires plugins to be installed since it creates a subfolder in there
 	make ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim
@@ -81,10 +89,10 @@ dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbr
 
 .PHONY: ctags
 ctags: $(CTAGS)
-~/.brew/bin/ctags: ~/.ctags.d
+$(BREW_BIN)/ctags: ~/.ctags.d
 	brew install --HEAD universal-ctags/universal-ctags/universal-ctags
 
-~/.brew/opt/curl/bin/curl:
+$(BREW_BIN)/curl/bin/curl:
 	$(BREW) install curl
 
 
@@ -101,34 +109,35 @@ zsh: $(ZSH) ~/.zshrc ~/.dotfilesrc ~/.oh-my-zsh
 brew: ~/.brew
 
 .PHONY: fzf
-fzf: ~/.brew/bin/fzf ~/.fzf.zsh
+fzf: $(BREW_BIN)/fzf ~/.fzf.zsh
+	$(brew --prefix)/opt/fzf/install
 
 ~/.fzf.zsh:
 	$(shell brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc
 
-~/.brew/bin/autojump:
+$(BREW_BIN)/autojump:
 	$(BREW) install autojump
 
 python3: $(PYTHON3) ~/.irbrc ~/.pythonrc.py
 	pip3 install -r requirements.yml
 
-~/.brew/opt/findutils/libexec/gnubin/xargs:
+$(BREW_BIN)/findutils/libexec/gnubin/xargs:
 	$(BREW) install findutils
 
-~/.brew/opt/coreutils:
+$(BREW_BIN)/coreutils:
 	$(BREW) install coreutils
 
-aws-azure-login: ~/.brew/bin/node
+aws-azure-login: $(BREW_BIN)/node
 	npm install -g aws-azure-login@1.13.0
 
 .PHONY: iterm
 iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app ~/bin/germ
 
-~/.iterm2_shell_integration.zsh: ~/.brew/opt/curl/bin/curl
+~/.iterm2_shell_integration.zsh: $(BREW_BIN)/curl/bin/curl
 	curl -L https://iterm2.com/shell_integration/install_shell_integration_and_utilities.sh | bash
 	patch -p1 -R < data/iterm-zsh.patch
 
-/Applications/iTerm.app: ~/.brew/bin/python3
+/Applications/iTerm.app: $(BREW_BIN)/python3
 	brew cask install iterm2
 
 ~/bin/germ: ~/.zsh.site-functions
@@ -136,14 +145,14 @@ iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app ~/bin/germ
 	chmod +x ~/bin/germ
 	~/bin/germ autocomplete > ~/.zsh.site-functions/_germ
 
-dock: ~/.brew/opt/findutils/libexec/gnubin/xargs ~/.brew/bin/dockutil
+dock: $(BREW_BIN)/findutils/libexec/gnubin/xargs $(BREW_BIN)/dockutil
 	dockutil --list | sed 's/file:.*//g' | xargs --no-run-if-empty -n1 -d'\n' dockutil --remove
 
 /Applications/Alfred 4.app:
 	brew cask install alfred
 	open /Applications/Alfred\ 4.app/Contents/MacOS/Alfred
 
-~/.brew/opt/make/libexec/gnubin/make:
+$(BREW_BIN)/make/libexec/gnubin/make:
 	$(BREW) install make
 
 .PHONY: docker
@@ -155,13 +164,13 @@ docker: /Applications/Docker.app/Contents/MacOS/Docker
 pbpaste: /tmp/alfred-pbpaste.alfredworkflow
 	open /tmp/alfred-pbpaste.alfredworkflow
 
-alfred: ~/.brew/bin/wget /tmp/alfred-tf-snippets.alfredworkflow pbpaste $(GREP)
+alfred: $(BREW_BIN)/wget /tmp/alfred-tf-snippets.alfredworkflow pbpaste $(GREP)
 	open /tmp/alfred-tf-snippets.alfredworkflow
 
 /tmp/alfred-pbpaste.alfredworkflow:
 	wget --quiet https://github.com/mhristof/alfred-pbpaste/releases/download/0.6.3/alfred-pbpaste.alfredworkflow -O alfred-pbpaste.alfredworkflow
 
-/tmp/alfred-tf-snippets.alfredworkflow: ~/.brew/bin/jq
+/tmp/alfred-tf-snippets.alfredworkflow: $(BREW_BIN)/jq
 	wget https://github.com/mhristof/alfred-tf-snippets/releases/download/0.7.0/alfred-tf-snippets.alfredworkflow -O /tmp/alfred-tf-snippets.alfredworkflow
 
 ~/go/bin/gojson:
@@ -194,7 +203,7 @@ bash-my-aws: ~/.bash-my-aws
 	$(BREW) tap homebrew/core
 	$(BREW) --version
 
-~/bin/semver: ~/bin ~/.zsh.site-functions
+~/bin/semver: $(BREW_BIN)/wget ~/bin ~/.zsh.site-functions
 	wget --quiet https://github.com/mhristof/semver/releases/download/v0.3.2/semver.$(UNAME) -O ~/bin/semver
 	chmod +x ~/bin/semver
 	~/bin/semver autocomplete > ~/.zsh.site-functions/_semver
@@ -205,7 +214,7 @@ bash-my-aws: ~/.bash-my-aws
 ~/.local/bin:
 	mkdir -p $@
 
-~/.brew/bin/%: ~/.brew
+$(BREW_BIN)/%:
 	$(BREW) install $*
 
 ~/.%:

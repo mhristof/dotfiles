@@ -11,16 +11,16 @@ export EDITOR="vim -X"
 
 # allow the next section to re-arrange paths
 export PATH=$HOME/.aws-cli/aws-cli:$PATH # aws has its own python in there, so add it to the bottom of the food chain
-export PATH=$HOME/.brew/bin:/usr/local/sbin:/usr/local/bin:$PATH
+export PATH=$HOME/.brew/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:$PATH
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
-export PATH=$HOME/.brew/opt/python/libexec/bin:$PATH
+export PATH=$HOME/.brew/opt/python/libexec/bin:/usr/local/opt/python/libexec/bin:$PATH
 export PATH=$HOME/Library/Python/3.7/bin:$PATH
-export PATH=$HOME/.brew/opt/findutils/libexec/gnubin:$PATH
-export PATH=$HOME/.brew/opt/grep/libexec/gnubin:$PATH
-export PATH=$HOME/.brew/opt/make/libexec/gnubin:$PATH
-export PATH=$HOME/.brew/opt/gettext/bin:$PATH
-export PATH=$HOME/.brew/opt/coreutils/libexec/gnubin:$PATH
-export PATH=$HOME/.brew/opt/openvpn/sbin:$PATH
+export PATH=$HOME/.brew/opt/findutils/libexec/gnubin:/usr/local/opt/findutils/libexec/gnubin:$PATH
+export PATH=$HOME/.brew/opt/grep/libexec/gnubin:/usr/local/opt/grep/libexec/gnubin:$PATH
+export PATH=$HOME/.brew/opt/make/libexec/gnubin:/usr/local/opt/make/libexec/gnubin:$PATH
+export PATH=$HOME/.brew/opt/gettext/bin:/usr/local/opt/gettext/bin:$PATH
+export PATH=$HOME/.brew/opt/coreutils/libexec/gnubin:/usr/local/opt/coreutils/libexec/gnubin:$PATH
+export PATH=$HOME/.brew/opt/openvpn/sbin:/usr/local/opt/openvpn/sbin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.bash-my-aws/bin:$PATH
 
