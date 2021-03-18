@@ -9,6 +9,7 @@ GREP := grep
 GREP := grep
 HTOP := $(BREW_BIN)/htop
 JQ := $(BREW_BIN)/jq
+LS := $(BREW_BIN)/coreutils
 PYCODESTYLE := $(BREW_BIN)/pycodestyle
 PYLINT := ~/Library/Python/3.7/bin/pylint
 PYTHON3 := $(BREW_BIN)/python3

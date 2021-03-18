@@ -5,6 +5,7 @@ GO := ~/.go/bin/go
 GREP :=
 HTOP := /usr/bin/htop
 JQ := ~/.local/bin/jq
+LS :=
 PIP3 := /usr/bin/pip3
 PYCODESTYLE := ~/.local/bin/pycodestyle
 PYLINT := ~/.local/bin/pylint

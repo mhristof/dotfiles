@@ -22,10 +22,7 @@ default: brew vim essentials
 essentials: $(HTOP) $(WATCH) less $(GREP) $(SPONGE)
 
 .PHONY: dev
-dev: vim git ~/bin/semver ls $(BREW_BIN)/watch $(JQ)
-
-ls:
-	brew install coreutils
+dev: vim git ~/bin/semver $(LS) $(BREW_BIN)/watch $(JQ)
 
 .PHONY: go
 go: $(GO) ~/go/bin/gojson 
