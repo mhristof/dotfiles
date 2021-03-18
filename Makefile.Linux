@@ -32,9 +32,6 @@ $(SHELLCHECK): $(PIP3) $(XZ) $(CURL) /usr/bin/tar
 	cp "shellcheck-stable/shellcheck" ~/.local/bin/
 
 
-/usr/bin/unzip:
-	sudo apt-get update
-	sudo apt-get install unzip
 
 $(TFLINT): ~/.local/bin /usr/bin/unzip
 	curl --location --silent https://github.com/terraform-linters/tflint/releases/download/v0.25.0/tflint_linux_amd64.zip > /tmp/tflint.zip

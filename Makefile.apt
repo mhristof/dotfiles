@@ -1,6 +1,9 @@
 update: /var/cache/apt/archives/lock
 	sudo apt-get update
 
+/usr/bin/unzip: update
+	sudo apt-get install unzip
+
 $(SPONGE): update
 	sudo apt-get install -y moreutils
 
