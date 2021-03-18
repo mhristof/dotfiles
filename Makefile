@@ -60,7 +60,7 @@ dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbr
 	make ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim
 	make ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim
 
-~/.tflint.d/plugins/tflint-ruleset-aws: ~/.brew/bin/tflint
+~/.tflint.d/plugins/tflint-ruleset-aws: $(TFLINT)
 	curl --location --silent https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v0.3.0/tflint-ruleset-aws_$(UNAME)_amd64.zip > /tmp/tflint-ruleset-aws.zip
 	unzip /tmp/tflint-ruleset-aws.zip
 	mkdir -p $(shell dirname $@)
@@ -200,6 +200,9 @@ bash-my-aws: ~/.bash-my-aws
 	~/bin/semver autocomplete > ~/.zsh.site-functions/_semver
 
 ~/.zsh.site-functions:
+	mkdir -p $@
+
+~/.local/bin:
 	mkdir -p $@
 
 ~/.brew/bin/%: ~/.brew

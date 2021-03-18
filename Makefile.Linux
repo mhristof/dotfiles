@@ -1,6 +1,7 @@
 AG := /usr/bin/ag
 CTAGS := /usr/bin/ctags
 CURL := /usr/bin/curl
+TFLINT := ~/.local/bin/tflint
 GO := ~/.go/bin/go
 GREP :=
 HTOP := /usr/bin/htop
@@ -29,6 +30,12 @@ $(SHELLCHECK): $(PIP3) $(XZ) $(CURL) /usr/bin/tar
 	curl -L --silent "https://github.com/koalaman/shellcheck/releases/download/stable/shellcheck-stable.linux.x86_64.tar.xz" | tar -xJv
 	mkdir -p ~/.local/bin
 	cp "shellcheck-stable/shellcheck" ~/.local/bin/
+
+
+$(TFLINT): ~/.local/bin
+	curl --location --silent https://github.com/terraform-linters/tflint/releases/download/v0.25.0/tflint_linux_amd64.zip > /tmp/tflint.zip
+	unzip /tmp/tflint.zip
+	mv tflint $@
 
 $(PYCODESTYLE): /usr/bin/pip3 
 	pip3 install --user pycodestyle
