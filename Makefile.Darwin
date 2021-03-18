@@ -1,3 +1,5 @@
+BREW_BIN := /usr/local/bin
+
 AG := $(BREW_BIN)/ag
 BREW := ~/.brew/bin/brew
 CTAGS := $(BREW_BIN)/ctags
@@ -39,3 +41,7 @@ $(CTAGS):
 
 $(PYLINT):
 	pip3 install pylint
+
+$(BREW_BIN)/%:
+	$(BREW) install $*
+
