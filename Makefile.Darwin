@@ -2,6 +2,7 @@ AG := ~/.brew/bin/ag
 BREW := ~/.brew/bin/brew
 CTAGS := ~/.brew/bin/ctags
 CURL := ~/.brew/opt/curl/bin/curl
+TFLINT := ~/.brew/bin/tflint
 GO := ~/.brew/bin/go 
 GREP := grep
 HTOP := ~/.brew/bin/htop 
