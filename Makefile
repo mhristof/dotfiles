@@ -203,7 +203,7 @@ bash-my-aws: ~/.bash-my-aws
 	$(BREW) tap homebrew/core
 	$(BREW) --version
 
-~/bin/semver: $(BREW_BIN)/wget ~/bin ~/.zsh.site-functions
+~/bin/semver: $(WGET) ~/bin ~/.zsh.site-functions
 	wget --quiet https://github.com/mhristof/semver/releases/download/v0.3.2/semver.$(UNAME) -O ~/bin/semver
 	chmod +x ~/bin/semver
 	~/bin/semver autocomplete > ~/.zsh.site-functions/_semver

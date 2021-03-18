@@ -14,7 +14,8 @@ SPONGE := /usr/bin/sponge
 SRCHILITE := /usr/share/source-highlight/src-hilite-lesspipe.sh
 TFLINT := ~/.local/bin/tflint
 VIM := /usr/bin/vim
-WATCH := 
+WATCH := /usr/bin/watch
+WGET := /usr/bin/wget
 XZ := /usr/share/doc/xz-utils 
 ZSH := /usr/bin/zsh
 

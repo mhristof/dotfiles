@@ -18,6 +18,7 @@ SRCHILITE :=  $(BREW_BIN)/src-hilite-lesspipe.sh
 TFLINT := $(BREW_BIN)/tflint
 VIM := $(BREW_BIN)/vim
 WATCH := $(BREW_BIN)/watch
+WGET := $(BREW_BIN)/wget
 ZSH := $(BREW_BIN)/zsh
 
 
