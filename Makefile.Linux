@@ -4,6 +4,8 @@ CURL := /usr/bin/curl
 GO := ~/.go/bin/go
 GREP :=
 HTOP := /usr/bin/htop
+JQ := ~/.local/bin/jq
+PIP3 := /usr/bin/pip3
 PYCODESTYLE := ~/.local/bin/pycodestyle
 PYLINT := ~/.local/bin/pylint
 PYTHON3 := /usr/bin/python3
@@ -12,9 +14,8 @@ SPONGE := /usr/bin/sponge
 SRCHILITE := /usr/share/source-highlight/src-hilite-lesspipe.sh
 VIM := /usr/bin/vim
 WATCH := 
-ZSH := /usr/bin/zsh
 XZ := /usr/share/doc/xz-utils 
-PIP3 := /usr/bin/pip3
+ZSH := /usr/bin/zsh
 
 ifneq (, $(shell command -v apt-get))
 include Makefile.apt
@@ -23,6 +24,11 @@ endif
 ifneq (, $(shell command -v amazon-linux-extras))
 include Makefile.amazon
 endif
+
+
+$(JQ):
+	curl --location --silent "https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64" > $@
+	chmod +x $@
 
 $(SHELLCHECK): $(PIP3) $(XZ) $(CURL) /usr/bin/tar
 	cd /tmp/

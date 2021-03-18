@@ -5,6 +5,7 @@ CURL := ~/.brew/opt/curl/bin/curl
 GO := ~/.brew/bin/go 
 GREP := grep
 HTOP := ~/.brew/bin/htop 
+JQ := ~/.brew/bin/jq
 PYCODESTYLE := ~/.brew/bin/pycodestyle 
 PYLINT := ~/Library/Python/3.7/bin/pylint
 PYTHON3 := ~/.brew/bin/python3
@@ -16,6 +17,7 @@ WATCH := ~/.brew/bin/watch
 ZSH := ~/.brew/bin/zsh
 
 $(GREP): ~/.brew/opt/grep/libexec/gnubin/grep
+
 
 $(SPONGE):
 	$(BREW) install moreutils
