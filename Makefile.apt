@@ -1,3 +1,5 @@
+WATCH := /usr/bin/watch
+
 update: /var/cache/apt/archives/lock
 	sudo apt-get update
 

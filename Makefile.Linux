@@ -5,6 +5,7 @@ GO := ~/.go/bin/go
 GREP :=
 HTOP := /usr/bin/htop
 JQ := ~/.local/bin/jq
+LS :=
 PIP3 := /usr/bin/pip3
 PYCODESTYLE := ~/.local/bin/pycodestyle
 PYLINT := ~/.local/bin/pylint
@@ -14,7 +15,8 @@ SPONGE := /usr/bin/sponge
 SRCHILITE := /usr/share/source-highlight/src-hilite-lesspipe.sh
 TFLINT := ~/.local/bin/tflint
 VIM := /usr/bin/vim
-WATCH := 
+WATCH := /usr/bin/watch
+WGET := /usr/bin/wget
 XZ := /usr/share/doc/xz-utils 
 ZSH := /usr/bin/zsh
 

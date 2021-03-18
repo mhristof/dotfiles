@@ -1,2 +1,4 @@
+WATCH :=
+
 /usr/bin/%:
 	sudo yum install -y $(shell basename $@)
