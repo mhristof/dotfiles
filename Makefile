@@ -85,9 +85,7 @@ $(BREW_BIN)/src-hilite-lesspipe.sh:
 	curl -sLO https://raw.githubusercontent.com/mhristof/ale-jenkinsfile/master/ale_jenkinsfile.vim
 
 .PHONY: ctags
-ctags: $(CTAGS)
-$(BREW_BIN)/ctags: ~/.ctags.d
-	brew install --HEAD universal-ctags/universal-ctags/universal-ctags
+ctags: $(CTAGS) ~/.ctags.d
 
 $(BREW_BIN)/curl/bin/curl:
 	$(BREW) install curl

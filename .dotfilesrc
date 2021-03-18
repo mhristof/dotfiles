@@ -13,6 +13,7 @@ export EDITOR="vim -X"
 export PATH=$HOME/.aws-cli/aws-cli:$PATH # aws has its own python in there, so add it to the bottom of the food chain
 export PATH=$HOME/.brew/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:$PATH
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+export PATH=$HOME/.brew/opt/curl/bin:/usr/local/opt/curl/bin:$PATH
 export PATH=$HOME/.brew/opt/python/libexec/bin:/usr/local/opt/python/libexec/bin:$PATH
 export PATH=$HOME/Library/Python/3.7/bin:$PATH
 export PATH=$HOME/.brew/opt/findutils/libexec/gnubin:/usr/local/opt/findutils/libexec/gnubin:$PATH
