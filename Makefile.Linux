@@ -4,6 +4,7 @@ CURL := /usr/bin/curl
 GO := ~/.go/bin/go
 GREP :=
 HTOP := /usr/bin/htop
+JQ := ~/.local/bin/jq
 PIP3 := /usr/bin/pip3
 PYCODESTYLE := ~/.local/bin/pycodestyle
 PYLINT := ~/.local/bin/pylint
@@ -24,6 +25,11 @@ endif
 ifneq (, $(shell command -v amazon-linux-extras))
 include Makefile.amazon
 endif
+
+
+$(JQ):
+	curl --location --silent "https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64" > $@
+	chmod +x $@
 
 $(SHELLCHECK): $(PIP3) $(XZ) $(CURL) /usr/bin/tar
 	cd /tmp/

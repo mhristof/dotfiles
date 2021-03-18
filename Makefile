@@ -21,7 +21,7 @@ default: brew vim essentials
 essentials: $(HTOP) $(WATCH) less $(GREP) $(SPONGE)
 
 .PHONY: dev
-dev: vim git ~/bin/semver
+dev: vim git ~/bin/semver $(JQ)
 
 .PHONY: go
 go: $(GO) ~/go/bin/gojson 
