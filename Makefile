@@ -92,7 +92,6 @@ $(BREW_BIN)/ctags: ~/.ctags.d
 $(BREW_BIN)/curl/bin/curl:
 	$(BREW) install curl
 
-
 ~/.zshrc: ~/.zsh.autoload
 	ln -sf $(PWD)/$(shell basename $@) $@
 
