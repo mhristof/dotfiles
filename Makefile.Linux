@@ -4,17 +4,18 @@ CURL := /usr/bin/curl
 GO := ~/.go/bin/go
 GREP :=
 HTOP := /usr/bin/htop
+PIP3 := /usr/bin/pip3
 PYCODESTYLE := ~/.local/bin/pycodestyle
 PYLINT := ~/.local/bin/pylint
 PYTHON3 := /usr/bin/python3
 SHELLCHECK := ~/.local/bin/shellcheck
 SPONGE := /usr/bin/sponge
 SRCHILITE := /usr/share/source-highlight/src-hilite-lesspipe.sh
+TFLINT := ~/.local/bin/tflint
 VIM := /usr/bin/vim
 WATCH := 
-ZSH := /usr/bin/zsh
 XZ := /usr/share/doc/xz-utils 
-PIP3 := /usr/bin/pip3
+ZSH := /usr/bin/zsh
 
 ifneq (, $(shell command -v apt-get))
 include Makefile.apt
@@ -29,6 +30,13 @@ $(SHELLCHECK): $(PIP3) $(XZ) $(CURL) /usr/bin/tar
 	curl -L --silent "https://github.com/koalaman/shellcheck/releases/download/stable/shellcheck-stable.linux.x86_64.tar.xz" | tar -xJv
 	mkdir -p ~/.local/bin
 	cp "shellcheck-stable/shellcheck" ~/.local/bin/
+
+
+
+$(TFLINT): ~/.local/bin /usr/bin/unzip
+	curl --location --silent https://github.com/terraform-linters/tflint/releases/download/v0.25.0/tflint_linux_amd64.zip > /tmp/tflint.zip
+	unzip /tmp/tflint.zip
+	mv tflint $@
 
 $(PYCODESTYLE): /usr/bin/pip3 
 	pip3 install --user pycodestyle
