@@ -49,7 +49,11 @@ git: ~/.gitignore_global ~/.gitconfig ~/.gitconfig_github
 ln: dots
 
 .PHONY: dots
-dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbrc ~/.pythonrc.py ~/.tmux.conf
+dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbrc ~/.pythonrc.py ~/.tmux.conf ~/.p10k.zsh
+
+~/.p10k.zsh:
+	brew install romkatv/powerlevel10k/powerlevel10k
+	ln -sf $(PWD)/$(shell basename $@) $@
 
 $(BREW_BIN)/src-hilite-lesspipe.sh:
 	$(BREW) install source-highlight
@@ -68,12 +72,11 @@ $(BREW_BIN)/src-hilite-lesspipe.sh:
 .PHONY: tflint
 tflint: ~/.tflint.d/plugins/tflint-ruleset-aws
 
-~/.tflint.d/plugins/tflint-ruleset-aws: $(TFLINT)
+~/.tflint.d/plugins/tflint-ruleset-aws: $(TFLINT) ~/.tflint.hcl
 	curl --location --silent https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v0.3.0/tflint-ruleset-aws_$(UNAME)_amd64.zip > /tmp/tflint-ruleset-aws.zip
 	unzip /tmp/tflint-ruleset-aws.zip
 	mkdir -p $(shell dirname $@)
 	mv tflint-ruleset-aws $@
-	make ~/.tflint.hcl
 
 .PHONY: checkov
 checkov: $(CHECKOV)
