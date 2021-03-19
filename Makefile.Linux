@@ -1,5 +1,6 @@
-AUTOJUMP := ~/.local/bin/autojump
 AG := /usr/bin/ag
+AUTOJUMP := ~/.local/bin/autojump
+CHECKOV := ~/.local/bin/checkov
 CTAGS := /usr/bin/ctags
 CURL := /usr/bin/curl
 GO := ~/.go/bin/go
@@ -54,8 +55,11 @@ $(TFLINT): ~/.local/bin /usr/bin/unzip
 	unzip /tmp/tflint.zip
 	mv tflint $@
 
-$(PYCODESTYLE): /usr/bin/pip3 
+$(PYCODESTYLE): /usr/bin/pip3
 	pip3 install --user pycodestyle
+
+$(CHECKOV): /usr/bin/pip3
+	pip3 install --user checkov
 
 $(GO): $(CURL)
 	cd ~/

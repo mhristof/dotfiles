@@ -75,7 +75,10 @@ tflint: ~/.tflint.d/plugins/tflint-ruleset-aws
 	mv tflint-ruleset-aws $@
 	make ~/.tflint.hcl
 
-~/bin/checkov2vim: ~/bin
+.PHONY: checkov
+checkov: $(CHECKOV)
+
+~/bin/checkov2vim: ~/bin checkov
 	curl -sL https://github.com/mhristof/checkov2vim/releases/latest/download/checkov2vim.$(UNAME) > $@
 	chmod +x $@
 
