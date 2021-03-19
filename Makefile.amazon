@@ -1,7 +1,6 @@
 include Makefile.yum
 
 PIP3 := ~/.local/pip3
-
 XZ := /usr/bin/xz
 
 $(PIP3): $(PYTHON3)
