@@ -19,6 +19,7 @@ RUN curl --silent https://github.com/tianon/gosu/releases/download/1.12/gosu-amd
 
 RUN groupadd -g 1001 mhristof && \
     useradd --shell /bin/bash -r -u 1001 -g mhristof -g users --create-home --home /home/mhristof mhristof
+ENV SHELL /bin/bash
 
 COPY . /home/mhristof/dotfiles
 WORKDIR /home/mhristof/dotfiles
