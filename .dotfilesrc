@@ -115,8 +115,6 @@ done < <(find $HOME/.zsh.autoload/ -type f)
 src "${HOME}/.iterm2_shell_integration.zsh"
 src "${HOME}/.fzf.zsh"
 src "$HOME/.brew/etc/profile.d/autojump.sh"
-src "$HOME/.local/etc/profile.d/autojump.sh"
-src "/usr/local/etc/profile.d/autojump.sh"
 test -e "${HOME}/.brew/bin/go" && {
      export GOPATH=$HOME/go
      export PATH=$GOPATH/bin:$PATH
