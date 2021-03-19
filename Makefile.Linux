@@ -1,3 +1,4 @@
+AUTOJUMP := ~/.local/bin/autojump
 AG := /usr/bin/ag
 CTAGS := /usr/bin/ctags
 CURL := /usr/bin/curl
@@ -28,6 +29,13 @@ ifneq (, $(shell command -v amazon-linux-extras))
 include Makefile.amazon
 endif
 
+
+$(AUTOJUMP): ~/.autojump $(PYTHON3) ~/.local/bin
+	cd ~/.autojump
+	python3 ./install.py --destdir ~/.local/
+
+~/.autojump:
+	git clone git://github.com/wting/autojump.git $@
 
 $(JQ):
 	curl --location --silent "https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64" > $@

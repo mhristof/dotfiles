@@ -1,5 +1,6 @@
 # vim: ft=Dockerfile
 FROM ubuntu:20.04
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ENV XDG_CACHE_HOME /tmp/.cache
 ENV PYTEST_ADDOPTS="-o cache_dir=/tmp"
@@ -27,10 +28,13 @@ RUN curl --silent https://github.com/tianon/gosu/releases/download/1.12/gosu-amd
     chmod 0755 /usr/bin/sudo
 
 RUN groupadd -g 999 mhristof && \
-    useradd -r -u 999 -g mhristof -g users --create-home --home /home/mhristof mhristof
+    useradd --shell /bin/bash -r -u 999 -g mhristof -g users --create-home --home /home/mhristof mhristof
+ENV SHELL /bin/bash
 
 COPY . /home/mhristof/dotfiles
 WORKDIR /home/mhristof/dotfiles
 RUN chown mhristof:mhristof -R /home/mhristof/
 
 USER mhristof
+
+CMD ["/bin/bash"]
