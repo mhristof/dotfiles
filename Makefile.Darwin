@@ -7,7 +7,6 @@ CTAGS := $(BREW_BIN)/ctags
 CURL := $(BREW_BIN)/curl/bin/curl
 GO := $(BREW_BIN)/go
 GREP := grep
-GREP := grep
 HTOP := $(BREW_BIN)/htop
 JQ := $(BREW_BIN)/jq
 LS := $(BREW_BIN)/coreutils
@@ -37,6 +36,9 @@ $(SPONGE):
 	$(BREW) install moreutils
 
 ~/.brew/opt/grep/libexec/gnubin/grep:
+	# Error: Cannot install moreutils because conflicting formulae are installed.
+	# parallel: because both install a `parallel` executable
+	$(BREW) unlink parallel
 	$(BREW) install grep
 
 $(CTAGS):
