@@ -54,7 +54,7 @@ dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbr
 $(BREW_BIN)/src-hilite-lesspipe.sh:
 	$(BREW) install source-highlight
 
-~/.vim: ~/.vimrc $(SHELLCHECK) $(PYCODESTYLE) $(AG) ctags $(PYLINT) $(VIM) ~/.tflint.d/plugins/tflint-ruleset-aws
+~/.vim: ~/.vimrc $(SHELLCHECK) $(PYCODESTYLE) $(AG) ctags $(PYLINT) $(VIM) tflint
 
 ~/.vim/bundle/Vundle.vim:
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
@@ -64,6 +64,9 @@ $(BREW_BIN)/src-hilite-lesspipe.sh:
 	# this requires plugins to be installed since it creates a subfolder in there
 	make ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim
 	make ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim
+
+.PHONY: tflint
+tflint: ~/.tflint.d/plugins/tflint-ruleset-aws
 
 ~/.tflint.d/plugins/tflint-ruleset-aws: $(TFLINT)
 	curl --location --silent https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v0.3.0/tflint-ruleset-aws_$(UNAME)_amd64.zip > /tmp/tflint-ruleset-aws.zip
