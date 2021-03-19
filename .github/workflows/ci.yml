@@ -22,6 +22,8 @@ jobs:
       - run: ${{ matrix.fix }}
       - run: ${{ matrix.cmdPrefix }} make zsh dev
         shell: bash
+        env:
+          SHELL: /bin/bash
 
   automerge:
     runs-on: ubuntu-latest
