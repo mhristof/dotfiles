@@ -128,7 +128,7 @@ aws-azure-login: $(BREW_BIN)/node
 	npm install -g aws-azure-login@1.13.0
 
 .PHONY: iterm
-iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app ~/bin/germ
+iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app germ
 
 ~/.iterm2_shell_integration.zsh: $(BREW_BIN)/curl/bin/curl
 	curl -L https://iterm2.com/shell_integration/install_shell_integration_and_utilities.sh | bash
@@ -137,10 +137,12 @@ iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app ~/bin/germ
 /Applications/iTerm.app: $(BREW_BIN)/python3
 	brew cask install iterm2
 
+germ: ~/bin/germ
+
 ~/bin/germ: ~/.zsh.site-functions
 	wget --quiet https://github.com/mhristof/germ/releases/download/v1.8.3/germ.$(UNAME) -O ~/bin/germ
 	chmod +x ~/bin/germ
-	~/bin/germ autocomplete > ~/.zsh.site-functions/_germ
+	~/bin/germ autocomplete zsh > ~/.zsh.site-functions/_germ
 
 dock: $(BREW_BIN)/findutils/libexec/gnubin/xargs $(BREW_BIN)/dockutil
 	dockutil --list | sed 's/file:.*//g' | xargs --no-run-if-empty -n1 -d'\n' dockutil --remove
@@ -203,7 +205,7 @@ bash-my-aws: ~/.bash-my-aws
 ~/bin/semver: $(WGET) ~/bin ~/.zsh.site-functions
 	wget --quiet https://github.com/mhristof/semver/releases/download/v0.3.2/semver.$(UNAME) -O ~/bin/semver
 	chmod +x ~/bin/semver
-	~/bin/semver autocomplete > ~/.zsh.site-functions/_semver
+	~/bin/semver autocomplete zsh > ~/.zsh.site-functions/_semver
 
 ~/.zsh.site-functions:
 	mkdir -p $@

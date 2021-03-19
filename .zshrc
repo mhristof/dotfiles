@@ -18,8 +18,6 @@ src $HOME/.zshrc_local || true
 src $ZSH/oh-my-zsh.sh
 src $HOME/.dotfilesrc
 src $HOME/Library/Preferences/org.dystroy.broot/launcher/bash/br || true
-src "${fpath[1]}/_germ" && compdef _germ germ
-src "${fpath[1]}/_semver" && compdef _semver semver
 
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /Users/mhristof/.brew/bin/terraform terraform

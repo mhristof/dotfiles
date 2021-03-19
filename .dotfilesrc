@@ -11,6 +11,7 @@ export EDITOR="vim -X"
 
 # allow the next section to re-arrange paths
 export PATH=$HOME/.aws-cli/aws-cli:$PATH # aws has its own python in there, so add it to the bottom of the food chain
+export PATH=$GOPATH/bin:$PATH
 export PATH=$HOME/.brew/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:$PATH
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 export PATH=$HOME/.brew/opt/curl/bin:/usr/local/opt/curl/bin:$PATH
@@ -112,24 +113,24 @@ while read -r file; do
     autoload $file
 done < <(find $HOME/.zsh.autoload/ -type f)
 
+while read -r file; do
+    base="$(basename $file)"
+    source $file && compdef $base ${base/_/}
+done < <(find $HOME/.zsh.site-functions -type f)
+
 src "${HOME}/.iterm2_shell_integration.zsh"
 src "${HOME}/.fzf.zsh"
 src "$HOME/.brew/etc/profile.d/autojump.sh"
 src "$HOME/.local/etc/profile.d/autojump.sh"
 src "/usr/local/etc/profile.d/autojump.sh"
-test -e "${HOME}/.brew/bin/go" && {
-     export GOPATH=$HOME/go
-     export PATH=$GOPATH/bin:$PATH
-}
+src "${HOME}/.bash-my-aws/aliases"
+src "${HOME}/.bash-my-aws/bash_completion.sh"
+src "${HOME}/.brew/etc/profile.d/bash_completion.sh"
+export GOPATH=$HOME/go
 
 export PATH=~/bin:$PATH
 export PATH=$(echo -n $PATH | awk -v RS=: -v ORS=: '!arr[$0]++') # remove duplicates
 
-test -e "${HOME}/.bash-my-aws/aliases" && {
-    source "${HOME}/.bash-my-aws/aliases"
-    source "${HOME}/.bash-my-aws/bash_completion.sh"
-}
-src "${HOME}/.brew/etc/profile.d/bash_completion.sh"
 
 export VAULT_ADDR='http://127.0.0.1:8200'
 export AWS_SDK_LOAD_CONFIG=1
