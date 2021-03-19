@@ -1,6 +1,7 @@
 include Makefile.yum
 
 PIP3 := ~/.local/pip3
+SPONGE :=
 SRCHILITE :=
 XZ := /usr/bin/xz
 
