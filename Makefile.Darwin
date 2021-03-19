@@ -1,8 +1,9 @@
 BREW_BIN := /usr/local/bin
 
-AUTOJUMP := $(BREW_BIN)/autojump
 AG := $(BREW_BIN)/ag
+AUTOJUMP := $(BREW_BIN)/autojump
 BREW := ~/.brew/bin/brew
+CHECKOV := $(BREW_BIN)/checkov
 CTAGS := $(BREW_BIN)/ctags
 CURL := $(BREW_BIN)/curl/bin/curl
 GO := $(BREW_BIN)/go
