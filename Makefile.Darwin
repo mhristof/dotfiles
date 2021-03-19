@@ -1,6 +1,5 @@
 BREW_BIN := /usr/local/bin
 
-AUTOJUMP := $(BREW_BIN)/autojump
 AG := $(BREW_BIN)/ag
 BREW := ~/.brew/bin/brew
 CTAGS := $(BREW_BIN)/ctags
