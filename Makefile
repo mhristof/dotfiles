@@ -22,7 +22,7 @@ default: brew vim essentials
 essentials: $(HTOP) $(WATCH) less $(GREP) $(SPONGE)
 
 .PHONY: dev
-dev: dots essentials vim git ~/bin/semver $(LS) $(WATCH) $(JQ) $(AUTOJUMP) aws
+dev: dots vim git ~/bin/semver $(LS) $(WATCH) $(JQ) $(AUTOJUMP)
 
 .PHONY: go
 go: $(GO) ~/go/bin/gojson 
