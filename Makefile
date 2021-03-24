@@ -150,6 +150,11 @@ germ: ~/bin/germ
 	chmod +x ~/bin/germ
 	~/bin/germ autocomplete zsh > ~/.zsh.site-functions/_germ
 
+~/bin/githubactions-docs:
+	wget --quiet https://github.com/mhristof/githubactions-docs/releases/download/v0.2.0/$(shell basename $@).$(UNAME) -O $@
+	chmod +x $@
+	$@ autocomplete zsh > ~/.zsh.site-functions/_$(shell basename $@)
+
 dock: $(BREW_BIN)/findutils/libexec/gnubin/xargs $(BREW_BIN)/dockutil
 	dockutil --list | sed 's/file:.*//g' | xargs --no-run-if-empty -n1 -d'\n' dockutil --remove
 
