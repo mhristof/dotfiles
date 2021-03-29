@@ -8,6 +8,7 @@ fi
 
 export GIT_EMAIL="mhristof@gmail.com"
 export EDITOR="vim -X"
+export GOPATH=$HOME/go
 
 # allow the next section to re-arrange paths
 export PATH=$HOME/.aws-cli/aws-cli:$PATH # aws has its own python in there, so add it to the bottom of the food chain
@@ -128,7 +129,6 @@ src "${HOME}/.bash-my-aws/bash_completion.sh"
 src "${HOME}/.brew/etc/profile.d/bash_completion.sh"
 src "/usr/local/opt/powerlevel10k/powerlevel10k.zsh-theme"
 src "$HOME/.p10k.zsh" # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-export GOPATH=$HOME/go
 
 export PATH=~/bin:$PATH
 export PATH=$(echo -n $PATH | awk -v RS=: -v ORS=: '!arr[$0]++') # remove duplicates
