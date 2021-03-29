@@ -4,7 +4,6 @@ CHECKOV := ~/.local/bin/checkov
 CTAGS := /usr/bin/ctags
 CURL := /usr/bin/curl
 GO := ~/.go/bin/go
-GOLANGCI_LINT := ~/.local/bin/golangci-lint
 GREP :=
 HTOP := /usr/bin/htop
 JQ := ~/.local/bin/jq
@@ -31,7 +30,6 @@ ifneq (, $(shell command -v amazon-linux-extras))
 include Makefile.amazon
 endif
 
-
 $(AUTOJUMP): ~/.autojump $(PYTHON3) ~/.local/bin
 	cd ~/.autojump
 	python3 ./install.py --destdir ~/.local/
@@ -49,8 +47,6 @@ $(SHELLCHECK): $(PIP3) $(XZ) $(CURL) /usr/bin/tar
 	mkdir -p ~/.local/bin
 	cp "shellcheck-stable/shellcheck" ~/.local/bin/
 
-
-
 $(TFLINT): ~/.local/bin /usr/bin/unzip
 	curl --location --silent https://github.com/terraform-linters/tflint/releases/download/v0.25.0/tflint_linux_amd64.zip > /tmp/tflint.zip
 	unzip /tmp/tflint.zip
@@ -66,8 +62,3 @@ $(GO): $(CURL)
 	cd ~/
 	curl -L --silent https://golang.org/dl/go1.14.4.linux-amd64.tar.gz | tar xfz -
 	mv go .go
-
-$(GOLANGCI_LINT): ~/.local/bin
-	curl --location --silent https://github.com/golangci/golangci-lint/releases/download/v1.39.0/golangci-lint-1.39.0-linux-amd64.tar.gz > /tmp/golangci-lint.tar.gz
-	tar xvf /tmp/golangci-lint.tar.gz -C /tmp/
-	mv /tmp/golangci-lint-*-linux-amd64/golangci-lint $@
