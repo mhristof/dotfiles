@@ -220,7 +220,7 @@ bash-my-aws: ~/.bash-my-aws
 
 .PHONY: gh
 gh: ~/.local/bin/gh
-~/.local/bin/gh:
+~/.local/bin/gh: ~/.local/bin
 	wget --quiet https://github.com/cli/cli/releases/download/v1.7.0/gh_1.7.0_$(GH_OS)_amd64.tar.gz -O /tmp/gh.tar.gz
 	tar xf /tmp/gh.tar.gz -C /tmp/
 	mv /tmp/gh_*/bin/gh $@
