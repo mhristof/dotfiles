@@ -75,10 +75,6 @@ alias gl='git log --graph --oneline --decorate --date=relative --all --pretty=fo
 alias wget100='wget -O /dev/null http://speedtest.london.linode.com/100MB-london.bin'
 alias dc='docker-compose'
 alias tf='terraform'
-which hub &> /dev/null
-if [[ $? -eq 0 ]]; then
-    eval "$(hub alias -s)"
-fi
 alias agh='ag --hidden'
 alias agt='ag --terraform'
 alias tpl='terraform plan -out plan.out'

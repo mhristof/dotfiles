@@ -43,7 +43,7 @@ vim: $(VIM) ~/.vim $(PYTHON3)
 less: $(SRCHILITE)
 
 .PHONY: git
-git: ~/.gitignore_global ~/.gitconfig ~/.gitconfig_github
+git: ~/.gitignore_global ~/.gitconfig ~/.gitconfig_github gh
 
 .PHONY: ln
 ln: dots
@@ -217,6 +217,13 @@ bash-my-aws: ~/.bash-my-aws
 	wget --quiet https://github.com/mhristof/semver/releases/download/v0.3.2/semver.$(UNAME) -O ~/bin/semver
 	chmod +x ~/bin/semver
 	~/bin/semver autocomplete zsh > ~/.zsh.site-functions/_semver
+
+.PHONY: gh
+gh: ~/.local/bin/gh
+~/.local/bin/gh:
+	wget --quiet https://github.com/cli/cli/releases/download/v1.7.0/gh_1.7.0_$(GH_OS)_amd64.tar.gz -O /tmp/gh.tar.gz
+	tar xf /tmp/gh.tar.gz -C /tmp/
+	mv /tmp/gh_*/bin/gh $@
 
 ~/.zsh.site-functions:
 	mkdir -p $@
