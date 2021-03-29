@@ -58,7 +58,7 @@ dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbr
 $(BREW_BIN)/src-hilite-lesspipe.sh:
 	$(BREW) install source-highlight
 
-~/.vim: ~/.vimrc $(SHELLCHECK) $(PYCODESTYLE) $(AG) ctags $(PYLINT) $(VIM) tflint
+~/.vim: ~/.vimrc $(SHELLCHECK) $(PYCODESTYLE) $(AG) ctags $(PYLINT) $(VIM) tflint golangci-lint
 
 ~/.vim/bundle/Vundle.vim:
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
@@ -224,6 +224,13 @@ gh: ~/.local/bin/gh
 	wget --quiet https://github.com/cli/cli/releases/download/v1.7.0/gh_1.7.0_$(GH_OS)_amd64.tar.gz -O /tmp/gh.tar.gz
 	tar xf /tmp/gh.tar.gz -C /tmp/
 	mv /tmp/gh_*/bin/gh $@
+
+.PHONY: golangci-lint
+golangci-lint: ~/.local/bin/golangci-lint
+~/.local/bin/golangci-lint: ~/.local/bin
+	curl --location --silent https://github.com/golangci/golangci-lint/releases/download/v1.39.0/golangci-lint-1.39.0-$(UNAME)-amd64.tar.gz > /tmp/golangci-lint.tar.gz
+	tar xvf /tmp/golangci-lint.tar.gz -C /tmp/
+	mv /tmp/golangci-lint-*-$(UNAME)-amd64/golangci-lint $@
 
 ~/.zsh.site-functions:
 	mkdir -p $@
