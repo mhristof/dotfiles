@@ -58,7 +58,7 @@ dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbr
 $(BREW_BIN)/src-hilite-lesspipe.sh:
 	$(BREW) install source-highlight
 
-~/.vim: ~/.vimrc $(SHELLCHECK) $(PYCODESTYLE) $(AG) ctags $(PYLINT) $(VIM) tflint
+~/.vim: ~/.vimrc $(SHELLCHECK) $(PYCODESTYLE) $(AG) ctags $(PYLINT) $(VIM) tflint $(GOLANGCI_LINT)
 
 ~/.vim/bundle/Vundle.vim:
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim

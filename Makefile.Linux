@@ -4,6 +4,7 @@ CHECKOV := ~/.local/bin/checkov
 CTAGS := /usr/bin/ctags
 CURL := /usr/bin/curl
 GO := ~/.go/bin/go
+GOLANGCI_LINT := ~/.local/bin/golangci-lint
 GREP :=
 HTOP := /usr/bin/htop
 JQ := ~/.local/bin/jq
@@ -65,3 +66,8 @@ $(GO): $(CURL)
 	cd ~/
 	curl -L --silent https://golang.org/dl/go1.14.4.linux-amd64.tar.gz | tar xfz -
 	mv go .go
+
+$(GOLANGCI_LINT): ~/.local/bin
+	curl --location --silent https://github.com/golangci/golangci-lint/releases/download/v1.39.0/golangci-lint-1.39.0-linux-amd64.tar.gz > /tmp/golangci-lint.tar.gz
+	tar xvf /tmp/golangci-lint.tar.gz -C /tmp/
+	mv /tmp/golangci-lint-*-linux-amd64/golangci-lint $@

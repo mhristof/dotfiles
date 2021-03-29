@@ -7,6 +7,7 @@ CHECKOV := $(BREW_BIN)/checkov
 CTAGS := $(BREW_BIN)/ctags
 CURL := $(BREW_BIN)/curl/bin/curl
 GO := $(BREW_BIN)/go
+GOLANGCI_LINT := $(BREW_BIN)/golangci-lint
 GREP := grep
 HTOP := $(BREW_BIN)/htop
 JQ := $(BREW_BIN)/jq
