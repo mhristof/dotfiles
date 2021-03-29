@@ -1,4 +1,5 @@
 BREW_BIN := /usr/local/bin
+GH_OS := macOS
 
 AG := $(BREW_BIN)/ag
 AUTOJUMP := $(BREW_BIN)/autojump

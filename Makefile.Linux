@@ -1,3 +1,5 @@
+GH_OS := linux
+
 AG := /usr/bin/ag
 AUTOJUMP := ~/.local/bin/autojump
 CHECKOV := ~/.local/bin/checkov
