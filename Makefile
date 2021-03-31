@@ -26,7 +26,7 @@ essentials: $(HTOP) $(WATCH) less $(GREP) $(SPONGE)
 dev: essentials dots vim git ~/bin/semver $(LS) $(WATCH) $(JQ) $(AUTOJUMP)
 
 .PHONY: go
-go: $(GO) ~/go/bin/gojson 
+go: $(GO) ~/go/bin/gojson
 
 .PHONY: aws
 aws: bash-my-aws $(BREW_BIN)/aws $(BREW_BIN)/kubectx
@@ -59,8 +59,17 @@ dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbr
 $(BREW_BIN)/src-hilite-lesspipe.sh:
 	$(BREW) install source-highlight
 
-~/.vim: ~/.vimrc $(SHELLCHECK) $(PYCODESTYLE) $(AG) ctags $(PYLINT) $(VIM) tflint golangci-lint
+# ~/.vim is defined as PHONY as its created indirectly via the vundle clone.
+# This is a 'fix' to prevent subsequent runs to use the catch-all 'ln -sf' command
+# when typing 'make vim'
+.PHONY: ~/.vim
+~/.vim: ~/.vim/bundle/Vundle.vim ~/.vimrc vim-tools vim-linters $(FIRST_VIM_PLUGIN)
 
+.PHONY: vim-linters
+vim-linters: $(SHELLCHECK)  $(PYCODESTYLE)  $(PYLINT)  tflint golangci-lint ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim  ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim
+
+.PHONY: vim-tools
+vim-tools: $(AG) ctags $(VIM)
 
 ~/.vim/bundle/Vundle.vim:
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
@@ -68,8 +77,6 @@ $(BREW_BIN)/src-hilite-lesspipe.sh:
 $(FIRST_VIM_PLUGIN):
 	echo $(FIRST_VIM_PLUGIN)
 	vim +PluginInstall +qall
-
-~/.vim: ~/.vim/bundle/Vundle.vim $(FIRST_VIM_PLUGIN) ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim ~/.vimrc $(SHELLCHECK) $(PYCODESTYLE) $(AG) ctags $(PYLINT) $(VIM)
 
 .PHONY: tflint
 tflint: ~/.tflint.d/plugins/tflint-ruleset-aws
