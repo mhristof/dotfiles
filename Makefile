@@ -247,6 +247,7 @@ $(BREW_BIN)/%:
 build: dockerfiles/linux.apt
 	docker build -f dockerfiles/linux.apt -t dotfiles-apt .
 
+
 linux-test:
 	docker run dotfiles-apt make vim
 
@@ -269,6 +270,14 @@ amazon: build.amazon
 amazon-test: build.amazon
 	docker run --rm dotfiles-amazon make zsh dev
 
-# vim:ft=make
-#
+.PHONY: all
+all: dev
 
+.PHONY: test
+test:
+	grep 'g:ale_linters' ~/.vimrc | cut -d= -f2  | grep -oP "[\w-]*" | xargs -n1 command -v
+
+.PHONY: clean
+clean:
+
+# vim:ft=make
