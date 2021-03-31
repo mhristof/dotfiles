@@ -275,7 +275,7 @@ all: dev
 
 .PHONY: test
 test:
-	grep 'g:ale_linters' ~/.vimrc | cut -d= -f2  | grep -oP "[\w-]*" | xargs -n1 command -v
+	grep 'g:ale_linters' ~/.vimrc | cut -d= -f2  | grep -oP "[\w-]*" | xargs -I{} bash -c 'command -v {} || (echo Could not find {}; exit 1)'
 
 .PHONY: clean
 clean:
