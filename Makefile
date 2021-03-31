@@ -14,6 +14,7 @@ include Makefile.$(shell uname -s)
 
 UNAME := $(shell uname | tr '[:upper:]' '[:lower:]')
 PWD ?= $(shell pwd)
+FIRST_VIM_PLUGIN := ~/.vim/bundle/$(shell basename $(shell grep Plugin .vimrc | head -2 | tail -1 | cut -d"'" -f2) .git)
 
 .PHONY: default
 default: brew vim essentials
@@ -60,14 +61,15 @@ $(BREW_BIN)/src-hilite-lesspipe.sh:
 
 ~/.vim: ~/.vimrc $(SHELLCHECK) $(PYCODESTYLE) $(AG) ctags $(PYLINT) $(VIM) tflint golangci-lint
 
+
 ~/.vim/bundle/Vundle.vim:
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
-~/.vim: ~/.vim/bundle/Vundle.vim ~/.vimrc $(SHELLCHECK) $(PYCODESTYLE) $(AG) ctags $(PYLINT) $(VIM)
+$(FIRST_VIM_PLUGIN):
+	echo $(FIRST_VIM_PLUGIN)
 	vim +PluginInstall +qall
-	# this requires plugins to be installed since it creates a subfolder in there
-	make ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim
-	make ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim
+
+~/.vim: ~/.vim/bundle/Vundle.vim $(FIRST_VIM_PLUGIN) ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim ~/.vimrc $(SHELLCHECK) $(PYCODESTYLE) $(AG) ctags $(PYLINT) $(VIM)
 
 .PHONY: tflint
 tflint: ~/.tflint.d/plugins/tflint-ruleset-aws
@@ -81,14 +83,14 @@ tflint: ~/.tflint.d/plugins/tflint-ruleset-aws
 .PHONY: checkov
 checkov: $(CHECKOV)
 
-~/bin/checkov2vim: ~/bin checkov
+~/bin/checkov2vim: $(CHECKOV) | ~/bin
 	curl -sL https://github.com/mhristof/checkov2vim/releases/latest/download/checkov2vim.$(UNAME) > $@
 	chmod +x $@
 
 ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim: ~/bin/checkov2vim
 	~/bin/checkov2vim generate --dest $@
 
-~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim: $(CURL)
+~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim: | $(CURL)
 	mkdir -p ~/.vim/bundle/ale/ale_linters/groovy/
 	cd ~/.vim/bundle/ale/ale_linters/groovy/
 	curl -sLO https://raw.githubusercontent.com/mhristof/ale-jenkinsfile/master/ale_jenkinsfile.vim
@@ -126,9 +128,6 @@ python3: $(PYTHON3) ~/.irbrc ~/.pythonrc.py
 
 $(BREW_BIN)/findutils/libexec/gnubin/xargs:
 	$(BREW) install findutils
-
-$(BREW_BIN)/coreutils:
-	$(BREW) install coreutils
 
 aws-azure-login: $(BREW_BIN)/node
 	npm install -g aws-azure-login@1.13.0
@@ -213,21 +212,21 @@ bash-my-aws: ~/.bash-my-aws
 	$(BREW) tap homebrew/core
 	$(BREW) --version
 
-~/bin/semver: $(WGET) ~/bin ~/.zsh.site-functions
+~/bin/semver: | $(WGET) ~/bin ~/.zsh.site-functions
 	wget --quiet https://github.com/mhristof/semver/releases/download/v0.3.2/semver.$(UNAME) -O ~/bin/semver
 	chmod +x ~/bin/semver
 	~/bin/semver autocomplete zsh > ~/.zsh.site-functions/_semver
 
 .PHONY: gh
 gh: ~/.local/bin/gh
-~/.local/bin/gh: ~/.local/bin
+~/.local/bin/gh: | ~/.local/bin
 	wget --quiet https://github.com/cli/cli/releases/download/v1.7.0/gh_1.7.0_$(GH_OS)_amd64.tar.gz -O /tmp/gh.tar.gz
 	tar xf /tmp/gh.tar.gz -C /tmp/
 	mv /tmp/gh_*/bin/gh $@
 
 .PHONY: golangci-lint
 golangci-lint: ~/.local/bin/golangci-lint
-~/.local/bin/golangci-lint: ~/.local/bin
+~/.local/bin/golangci-lint: | ~/.local/bin
 	curl --location --silent https://github.com/golangci/golangci-lint/releases/download/v1.39.0/golangci-lint-1.39.0-$(UNAME)-amd64.tar.gz > /tmp/golangci-lint.tar.gz
 	tar xvf /tmp/golangci-lint.tar.gz -C /tmp/
 	mv /tmp/golangci-lint-*-$(UNAME)-amd64/golangci-lint $@
@@ -237,9 +236,6 @@ golangci-lint: ~/.local/bin/golangci-lint
 
 ~/.local/bin:
 	mkdir -p $@
-
-$(BREW_BIN)/%:
-	$(BREW) install $*
 
 ~/.%:
 	ln -sf $(PWD)/$(shell basename $@) $@
