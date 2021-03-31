@@ -31,6 +31,7 @@ BREW := $(shell which brew)
 endif
 
 $(SPONGE):
+	$(BREW) unlink parallel || true
 	$(BREW) install moreutils
 
 $(GREP):
