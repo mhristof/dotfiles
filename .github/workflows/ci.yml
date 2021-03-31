@@ -24,8 +24,23 @@ jobs:
         shell: bash
         env:
           SHELL: /bin/bash
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Lint Code Base
+        uses: github/super-linter@v3
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: master
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   automerge:
-    needs: build
+    needs:
+      - build
+      - lint
     runs-on: ubuntu-latest
     steps:
       - name: automerge
