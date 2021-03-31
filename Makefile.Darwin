@@ -6,14 +6,14 @@ AUTOJUMP := $(BREW_BIN)/autojump
 BREW := ~/.brew/bin/brew
 CHECKOV := $(BREW_BIN)/checkov
 CTAGS := $(BREW_BIN)/ctags
-CURL := $(BREW_BIN)/curl/bin/curl
+CURL := $(abspath $(BREW_BIN)/../opt/curl/bin/curl)
 GO := $(BREW_BIN)/go
-GREP := grep
+GREP := $(abspath $(BREW_BIN)/../opt/grep/libexec/gnubin/grep)
 HTOP := $(BREW_BIN)/htop
 JQ := $(BREW_BIN)/jq
-LS := $(BREW_BIN)/coreutils
+LS := $(abspath $(BREW_BIN)/../opt/coreutils)
 PYCODESTYLE := $(BREW_BIN)/pycodestyle
-PYLINT := ~/Library/Python/3.7/bin/pylint
+PYLINT := /usr/local/bin/pylint
 PYTHON3 := $(BREW_BIN)/python3
 SHELLCHECK := $(BREW_BIN)/shellcheck
 SPONGE := $(BREW_BIN)/sponge
@@ -24,23 +24,20 @@ WATCH := $(BREW_BIN)/watch
 WGET := $(BREW_BIN)/wget
 ZSH := $(BREW_BIN)/zsh
 
-
 ifeq (, $(shell which brew))
 BREW := ~/.brew/bin/brew
 else
 BREW := $(shell which brew)
 endif
 
-$(GREP): ~/.brew/opt/grep/libexec/gnubin/grep
-
-
 $(SPONGE):
+	$(BREW) unlink parallel || true
 	$(BREW) install moreutils
 
-~/.brew/opt/grep/libexec/gnubin/grep:
-	# Error: Cannot install moreutils because conflicting formulae are installed.
-	# parallel: because both install a `parallel` executable
-	$(BREW) unlink parallel
+%/coreutils:
+	$(BREW) install coreutils
+
+$(GREP):
 	$(BREW) install grep
 
 $(CTAGS):
