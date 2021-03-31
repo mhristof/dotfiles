@@ -94,7 +94,7 @@ checkov: $(CHECKOV)
 	curl -sL https://github.com/mhristof/checkov2vim/releases/latest/download/checkov2vim.$(UNAME) > $@
 	chmod +x $@
 
-~/.vim/bundle/ale/ale_linters/terraform/checkov.vim: ~/bin/checkov2vim
+~/.vim/bundle/ale/ale_linters/terraform/checkov.vim: ~/bin/checkov2vim $(FIRST_VIM_PLUGIN)
 	~/bin/checkov2vim generate --dest $@
 
 ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim: | $(CURL)
