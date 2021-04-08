@@ -51,7 +51,6 @@ alias .....='c ../../../../'
 alias v='vim'
 alias vrc='vim ~/.vimrc'
 alias history_populate="history | tr -s ' ' | cut -d ' ' -f3 | sort | uniq -c | sort -rn  | head"
-alias lt='ls -alt'
 alias grep='grep --color=auto'
 alias df='df -h'
 alias ctmp='mkdir -p ~/tmp/$(date +"%Y%m%d_%H%M%S") && cd $_'
@@ -92,19 +91,20 @@ alias mkalfredgo='cookiecutter gh:mhristof/cookiecutter-alfred-go'
 alias dmas='git diff master -- . || git diff main -- .'
 
 unalias gp
-alias gap=ls
 unalias gap
-alias gam=ls
 unalias gam
 
-case $(uname) in
-    Darwin)
-    alias l='ls -lah'
-    alias ls='ls --color=auto'
-    alias yoink='open -a Yoink'
-    ;;
-esac
 
+if command -v exa &> /dev/null; then
+    alias ls='exa'
+    alias l='exa --time-style long-iso --binary --header --group --long  --created -all --git --links'
+    alias ltc='l --sort created'
+    alias lts='l --sort size'
+    alias tree='ls --tree'
+    alias tree2='ls --tree --level 2'
+    alias tree3='ls --tree --level 3'
+    alias tree4='ls --tree --level 4'
+fi
 
 while read -r file; do
     autoload $file

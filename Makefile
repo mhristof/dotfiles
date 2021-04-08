@@ -199,6 +199,9 @@ terraform-docs:
 slack:
 	brew cask install slack
 
+.PHONY: exa
+exa: $(EXA)
+
 .PHONY: shortcut
 shortcut:
 	./setup-mac-shortcuts.sh

@@ -5,6 +5,7 @@ AUTOJUMP := ~/.local/bin/autojump
 CHECKOV := ~/.local/bin/checkov
 CTAGS := /usr/bin/ctags
 CURL := /usr/bin/curl
+EXA := ~/.local/bin/exa
 GO := ~/.go/bin/go
 GREP :=
 HTOP := /usr/bin/htop
@@ -64,3 +65,10 @@ $(GO): $(CURL)
 	cd ~/
 	curl -L --silent https://golang.org/dl/go1.14.4.linux-amd64.tar.gz | tar xfz -
 	mv go .go
+
+$(EXA): | ~/.local/bin /tmp/exa.zip /usr/bin/unzip
+	unzip -o /tmp/exa.zip -d ~/.local
+
+
+/tmp/exa.zip:
+	curl --location --silent https://github.com/ogham/exa/releases/download/v0.10.0/exa-linux-x86_64-v0.10.0.zip > $@
