@@ -91,9 +91,11 @@ alias mkgo='cookiecutter gh:mhristof/cookiecutter-golang-cmd'
 alias mkalfredgo='cookiecutter gh:mhristof/cookiecutter-alfred-go'
 alias dmas='git diff master -- . || git diff main -- .'
 
-unalias gp
-unalias gap
-unalias gam
+(
+    unalias gp || true
+    unalias gap || true
+    unalias gam || true
+) &> /dev/null
 
 
 if command -v exa &> /dev/null; then
