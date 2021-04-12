@@ -175,39 +175,39 @@ hi SpellLocal term=underline cterm=underline
 
 
 if has("autocmd")
-    autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-    autocmd WinEnter * setlocal cursorline
-    autocmd WinEnter * setlocal cursorcolumn
-    autocmd WinEnter * setlocal cc=80
-    autocmd WinLeave * setlocal nocursorline
-    autocmd WinLeave * setlocal nocursorcolumn
-    autocmd WinLeave * setlocal cc=0
-    autocmd FileType python :set makeprg=pep8\ %
-    autocmd BufReadPost,WinEnter *.py :set makeprg=pep8\ %
-    autocmd BufEnter *.mkf :set ft=make
     autocmd BufEnter *.dsl :set ft=groovy
+    autocmd BufEnter *.github/workflows/*.yml :set ft=github-actions
+    autocmd BufEnter *.mkf :set ft=make
+    autocmd BufEnter *.yml :set ft=ansible
+    autocmd BufEnter .travis.yml :set ft=yaml
     autocmd BufEnter Jenkinsfile :set ft=groovy
     autocmd BufEnter Jenkinsfile :setlocal shiftwidth=2 tabstop=2
-    autocmd BufEnter *.yml :set ft=ansible
     autocmd BufEnter haproxy.cfg* :set ft=haproxy
-    autocmd BufEnter .travis.yml :set ft=yaml
-    autocmd WinLeave * :setlocal rnu!
-    autocmd WinEnter * :setlocal rnu
-    autocmd WinEnter,BufEnter Vagrantfile,*.rb,*.erb call SetupRuby()
-    autocmd FileType ruby,eruby call SetupRuby()
-    autocmd VimResized * wincmd =
+    autocmd BufRead * if search('apiVersion:', 'nw') | setlocal ft=yaml.k8s | endif
+    autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+    autocmd BufReadPost,WinEnter *.py :set makeprg=pep8\ %
     autocmd BufWrite * :diffupdate
-    autocmd WinEnter,BufWritePost *.py call PythonCtags()
-    autocmd WinEnter,BufWritePost *.tf call TerraformCtags()
+    autocmd FileType github-actions call SetupGithubActions()
     autocmd FileType markdown set makeprg=grip\ -b\ %\ &>\ /dev/null
-    autocmd VimEnter * call SetupObsession()
+    autocmd FileType python :set makeprg=pep8\ %
+    autocmd FileType ruby,eruby call SetupRuby()
     autocmd FileType terraform :nnoremap K :call TerraformMan()<CR>
     autocmd FileType yaml :nnoremap K :call AnsibleMan()<CR>
-    autocmd BufEnter *.github/workflows/*.yml :set ft=github-actions
-    autocmd FileType github-actions call SetupGithubActions()
-    autocmd filetype netrw nnoremap <buffer> t :FZF<cr><cr>
+    autocmd VimEnter * call SetupObsession()
+    autocmd VimResized * wincmd =
+    autocmd WinEnter * :setlocal rnu
+    autocmd WinEnter * setlocal cc=80
+    autocmd WinEnter * setlocal cursorcolumn
+    autocmd WinEnter * setlocal cursorline
+    autocmd WinEnter,BufEnter Vagrantfile,*.rb,*.erb call SetupRuby()
+    autocmd WinEnter,BufWritePost *.py call PythonCtags()
+    autocmd WinEnter,BufWritePost *.tf call TerraformCtags()
+    autocmd WinLeave * :setlocal rnu!
+    autocmd WinLeave * setlocal cc=0
+    autocmd WinLeave * setlocal nocursorcolumn
+    autocmd WinLeave * setlocal nocursorline
     autocmd filetype gitrebase :nnoremap s :call Squash()<cr>
-    autocmd BufRead * if search('apiVersion:', 'nw') | setlocal ft=yaml.k8s | endif
+    autocmd filetype netrw nnoremap <buffer> t :FZF<cr><cr>
 endif
 
 function Squash()
