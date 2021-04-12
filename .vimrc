@@ -183,7 +183,7 @@ if has("autocmd")
     autocmd BufEnter Jenkinsfile :set ft=groovy
     autocmd BufEnter Jenkinsfile :setlocal shiftwidth=2 tabstop=2
     autocmd BufEnter haproxy.cfg* :set ft=haproxy
-    autocmd BufRead * if search('apiVersion:', 'nw') | setlocal ft=yaml.k8s | endif
+    autocmd BufRead * if (expand('%:e') =~ "yaml" || expand('%:e') =~ "yml") && search('apiVersion:', 'nw') | setlocal ft=yaml.k8s | endif
     autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
     autocmd BufReadPost,WinEnter *.py :set makeprg=pep8\ %
     autocmd BufWrite * :diffupdate
