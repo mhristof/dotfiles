@@ -13,6 +13,7 @@ GREP := $(abspath $(BREW_BIN)/../opt/grep/libexec/gnubin/grep)
 HELM := $(BREW_BIN)/helm
 HTOP := $(BREW_BIN)/htop
 JQ := $(BREW_BIN)/jq
+K9S := $(BREW_BIN)/k9s
 LS := $(abspath $(BREW_BIN)/../opt/coreutils)
 PYCODESTYLE := $(BREW_BIN)/pycodestyle
 PYLINT := /usr/local/bin/pylint

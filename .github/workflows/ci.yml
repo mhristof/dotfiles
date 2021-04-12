@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: ${{ matrix.fix }}
-      - run: ${{ matrix.cmdPrefix }} make zsh dev
+      - run: ${{ matrix.cmdPrefix }} make zsh dev k8s
         shell: bash
         env:
           SHELL: /bin/bash
