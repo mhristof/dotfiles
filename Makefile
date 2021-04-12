@@ -202,6 +202,9 @@ slack:
 .PHONY: exa
 exa: $(EXA)
 
+.PHONY: helm
+helm: $(HELM)
+
 .PHONY: shortcut
 shortcut:
 	./setup-mac-shortcuts.sh

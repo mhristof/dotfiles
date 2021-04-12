@@ -8,6 +8,7 @@ CURL := /usr/bin/curl
 EXA := ~/.local/bin/exa
 GO := ~/.go/bin/go
 GREP :=
+HELM := ~/.local/bin/helm
 HTOP := /usr/bin/htop
 JQ := ~/.local/bin/jq
 LS :=
@@ -72,3 +73,11 @@ $(EXA): | ~/.local/bin /tmp/exa.zip /usr/bin/unzip
 
 /tmp/exa.zip:
 	curl --location --silent https://github.com/ogham/exa/releases/download/v0.10.0/exa-linux-x86_64-v0.10.0.zip > $@
+
+$(HELM): | /tmp/helm.tar.gz ~/.local/bin
+	tar xvf /tmp/helm.tar.gz -C /tmp
+	mv /tmp/linux-amd64/helm ~/.local/bin
+
+/tmp/helm.tar.gz:
+	curl --location --silent https://get.helm.sh/helm-v3.5.3-linux-amd64.tar.gz > $@
+
