@@ -11,6 +11,7 @@ GREP :=
 HELM := ~/.local/bin/helm
 HTOP := /usr/bin/htop
 JQ := ~/.local/bin/jq
+K9S := ~/.local/bin/k9s
 LS :=
 PIP3 := /usr/bin/pip3
 PYCODESTYLE := ~/.local/bin/pycodestyle
@@ -81,3 +82,9 @@ $(HELM): | /tmp/helm.tar.gz ~/.local/bin
 /tmp/helm.tar.gz:
 	curl --location --silent https://get.helm.sh/helm-v3.5.3-linux-amd64.tar.gz > $@
 
+$(K9S): | ~/.local/bin /tmp/k9s.tar.gz
+	tar xvf /tmp/k9s.tar.gz -C /tmp/
+	mv /tmp/k9s ~/.local/bin/
+
+/tmp/k9s.tar.gz:
+	curl --location --silent https://github.com/derailed/k9s/releases/download/v0.24.7/k9s_Linux_arm64.tar.gz > $@

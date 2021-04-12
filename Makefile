@@ -31,6 +31,9 @@ go: $(GO) ~/go/bin/gojson
 .PHONY: aws
 aws: bash-my-aws $(BREW_BIN)/aws $(BREW_BIN)/kubectx
 
+.PHONY: k8s
+k8s: $(K9S)
+
 $(BREW_BIN)/aws:
 	pip3 install aws --user
 
@@ -204,6 +207,9 @@ exa: $(EXA)
 
 .PHONY: helm
 helm: $(HELM)
+
+.PHONY: k9s
+k9s: $(K9S)
 
 .PHONY: shortcut
 shortcut:
