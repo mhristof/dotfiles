@@ -207,6 +207,7 @@ if has("autocmd")
     autocmd FileType github-actions call SetupGithubActions()
     autocmd filetype netrw nnoremap <buffer> t :FZF<cr><cr>
     autocmd filetype gitrebase :nnoremap s :call Squash()<cr>
+    autocmd BufRead * if search('apiVersion:', 'nw') | setlocal ft=yaml.k8s | endif
 endif
 
 function Squash()
