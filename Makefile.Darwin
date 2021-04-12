@@ -10,6 +10,7 @@ CURL := $(abspath $(BREW_BIN)/../opt/curl/bin/curl)
 EXA := $(BREW_BIN)/exa
 GO := $(BREW_BIN)/go
 GREP := $(abspath $(BREW_BIN)/../opt/grep/libexec/gnubin/grep)
+HELM := $(BREW_BIN)/helm
 HTOP := $(BREW_BIN)/htop
 JQ := $(BREW_BIN)/jq
 LS := $(abspath $(BREW_BIN)/../opt/coreutils)
