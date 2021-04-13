@@ -47,7 +47,7 @@ vim: $(VIM) ~/.vim $(PYTHON3)
 less: $(SRCHILITE)
 
 .PHONY: git
-git: ~/.gitignore_global ~/.gitconfig ~/.gitconfig_github gh
+git: ~/.gitignore.global ~/.gitconfig ~/.gitconfig.github gh
 
 .PHONY: ln
 ln: dots
