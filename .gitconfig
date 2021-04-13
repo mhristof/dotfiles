@@ -13,16 +13,16 @@
 
 
 [includeIf "gitdir:~/code/github/"]
-   path = .gitconfig_github
+   path = .gitconfig.github
 
 [includeIf "gitdir:~/dotfiles/"]
-   path = .gitconfig_github
+   path = .gitconfig.github
 
 [includeIf "gitdir:~/go/src/github.com/"]
-   path = .gitconfig_github
+   path = .gitconfig.github
 
 [includeIf "gitdir:~/.vim/"]
-   path = .gitconfig_github
+   path = .gitconfig.github
 
 [include]
     path = ~/.gitconfig.local
