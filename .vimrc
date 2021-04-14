@@ -176,9 +176,9 @@ hi SpellLocal term=underline cterm=underline
 
 if has("autocmd")
     autocmd BufEnter *.dsl :set ft=groovy
-    autocmd BufEnter *.github/workflows/*.yml :set ft=github-actions
-    autocmd BufEnter *.mkf :set ft=make
     autocmd BufEnter *.yml :set ft=ansible
+    autocmd BufEnter *.github/workflows/*.yml :set ft=yaml.github-actions
+    autocmd BufEnter *.mkf :set ft=make
     autocmd BufEnter .travis.yml :set ft=yaml
     autocmd BufEnter Jenkinsfile :set ft=groovy
     autocmd BufEnter Jenkinsfile :setlocal shiftwidth=2 tabstop=2
