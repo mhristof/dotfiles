@@ -247,7 +247,7 @@ bash-my-aws: ~/.bash-my-aws
 	$(BREW) --version
 
 ~/bin/semver: | $(WGET) ~/bin ~/.zsh.site-functions
-	wget --quiet https://github.com/mhristof/semver/releases/download/v0.3.2/semver.$(UNAME) -O ~/bin/semver
+	wget --quiet https://github.com/mhristof/semver/releases/download/v0.5.0/semver.$(UNAME) -O ~/bin/semver
 	chmod +x ~/bin/semver
 	~/bin/semver autocomplete zsh > ~/.zsh.site-functions/_semver
 
