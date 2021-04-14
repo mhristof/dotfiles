@@ -194,6 +194,13 @@ qrencode: /tmp/alfred-qrencode.alfredworkflow
 	curl --silent --location https://github.com/mhristof/alfred-qrencode/releases/download/v0.2.3/alfred-qrencode.alfredworkflow > $@
 	open $@
 
+.PHONY: random
+random: /tmp/alfred-random.alfredworkflow
+
+/tmp/alfred-random.alfredworkflow:
+	curl --silent --location https://github.com/mhristof/alfred-random/releases/download/v0.1.1/alfred-random.alfredworkflow > $@
+	open $@
+
 /tmp/alfred-pbpaste.alfredworkflow:
 	wget --quiet https://github.com/mhristof/alfred-pbpaste/releases/download/0.6.3/alfred-pbpaste.alfredworkflow -O alfred-pbpaste.alfredworkflow
 
