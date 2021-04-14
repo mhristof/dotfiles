@@ -183,8 +183,16 @@ docker: /Applications/Docker.app/Contents/MacOS/Docker
 pbpaste: /tmp/alfred-pbpaste.alfredworkflow
 	open /tmp/alfred-pbpaste.alfredworkflow
 
-alfred: $(BREW_BIN)/wget /tmp/alfred-tf-snippets.alfredworkflow pbpaste $(GREP)
+alfred: $(BREW_BIN)/wget /tmp/alfred-tf-snippets.alfredworkflow pbpaste $(GREP) /tmp/alfred-qrencode.alfredworkflow
 	open /tmp/alfred-tf-snippets.alfredworkflow
+
+
+.PHONY: qrencode
+qrencode: /tmp/alfred-qrencode.alfredworkflow
+
+/tmp/alfred-qrencode.alfredworkflow:
+	curl --silent --location https://github.com/mhristof/alfred-qrencode/releases/download/v0.2.3/alfred-qrencode.alfredworkflow > $@
+	open $@
 
 /tmp/alfred-pbpaste.alfredworkflow:
 	wget --quiet https://github.com/mhristof/alfred-pbpaste/releases/download/0.6.3/alfred-pbpaste.alfredworkflow -O alfred-pbpaste.alfredworkflow
