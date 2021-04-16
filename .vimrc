@@ -266,7 +266,11 @@ function TagsOrAck()
 endfunction
 
 function Snippets()
-    exe ":vsplit ~/.vim/bundle/vim-snipmate/snippets/" . &filetype . ".snippets"
+    let s:split = "vsplit"
+    for s:ft in split(&filetype, '\.')
+        exe ":" . s:split . " ~/.vim/bundle/vim-snipmate/snippets/" . s:ft . ".snippets"
+        let s:split = "split"
+    endfor
 endfunction
 
 function SetupObsession()
