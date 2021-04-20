@@ -85,7 +85,7 @@ $(FIRST_VIM_PLUGIN):
 tflint: ~/.tflint.d/plugins/tflint-ruleset-aws
 
 ~/.tflint.d/plugins/tflint-ruleset-aws: $(TFLINT) ~/.tflint.hcl
-	curl --location --silent https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v0.3.0/tflint-ruleset-aws_$(UNAME)_amd64.zip > /tmp/tflint-ruleset-aws.zip
+	curl --location --silent https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v0.3.1/tflint-ruleset-aws_$(UNAME)_amd64.zip > /tmp/tflint-ruleset-aws.zip
 	unzip /tmp/tflint-ruleset-aws.zip
 	mkdir -p $(shell dirname $@)
 	mv tflint-ruleset-aws $@
@@ -155,7 +155,7 @@ iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app germ
 germ: ~/bin/germ
 
 ~/bin/germ: ~/.zsh.site-functions
-	wget --quiet https://github.com/mhristof/germ/releases/download/v1.8.3/germ.$(UNAME) -O ~/bin/germ
+	wget --quiet https://github.com/mhristof/germ/releases/download/v1.10.4/germ.$(UNAME) -O ~/bin/germ
 	chmod +x ~/bin/germ
 	~/bin/germ autocomplete zsh > ~/.zsh.site-functions/_germ
 
@@ -198,7 +198,7 @@ qrencode: /tmp/alfred-qrencode.alfredworkflow
 random: /tmp/alfred-random.alfredworkflow
 
 /tmp/alfred-random.alfredworkflow:
-	curl --silent --location https://github.com/mhristof/alfred-random/releases/download/v0.1.1/alfred-random.alfredworkflow > $@
+	curl --silent --location https://github.com/mhristof/alfred-random/releases/download/v0.2.0/alfred-random.alfredworkflow > $@
 	open $@
 
 /tmp/alfred-pbpaste.alfredworkflow:
@@ -211,7 +211,7 @@ random: /tmp/alfred-random.alfredworkflow
 	go get github.com/ChimeraCoder/gojson/gojson
 
 terraform-docs:
-	curl --silent --location --output $@ https://github.com/terraform-docs/terraform-docs/releases/download/v0.11.0/terraform-docs-v0.11.0-$(shell tr '[:upper:]' '[:lower:]')-amd64
+	curl --silent --location --output $@ https://github.com/terraform-docs/terraform-docs/releases/download/v0.12.1/terraform-docs-v0.12.1-$(shell tr '[:upper:]' '[:lower:]')-amd64
 	chmod +x terraform-docs
 
 slack:
@@ -254,7 +254,7 @@ bash-my-aws: ~/.bash-my-aws
 .PHONY: gh
 gh: ~/.local/bin/gh
 ~/.local/bin/gh: | ~/.local/bin
-	wget --quiet https://github.com/cli/cli/releases/download/v1.7.0/gh_1.7.0_$(GH_OS)_amd64.tar.gz -O /tmp/gh.tar.gz
+	wget --quiet https://github.com/cli/cli/releases/download/v1.9.2-pre0/gh_1.9.2-pre0_$(GH_OS)_amd64.tar.gz -O /tmp/gh.tar.gz
 	tar xf /tmp/gh.tar.gz -C /tmp/
 	mv /tmp/gh_*/bin/gh $@
 
@@ -301,4 +301,5 @@ amazon-test: build.amazon
 
 # vim:ft=make
 #
+
 
