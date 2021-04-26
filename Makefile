@@ -69,7 +69,7 @@ $(BREW_BIN)/src-hilite-lesspipe.sh:
 ~/.vim: ~/.vim/bundle/Vundle.vim ~/.vimrc vim-tools vim-linters $(FIRST_VIM_PLUGIN)
 
 .PHONY: vim-linters
-vim-linters: $(SHELLCHECK)  $(PYCODESTYLE)  $(PYLINT)  tflint golangci-lint ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim  ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim
+vim-linters: $(SHELLCHECK) $(PYCODESTYLE)  $(PYLINT)  tflint golangci-lint ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim  ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim $(YAMLLINT)
 
 .PHONY: vim-tools
 vim-tools: $(AG) ctags $(VIM)

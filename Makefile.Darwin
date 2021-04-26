@@ -25,6 +25,7 @@ TFLINT := $(BREW_BIN)/tflint
 VIM := $(BREW_BIN)/vim
 WATCH := $(BREW_BIN)/watch
 WGET := $(BREW_BIN)/wget
+YAMLLINT := $(BREW_BIN)/yamllint
 ZSH := $(BREW_BIN)/zsh
 
 ifeq (, $(shell which brew))
