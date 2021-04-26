@@ -265,6 +265,9 @@ golangci-lint: ~/.local/bin/golangci-lint
 	tar xvf /tmp/golangci-lint.tar.gz -C /tmp/
 	mv /tmp/golangci-lint-*-$(UNAME)-amd64/golangci-lint $@
 
+.PHONY: yamllint
+yamllint: $(YAMLLINT)
+
 ~/.zsh.site-functions:
 	mkdir -p $@
 
