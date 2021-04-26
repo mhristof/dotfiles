@@ -26,6 +26,7 @@ WATCH := /usr/bin/watch
 WGET := /usr/bin/wget
 XZ := /usr/share/doc/xz-utils 
 ZSH := /usr/bin/zsh
+YAMLLINT := ~/.local/bin/yamllint
 
 ifneq (, $(shell command -v apt-get))
 include Makefile.apt
@@ -88,3 +89,6 @@ $(K9S): | ~/.local/bin /tmp/k9s.tar.gz
 
 /tmp/k9s.tar.gz:
 	curl --location --silent https://github.com/derailed/k9s/releases/download/v0.24.7/k9s_Linux_arm64.tar.gz > $@
+
+$(YAMLLINT): | ~/.local/bin
+	pip install --user yamllint
