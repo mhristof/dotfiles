@@ -66,7 +66,7 @@ $(BREW_BIN)/src-hilite-lesspipe.sh:
 # This is a 'fix' to prevent subsequent runs to use the catch-all 'ln -sf' command
 # when typing 'make vim'
 .PHONY: ~/.vim
-~/.vim: ~/.vim/bundle/Vundle.vim ~/.vimrc vim-tools vim-linters $(FIRST_VIM_PLUGIN)
+~/.vim: ~/.vim/bundle/Vundle.vim ~/.vimrc vim-tools vim-linters $(FIRST_VIM_PLUGIN) ~/bin/gitbrowse
 
 .PHONY: vim-linters
 vim-linters: $(SHELLCHECK) $(PYCODESTYLE)  $(PYLINT)  tflint golangci-lint ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim  ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim $(YAMLLINT)
@@ -264,6 +264,13 @@ golangci-lint: ~/.local/bin/golangci-lint
 	curl --location --silent https://github.com/golangci/golangci-lint/releases/download/v1.39.0/golangci-lint-1.39.0-$(UNAME)-amd64.tar.gz > /tmp/golangci-lint.tar.gz
 	tar xvf /tmp/golangci-lint.tar.gz -C /tmp/
 	mv /tmp/golangci-lint-*-$(UNAME)-amd64/golangci-lint $@
+
+.PHONY: gitbrowse
+gitbrowse:  ~/bin/gitbrowse
+
+~/bin/gitbrowse:
+	curl --location --silent https://github.com/mhristof/gitbrowse/releases/download/v0.1.0/gitbrowse.$(UNAME) > $@
+	chmod +x $@
 
 .PHONY: yamllint
 yamllint: $(YAMLLINT)
