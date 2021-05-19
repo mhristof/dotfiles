@@ -106,9 +106,12 @@ let g:DirDiffExcludes = "*.pyc"
 let g:VCSCommandDeleteOnHide=66
 let g:ackprg = 'ag --nogroup --nocolor --column'
 let g:ale_dockerfile_hadolint_use_docker  = "always"
+let g:ale_fix_on_save = 1
+let g:ale_fixers = {'sh': ['shfmt']}
+let g:ale_history_log_output = 1
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_linters = {'yaml': ['yamllint'], 'python': ['pycodestyle', 'pylint', 'pydocstyle'], 'go': ['golangci-lint'],}
-let g:ale_history_log_output = 1
+let g:ale_sh_shfmt_options='-i 4' " Indent with N spaces
 let g:fzfSwitchProjectAlwaysChooseFile = 1
 let g:fzfSwitchProjectWorkspaces = [ '~/code']
 let g:fzf_layout = { 'down': '40%' } " disable the weird center pop up window
@@ -119,8 +122,6 @@ let g:netrw_browse_split = 0
 let g:netrw_liststyle = 3
 let g:netrw_sort_sequence = '[\/]$,\<core\%(\.\d\+\)\=\>,\.h$,\.c$,\.cpp$,\~\=\*$,*,\.o$,\.obj$,\.info$,\.swp$,\.bak$,\.clean$,\.rej,\.orig,\~$'
 let g:terraform_fmt_on_save=1
-
-
 
 map <C-j> <C-W>j
 map <C-k> <C-W>k
