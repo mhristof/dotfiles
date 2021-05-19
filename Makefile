@@ -69,7 +69,7 @@ $(BREW_BIN)/src-hilite-lesspipe.sh:
 ~/.vim: ~/.vim/bundle/Vundle.vim ~/.vimrc vim-tools vim-linters $(FIRST_VIM_PLUGIN) ~/bin/gitbrowse
 
 .PHONY: vim-linters
-vim-linters: $(SHELLCHECK) $(PYCODESTYLE)  $(PYLINT)  tflint golangci-lint ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim  ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim $(YAMLLINT)
+vim-linters: $(SHELLCHECK) $(PYCODESTYLE)  $(PYLINT)  tflint golangci-lint ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim  ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim $(YAMLLINT) shfmt
 
 .PHONY: vim-tools
 vim-tools: $(AG) ctags $(VIM)
@@ -209,6 +209,13 @@ random: /tmp/alfred-random.alfredworkflow
 
 ~/go/bin/gojson:
 	go get github.com/ChimeraCoder/gojson/gojson
+
+.PHONY: shfmt
+shfmt: ~/.local/bin/shfmt
+
+~/.local/bin/shfmt:
+	curl --silent --location --output $@ https://github.com/mvdan/sh/releases/download/v3.3.0/shfmt_v3.3.0_$(UNAME)_amd64
+	chmod +x $@
 
 terraform-docs:
 	curl --silent --location --output $@ https://github.com/terraform-docs/terraform-docs/releases/download/v0.12.1/terraform-docs-v0.12.1-$(shell tr '[:upper:]' '[:lower:]')-amd64
