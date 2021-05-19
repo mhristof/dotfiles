@@ -5,7 +5,7 @@ IFS=$'\n\t'
 
 YAML="$(cat)"
 MODULE=$(echo "$YAML" | yq -r '.[-1] | keys | to_entries[] | select(.value != "name") .value')
-FIELD=$(echo "$YAML" | yq -r '.[-1].'"$MODULE"' | to_entries[-1].key' 2> /dev/null || echo "")
+FIELD=$(echo "$YAML" | yq -r '.[-1].'"$MODULE"' | to_entries[-1].key' 2>/dev/null || echo "")
 
 if [[ $FIELD != "" ]]; then
     FIELD="#parameter-${FIELD}"

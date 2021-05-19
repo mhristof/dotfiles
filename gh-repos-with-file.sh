@@ -2,8 +2,10 @@
 # http://redsymbol.net/articles/unofficial-bash-strict-mode/
 set -euo pipefail
 IFS=$'\n\t'
-die() { echo "$*" 1>&2 ; exit 1; }
-
+die() {
+    echo "$*" 1>&2
+    exit 1
+}
 
 FILE=${1:-}
 

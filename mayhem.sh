@@ -3,7 +3,6 @@
 #set -euo pipefail
 #IFS=$'\n\t'
 
-
 echo 'shred -u .bash_history'
 echo 'shred -u .zsh_history'
 echo 'docker ps -aq | xargs docker rm -f'
@@ -21,6 +20,5 @@ echo 'shred -u .bash_history'
 echo 'shred -u .zsh_history'
 echo 'Delete the keychain stuff'
 echo 'Delete 1password stuff'
-
 
 exit 0

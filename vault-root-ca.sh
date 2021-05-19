@@ -6,10 +6,12 @@ IFS=$'\n\t'
 MOUNT="${1:-rootca}"
 DOMAIN="${2:-example.com}"
 
-
-die() { echo "$*" 1>&2 ; exit 1; }
+die() {
+    echo "$*" 1>&2
+    exit 1
+}
 function usage {
-    cat << EOF
+    cat <<EOF
 Setup a root ca and an intermediate mount in vault to issue certificates.
 
 Usage:
@@ -25,32 +27,31 @@ EOF
 
 # https://stackoverflow.com/a/30026641/2599522
 for arg in "$@"; do
-  shift
-  case "$arg" in
-    "--help") set -- "$@" "-h" ;;
-    *)        set -- "$@" "$arg"
-  esac
+    shift
+    case "$arg" in
+        "--help") set -- "$@" "-h" ;;
+        *) set -- "$@" "$arg" ;;
+    esac
 done
 
-while getopts "d:m:hv" OPTION
-do
-     case $OPTION in
-         d) DOMAIN=$OPTARG;;
-         m) MOUNT=$OPTARG;;
-         h)
-             usage
-             ;;
-         ?)
-             usage
-             ;;
-     esac
+while getopts "d:m:hv" OPTION; do
+    case $OPTION in
+        d) DOMAIN=$OPTARG ;;
+        m) MOUNT=$OPTARG ;;
+        h)
+            usage
+            ;;
+        ?)
+            usage
+            ;;
+    esac
 done
 
 if [[ -z $VAULT_ADDR ]]; then
     die "Error, VAULT_ADDR is not set"
 fi
 
-if [[ -z ${VAULT_TOKEN:-} ]] && ! vault secrets list &> /dev/null; then
+if [[ -z ${VAULT_TOKEN:-} ]] && ! vault secrets list &>/dev/null; then
     die "Error, VAULT_TOKEN is not set"
 fi
 
@@ -63,8 +64,8 @@ vault write "${MOUNT}/root/generate/internal" common_name="$DOMAIN" ttl=8760h
 vault write "${MOUNT}/roles/${DOMAIN}" allowed_domains="$DOMAIN" allow_subdomains=true max_ttl=72h allowed_uri_sans="example1.com"
 
 vault secrets enable -path="${MOUNT}_int" pki
-vault write -format json "${MOUNT}_int/intermediate/generate/internal" common_name="$DOMAIN Intermediate Authority" ttl=43800h | jq .data.csr -r > "${MOUNT}_int".csr
-vault write -format json "${MOUNT}/root/sign-intermediate" csr=@"${MOUNT}_int.csr" format=pem_bundle ttl=43800h | jq .data.certificate -r > signed_certificate.pem
+vault write -format json "${MOUNT}_int/intermediate/generate/internal" common_name="$DOMAIN Intermediate Authority" ttl=43800h | jq .data.csr -r >"${MOUNT}_int".csr
+vault write -format json "${MOUNT}/root/sign-intermediate" csr=@"${MOUNT}_int.csr" format=pem_bundle ttl=43800h | jq .data.certificate -r >signed_certificate.pem
 vault write "${MOUNT}_int/intermediate/set-signed" certificate=@signed_certificate.pem
 vault write "${MOUNT}_int/roles/${DOMAIN}" allowed_domains="$DOMAIN" allow_subdomains=true max_ttl=72h
 

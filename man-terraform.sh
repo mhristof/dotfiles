@@ -3,7 +3,7 @@ set -euo pipefail
 
 TYPE=${1:-resource}
 NAME=${2:-}
-PROVIDER="$(cut -d '_' -f1 <<< "$NAME")"
+PROVIDER="$(cut -d '_' -f1 <<<"$NAME")"
 MODULE=${3:-}
 
 if [ "$PROVIDER" == "=" ] && [ "$TYPE" == "source" ]; then
