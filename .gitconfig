@@ -1,5 +1,5 @@
 [core]
-	excludesfile = ~/.gitignore_global
+	excludesfile = ~/.gitignore.global
 	pager = less -x1,5
 [alias]
 	undo = reset --soft HEAD~1
@@ -26,3 +26,5 @@
 
 [include]
     path = ~/.gitconfig.local
+[pull]
+	ff = only
