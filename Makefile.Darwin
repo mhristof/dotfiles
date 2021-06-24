@@ -25,6 +25,7 @@ TFLINT := $(BREW_BIN)/tflint
 VIM := $(BREW_BIN)/vim
 WATCH := $(BREW_BIN)/watch
 WGET := $(BREW_BIN)/wget
+XARGS := $(abspath $(BREW_BIN)/../opt/findutils)
 YAMLLINT := $(BREW_BIN)/yamllint
 ZSH := $(BREW_BIN)/zsh
 
@@ -40,6 +41,9 @@ $(SPONGE):
 
 %/coreutils:
 	$(BREW) install coreutils
+
+%/findutils:
+	$(BREW) install findutils
 
 $(GREP):
 	$(BREW) install grep
