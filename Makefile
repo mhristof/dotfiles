@@ -214,9 +214,12 @@ shfmt: ~/.local/bin/shfmt
 	curl --silent --location --output $@ https://github.com/mvdan/sh/releases/download/v3.3.0/shfmt_v3.3.0_$(UNAME)_amd64
 	chmod +x $@
 
-terraform-docs:
-	curl --silent --location --output $@ https://github.com/terraform-docs/terraform-docs/releases/download/v0.12.1/terraform-docs-v0.12.1-$(shell tr '[:upper:]' '[:lower:]')-amd64
-	chmod +x terraform-docs
+.PHONY: terraform-docs
+terraform-docs:  ~/.local/bin/terraform-docs
+
+~/.local/bin/terraform-docs: | ~/.local/bin
+	curl --silent --location --output $@ https://github.com/terraform-docs/terraform-docs/releases/download/v0.12.1/terraform-docs-v0.12.1-$(shell tr '[:upper:]' '[:lower:]' <<< "$(UNAME)")-amd64
+	chmod +x $@
 
 slack:
 	brew cask install slack
