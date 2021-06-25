@@ -136,9 +136,6 @@ $(BREW_BIN)/autojump:
 python3: $(PYTHON3) ~/.irbrc ~/.pythonrc.py
 	pip3 install -r requirements.yml
 
-$(BREW_BIN)/findutils/libexec/gnubin/xargs:
-	$(BREW) install findutils
-
 aws-azure-login: $(BREW_BIN)/node
 	npm install -g aws-azure-login@1.13.0
 
@@ -164,7 +161,7 @@ germ: ~/bin/germ
 	chmod +x $@
 	$@ autocomplete zsh > ~/.zsh.site-functions/_$(shell basename $@)
 
-dock: $(BREW_BIN)/findutils/libexec/gnubin/xargs $(BREW_BIN)/dockutil
+dock: $(XARGS) $(BREW_BIN)/dockutil
 	dockutil --list | sed 's/file:.*//g' | xargs --no-run-if-empty -n1 -d'\n' dockutil --remove
 
 /Applications/Alfred 4.app:

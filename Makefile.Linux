@@ -24,9 +24,10 @@ TFLINT := ~/.local/bin/tflint
 VIM := /usr/bin/vim
 WATCH := /usr/bin/watch
 WGET := /usr/bin/wget
+XARGS :=
 XZ := /usr/share/doc/xz-utils 
-ZSH := /usr/bin/zsh
 YAMLLINT := ~/.local/bin/yamllint
+ZSH := /usr/bin/zsh
 
 ifneq (, $(shell command -v apt-get))
 include Makefile.apt

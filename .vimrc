@@ -154,6 +154,7 @@ vmap X "_d
 vmap x "_d
 
 cnoremap mk. !mkdir -p <c-r>=expand("%:h")<cr>/
+cnoremap gremote r!git config --get remote.origin.url
 
 if filereadable(glob('~/.vim/bundle/molokai/colors/molokai.vim'))
   colorscheme molokai
@@ -178,6 +179,7 @@ hi SpellLocal term=underline cterm=underline
 if has("autocmd")
     autocmd BufEnter *.dsl :set ft=groovy
     autocmd BufEnter *.yml :set ft=ansible
+    autocmd BufEnter .pre-commit-config.yaml :set ft=yaml.pre-commit
     autocmd BufEnter *.github/workflows/*.yml :set ft=yaml.github-actions
     autocmd BufEnter *.mkf :set ft=make
     autocmd BufEnter .travis.yml :set ft=yaml
