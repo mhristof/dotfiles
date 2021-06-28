@@ -89,12 +89,12 @@ tflint-clean:
 
 
 ~/.local/bin/tflint: ~/.local/bin /usr/bin/unzip
-	curl --location --silent https://github.com/terraform-linters/tflint/releases/download/v0.25.0/tflint_$(UNAME)_amd64.zip > /tmp/tflint.zip
+	curl --location --silent https://github.com/terraform-linters/tflint/releases/download/v0.29.1/tflint_$(UNAME)_amd64.zip > /tmp/tflint.zip
 	unzip /tmp/tflint.zip
 	mv tflint $@
 
 ~/.tflint.d/plugins/tflint-ruleset-aws: $(TFLINT) ~/.tflint.hcl
-	curl --location --silent https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v0.3.1/tflint-ruleset-aws_$(UNAME)_amd64.zip > /tmp/tflint-ruleset-aws.zip
+	curl --location --silent https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v0.4.3/tflint-ruleset-aws_$(UNAME)_amd64.zip > /tmp/tflint-ruleset-aws.zip
 	unzip /tmp/tflint-ruleset-aws.zip
 	mkdir -p $(shell dirname $@)
 	mv tflint-ruleset-aws $@
