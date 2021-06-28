@@ -89,7 +89,7 @@ tflint-clean:
 
 
 ~/.local/bin/tflint: ~/.local/bin /usr/bin/unzip
-	curl --location --silent https://github.com/terraform-linters/tflint/releases/download/v0.25.0/tflint_linux_amd64.zip > /tmp/tflint.zip
+	curl --location --silent https://github.com/terraform-linters/tflint/releases/download/v0.25.0/tflint_$(UNAME)_amd64.zip > /tmp/tflint.zip
 	unzip /tmp/tflint.zip
 	mv tflint $@
 
