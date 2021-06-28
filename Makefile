@@ -91,7 +91,10 @@ tflint: ~/.tflint.d/plugins/tflint-ruleset-aws
 	mv tflint-ruleset-aws $@
 
 .PHONY: checkov
-checkov: $(CHECKOV)
+checkov: ~/.local/bin/checkov
+
+~/.local/bin/checkov:
+	pip install --user checkov
 
 ~/bin/checkov2vim: $(CHECKOV) | ~/bin
 	curl -sL https://github.com/mhristof/checkov2vim/releases/latest/download/checkov2vim.$(UNAME) > $@

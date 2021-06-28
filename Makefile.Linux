@@ -2,7 +2,6 @@ GH_OS := linux
 
 AG := /usr/bin/ag
 AUTOJUMP := ~/.local/bin/autojump
-CHECKOV := ~/.local/bin/checkov
 CTAGS := /usr/bin/ctags
 CURL := /usr/bin/curl
 EXA := ~/.local/bin/exa
@@ -61,9 +60,6 @@ $(TFLINT): ~/.local/bin /usr/bin/unzip
 
 $(PYCODESTYLE): /usr/bin/pip3
 	pip3 install --user pycodestyle
-
-$(CHECKOV): /usr/bin/pip3
-	pip3 install --user checkov
 
 $(GO): $(CURL)
 	cd ~/
