@@ -85,7 +85,7 @@ $(FIRST_VIM_PLUGIN):
 tflint: ~/.tflint.d/plugins/tflint-ruleset-aws
 
 ~/.tflint.d/plugins/tflint-ruleset-aws: $(TFLINT) ~/.tflint.hcl
-	curl --location --silent https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v0.3.1/tflint-ruleset-aws_$(UNAME)_amd64.zip > /tmp/tflint-ruleset-aws.zip
+	curl --location --silent https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v0.4.3/tflint-ruleset-aws_$(UNAME)_amd64.zip > /tmp/tflint-ruleset-aws.zip
 	unzip /tmp/tflint-ruleset-aws.zip
 	mkdir -p $(shell dirname $@)
 	mv tflint-ruleset-aws $@
@@ -155,7 +155,7 @@ iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app germ
 germ: ~/bin/germ
 
 ~/bin/germ: ~/.zsh.site-functions
-	wget --quiet https://github.com/mhristof/germ/releases/download/v1.10.4/germ.$(UNAME) -O ~/bin/germ
+	wget --quiet https://github.com/mhristof/germ/releases/download/v1.11.1/germ.$(UNAME) -O ~/bin/germ
 	chmod +x ~/bin/germ
 	~/bin/germ autocomplete zsh > ~/.zsh.site-functions/_germ
 
@@ -221,7 +221,7 @@ shfmt: ~/.local/bin/shfmt
 terraform-docs:  ~/.local/bin/terraform-docs
 
 ~/.local/bin/terraform-docs: | ~/.local/bin
-	curl --silent --location --output $@ https://github.com/terraform-docs/terraform-docs/releases/download/v0.12.1/terraform-docs-v0.12.1-$(shell tr '[:upper:]' '[:lower:]' <<< "$(UNAME)")-amd64
+	curl --silent --location --output $@ https://github.com/terraform-docs/terraform-docs/releases/download/v0.14.1/terraform-docs-v0.14.1-$(shell tr '[:upper:]' '[:lower:]' <<< "$(UNAME)")-amd64
 	chmod +x $@
 
 slack:
@@ -264,14 +264,14 @@ bash-my-aws: ~/.bash-my-aws
 .PHONY: gh
 gh: ~/.local/bin/gh
 ~/.local/bin/gh: | ~/.local/bin
-	wget --quiet https://github.com/cli/cli/releases/download/v1.9.2/gh_1.9.2_$(GH_OS)_amd64.tar.gz -O /tmp/gh.tar.gz
+	wget --quiet https://github.com/cli/cli/releases/download/v1.12.0-pre.2/gh_1.12.0-pre.2_$(GH_OS)_amd64.tar.gz -O /tmp/gh.tar.gz
 	tar xf /tmp/gh.tar.gz -C /tmp/
 	mv /tmp/gh_*/bin/gh $@
 
 .PHONY: golangci-lint
 golangci-lint: ~/.local/bin/golangci-lint
 ~/.local/bin/golangci-lint: | ~/.local/bin
-	curl --location --silent https://github.com/golangci/golangci-lint/releases/download/v1.39.0/golangci-lint-1.39.0-$(UNAME)-amd64.tar.gz > /tmp/golangci-lint.tar.gz
+	curl --location --silent https://github.com/golangci/golangci-lint/releases/download/v1.41.1/golangci-lint-1.41.1-$(UNAME)-amd64.tar.gz > /tmp/golangci-lint.tar.gz
 	tar xvf /tmp/golangci-lint.tar.gz -C /tmp/
 	mv /tmp/golangci-lint-*-$(UNAME)-amd64/golangci-lint $@
 
@@ -279,7 +279,7 @@ golangci-lint: ~/.local/bin/golangci-lint
 gitbrowse:  ~/bin/gitbrowse
 
 ~/bin/gitbrowse:
-	curl --location --silent https://github.com/mhristof/gitbrowse/releases/download/v0.1.0/gitbrowse.$(UNAME) > $@
+	curl --location --silent https://github.com/mhristof/gitbrowse/releases/download/v0.2.0/gitbrowse.$(UNAME) > $@
 	chmod +x $@
 
 .PHONY: yamllint
