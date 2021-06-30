@@ -20,7 +20,6 @@ PYTHON3 := $(BREW_BIN)/python3
 SHELLCHECK := $(BREW_BIN)/shellcheck
 SPONGE := $(BREW_BIN)/sponge
 SRCHILITE :=  $(BREW_BIN)/src-hilite-lesspipe.sh
-TFLINT := $(BREW_BIN)/tflint
 VIM := $(BREW_BIN)/vim
 WATCH := $(BREW_BIN)/watch
 WGET := $(BREW_BIN)/wget

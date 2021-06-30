@@ -19,7 +19,6 @@ PYTHON3 := /usr/bin/python3
 SHELLCHECK := ~/.local/bin/shellcheck
 SPONGE := /usr/bin/sponge
 SRCHILITE := /usr/share/source-highlight/src-hilite-lesspipe.sh
-TFLINT := ~/.local/bin/tflint
 VIM := /usr/bin/vim
 WATCH := /usr/bin/watch
 WGET := /usr/bin/wget
@@ -53,10 +52,6 @@ $(SHELLCHECK): $(PIP3) $(XZ) $(CURL) /usr/bin/tar
 	mkdir -p ~/.local/bin
 	cp "shellcheck-stable/shellcheck" ~/.local/bin/
 
-$(TFLINT): ~/.local/bin /usr/bin/unzip
-	curl --location --silent https://github.com/terraform-linters/tflint/releases/download/v0.25.0/tflint_linux_amd64.zip > /tmp/tflint.zip
-	unzip /tmp/tflint.zip
-	mv tflint $@
 
 $(PYCODESTYLE): /usr/bin/pip3
 	pip3 install --user pycodestyle
