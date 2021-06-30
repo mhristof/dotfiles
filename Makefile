@@ -82,7 +82,7 @@ $(FIRST_VIM_PLUGIN):
 	vim +PluginInstall +qall
 
 .PHONY: tflint
-tflint: ~/.tflint.d/plugins/tflint-ruleset-aws ~/.local/bin/tflint
+tflint: ~/.local/bin/tflint ~/.tflint.d/plugins/tflint-ruleset-aws
 .PHONY: tflint-clean
 tflint-clean: 
 	rm ~/.local/bin/tflint ~/.tflint.d -r
@@ -93,7 +93,7 @@ tflint-clean:
 	unzip /tmp/tflint.zip
 	mv tflint $@
 
-~/.tflint.d/plugins/tflint-ruleset-aws: $(TFLINT) ~/.tflint.hcl
+~/.tflint.d/plugins/tflint-ruleset-aws: $(TFLINT) ~/.tflint.hcl /usr/bin/unzip
 	curl --location --silent https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v0.4.3/tflint-ruleset-aws_$(UNAME)_amd64.zip > /tmp/tflint-ruleset-aws.zip
 	unzip /tmp/tflint-ruleset-aws.zip
 	mkdir -p $(shell dirname $@)
