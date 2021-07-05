@@ -28,8 +28,9 @@ export PATH=$HOME/.brew/opt/openvpn/sbin:/usr/local/opt/openvpn/sbin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.bash-my-aws/bin:$PATH
 
-export PYTHONSTARTUP=~/.pythonrc.py
 export HISTCONTROL=ignoredups:erasedups
+export MANPAGER="sh -c 'col -bx | cat -l man -p'"
+export PYTHONSTARTUP=~/.pythonrc.py
 
 if [[ $THIS_SHELL == "bash" ]]; then
     # When the shell exits, append to the history file instead of overwriting it
@@ -41,9 +42,6 @@ fi
 export HISTSIZE=99999999
 export HISTFILESIZE=
 export HISTTIMEFORMAT='%F %T '
-
-export LESSOPEN="| $HOME/.brew/bin/src-hilite-lesspipe.sh %s"
-export LESS=' -R '
 
 alias ..='c ../'
 alias ...='c ../../'
