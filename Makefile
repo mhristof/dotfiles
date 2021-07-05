@@ -251,13 +251,13 @@ helm: $(HELM)
 k9s: $(K9S)
 
 .PHONY: bat
-bat: ~/.local/bin/cat
+bat: ~/.local/bin/bat
 
-~/.local/bin/cat:
+~/.local/bin/bat:
 	curl --silent --location --output /tmp/bat.tar.gz https://github.com/sharkdp/bat/releases/download/v0.18.1/bat-v0.18.1-x86_64-$(VENDOR)-$(UNAME).tar.gz
 	$(eval TEMPDIR := $(shell mktemp -d))
 	tar xvf /tmp/bat.tar.gz -C $(TEMPDIR)
-	mv $(TEMPDIR)/bat*/bat ~/.local/bin/cat
+	mv $(TEMPDIR)/bat*/bat $@
 	rm -rf $(TEMPDIR)
 
 .PHONY: shortcut
