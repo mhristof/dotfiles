@@ -13,6 +13,12 @@ BREW_BIN := /usr/local/bin
 include Makefile.$(shell uname -s)
 
 UNAME := $(shell uname | tr '[:upper:]' '[:lower:]')
+ifeq ($(shell which sw_vers),)
+VENDOR := linux
+else
+VENDOR := apple
+endif
+
 PWD ?= $(shell pwd)
 FIRST_VIM_PLUGIN := ~/.vim/bundle/$(shell basename $(shell grep Plugin .vimrc | head -2 | tail -1 | cut -d"'" -f2) .git)
 
@@ -243,6 +249,16 @@ helm: $(HELM)
 
 .PHONY: k9s
 k9s: $(K9S)
+
+.PHONY: bat
+bat: ~/.local/bin/cat
+
+~/.local/bin/cat:
+	curl --silent --location --output /tmp/bat.tar.gz https://github.com/sharkdp/bat/releases/download/v0.18.1/bat-v0.18.1-x86_64-$(VENDOR)-$(UNAME).tar.gz
+	$(eval TEMPDIR := $(shell mktemp -d))
+	tar xvf /tmp/bat.tar.gz -C $(TEMPDIR)
+	mv $(TEMPDIR)/bat*/bat ~/.local/bin/cat
+	rm -rf $(TEMPDIR)
 
 .PHONY: shortcut
 shortcut:
