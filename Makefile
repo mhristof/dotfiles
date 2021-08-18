@@ -125,7 +125,7 @@ checkov: ~/.local/bin/checkov
 .PHONY: viddy
 viddy: ~/.local/bin/viddy
 
-~/.local/bin/viddy: | ~/.local/bin
+~/.local/bin/viddy: | ~/.local/bin /usr/bin/tar
 	wget -O /tmp/viddy.tar.gz https://github.com/sachaos/viddy/releases/download/v0.1.4/viddy_0.1.4_$(shell uname)_x86_64.tar.gz
 	tar xvf /tmp/viddy.tar.gz -C /tmp/
 	mv /tmp/viddy ~/.local/bin/
