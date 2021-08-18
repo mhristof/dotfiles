@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if command -v viddy &>/dev/null; then
+    viddy "$@"
+else
+    watch "$@"
+fi

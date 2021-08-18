@@ -26,7 +26,7 @@ FIRST_VIM_PLUGIN := ~/.vim/bundle/$(shell basename $(shell grep Plugin .vimrc | 
 default: brew vim essentials
 
 .PHONY: essentials
-essentials: $(HTOP) $(WATCH) less $(GREP) $(SPONGE)
+essentials: $(HTOP) $(WATCH) less $(GREP) $(SPONGE) viddy
 
 .PHONY: dev
 dev: essentials dots vim git ~/bin/semver $(LS) $(WATCH) $(JQ) $(AUTOJUMP)
@@ -121,6 +121,14 @@ checkov: ~/.local/bin/checkov
 	mkdir -p ~/.vim/bundle/ale/ale_linters/groovy/
 	cd ~/.vim/bundle/ale/ale_linters/groovy/
 	curl -sLO https://raw.githubusercontent.com/mhristof/ale-jenkinsfile/master/ale_jenkinsfile.vim
+
+.PHONY: viddy
+viddy: ~/.local/bin/viddy
+
+~/.local/bin/viddy: | ~/.local/bin /usr/bin/tar
+	wget -O /tmp/viddy.tar.gz https://github.com/sachaos/viddy/releases/download/v0.1.4/viddy_0.1.4_$(shell uname)_x86_64.tar.gz
+	tar xvf /tmp/viddy.tar.gz -C /tmp/
+	mv /tmp/viddy ~/.local/bin/
 
 .PHONY: ctags
 ctags: $(CTAGS) ~/.ctags.d
