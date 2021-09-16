@@ -2,6 +2,7 @@ GH_OS := linux
 
 AG := /usr/bin/ag
 AUTOJUMP := ~/.local/bin/autojump
+BANDIT := ~/.local/bin/bandit
 CTAGS := /usr/bin/ctags
 CURL := /usr/bin/curl
 EXA := ~/.local/bin/exa
@@ -52,6 +53,9 @@ $(SHELLCHECK): $(PIP3) $(XZ) $(CURL) /usr/bin/tar
 	mkdir -p ~/.local/bin
 	cp "shellcheck-stable/shellcheck" ~/.local/bin/
 
+
+$(BANDIT): /usr/bin/pip3
+	pip3 install --user bandit
 
 $(PYCODESTYLE): /usr/bin/pip3
 	pip3 install --user pycodestyle

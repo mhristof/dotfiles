@@ -28,5 +28,9 @@ $(PYLINT):
 	sudo apt-get install python3-setuptools
 	pip3 install pylint
 
+$(BANDIT):
+	sudo apt-get install python3-setuptools
+	pip3 install bandit
+
 /usr/bin/%: update
 	sudo apt-get install -y $(shell basename $@)
