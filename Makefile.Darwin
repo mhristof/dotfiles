@@ -3,6 +3,7 @@ GH_OS := macOS
 
 AG := $(BREW_BIN)/ag
 AUTOJUMP := $(BREW_BIN)/autojump
+BANDIT := $(BREW_BIN)/bandit
 BREW := ~/.brew/bin/brew
 CTAGS := $(BREW_BIN)/ctags
 CURL := $(abspath $(BREW_BIN)/../opt/curl/bin/curl)
@@ -51,6 +52,9 @@ $(CTAGS):
 
 $(PYLINT):
 	pip3 install pylint
+
+$(BANDIT):
+	pip3 install bandit
 
 $(BREW_BIN)/%:
 	$(BREW) install $*
