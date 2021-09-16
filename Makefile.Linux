@@ -54,10 +54,10 @@ $(SHELLCHECK): $(PIP3) $(XZ) $(CURL) /usr/bin/tar
 	cp "shellcheck-stable/shellcheck" ~/.local/bin/
 
 
-$(BANDIT): /usr/bin/pip3
+$(BANDIT): $(PIP3)
 	pip3 install --user bandit
 
-$(PYCODESTYLE): /usr/bin/pip3
+$(PYCODESTYLE): $(PIP3)
 	pip3 install --user pycodestyle
 
 $(GO): $(CURL)
