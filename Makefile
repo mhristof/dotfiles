@@ -98,12 +98,12 @@ tflint-clean:
 	rm ~/.local/bin/tflint ~/.tflint.d -r
 
 ~/.local/bin/tflint: ~/.local/bin /usr/bin/unzip
-	curl --location --silent https://github.com/terraform-linters/tflint/releases/download/v0.31.0/tflint_$(UNAME)_amd64.zip > /tmp/tflint.zip
+	curl --location --silent https://github.com/terraform-linters/tflint/releases/download/v0.33.1/tflint_$(UNAME)_amd64.zip > /tmp/tflint.zip
 	unzip /tmp/tflint.zip
 	mv tflint $@
 
 ~/.tflint.d/plugins/tflint-ruleset-aws: $(TFLINT) ~/.tflint.hcl /usr/bin/unzip
-	curl --location --silent https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v0.6.0/tflint-ruleset-aws_$(UNAME)_amd64.zip > /tmp/tflint-ruleset-aws.zip
+	curl --location --silent https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v0.9.0/tflint-ruleset-aws_$(UNAME)_amd64.zip > /tmp/tflint-ruleset-aws.zip
 	unzip /tmp/tflint-ruleset-aws.zip
 	mkdir -p $(shell dirname $@)
 	mv tflint-ruleset-aws $@
@@ -130,7 +130,7 @@ checkov: ~/.local/bin/checkov
 viddy: ~/.local/bin/viddy
 
 ~/.local/bin/viddy: | ~/.local/bin /usr/bin/tar
-	wget -O /tmp/viddy.tar.gz https://github.com/sachaos/viddy/releases/download/v0.1.4/viddy_0.1.4_$(shell uname)_x86_64.tar.gz
+	wget -O /tmp/viddy.tar.gz https://github.com/sachaos/viddy/releases/download/v0.3.3/viddy_0.3.3_$(shell uname)_x86_64.tar.gz
 	tar xvf /tmp/viddy.tar.gz -C /tmp/
 	mv /tmp/viddy ~/.local/bin/
 
@@ -240,14 +240,14 @@ random: /tmp/alfred-random.alfredworkflow
 shfmt: ~/.local/bin/shfmt
 
 ~/.local/bin/shfmt:
-	curl --silent --location --output $@ https://github.com/mvdan/sh/releases/download/v3.3.1/shfmt_v3.3.1_$(UNAME)_amd64
+	curl --silent --location --output $@ https://github.com/mvdan/sh/releases/download/v3.4.0/shfmt_v3.4.0_$(UNAME)_amd64
 	chmod +x $@
 
 .PHONY: terraform-docs
 terraform-docs:  ~/.local/bin/terraform-docs
 
 ~/.local/bin/terraform-docs: | ~/.local/bin
-	curl --silent --location --output $@ https://github.com/terraform-docs/terraform-docs/releases/download/v0.15.0/terraform-docs-v0.15.0-$(shell tr '[:upper:]' '[:lower:]' <<< "$(UNAME)")-amd64
+	curl --silent --location --output $@ https://github.com/terraform-docs/terraform-docs/releases/download/v0.16.0/terraform-docs-v0.16.0-$(shell tr '[:upper:]' '[:lower:]' <<< "$(UNAME)")-amd64
 	chmod +x $@
 
 slack:
@@ -266,7 +266,7 @@ k9s: $(K9S)
 bat: ~/.local/bin/bat
 
 ~/.local/bin/bat:
-	curl --silent --location --output /tmp/bat.tar.gz https://github.com/sharkdp/bat/releases/download/v0.18.2/bat-v0.18.2-x86_64-$(VENDOR)-$(UNAME).tar.gz
+	curl --silent --location --output /tmp/bat.tar.gz https://github.com/sharkdp/bat/releases/download/v0.18.3/bat-v0.18.3-x86_64-$(VENDOR)-$(UNAME).tar.gz
 	$(eval TEMPDIR := $(shell mktemp -d))
 	tar xvf /tmp/bat.tar.gz -C $(TEMPDIR)
 	mv $(TEMPDIR)/bat*/bat $@
@@ -293,21 +293,21 @@ bash-my-aws: ~/.bash-my-aws
 	$(BREW) --version
 
 ~/bin/semver: | $(WGET) ~/bin ~/.zsh.site-functions
-	wget --quiet https://github.com/mhristof/semver/releases/download/v0.5.0/semver.$(UNAME) -O ~/bin/semver
+	wget --quiet https://github.com/mhristof/semver/releases/download/v0.6.0/semver.$(UNAME) -O ~/bin/semver
 	chmod +x ~/bin/semver
 	~/bin/semver autocomplete zsh > ~/.zsh.site-functions/_semver
 
 .PHONY: gh
 gh: ~/.local/bin/gh
 ~/.local/bin/gh: | ~/.local/bin
-	wget --quiet https://github.com/cli/cli/releases/download/v1.14.0/gh_1.14.0_$(GH_OS)_amd64.tar.gz -O /tmp/gh.tar.gz
+	wget --quiet https://github.com/cli/cli/releases/download/v2.2.0/gh_2.2.0_$(GH_OS)_amd64.tar.gz -O /tmp/gh.tar.gz
 	tar xf /tmp/gh.tar.gz -C /tmp/
 	mv /tmp/gh_*/bin/gh $@
 
 .PHONY: golangci-lint
 golangci-lint: ~/.local/bin/golangci-lint
 ~/.local/bin/golangci-lint: | ~/.local/bin
-	curl --location --silent https://github.com/golangci/golangci-lint/releases/download/v1.42.0/golangci-lint-1.42.0-$(UNAME)-amd64.tar.gz > /tmp/golangci-lint.tar.gz
+	curl --location --silent https://github.com/golangci/golangci-lint/releases/download/v1.43.0/golangci-lint-1.43.0-$(UNAME)-amd64.tar.gz > /tmp/golangci-lint.tar.gz
 	tar xvf /tmp/golangci-lint.tar.gz -C /tmp/
 	mv /tmp/golangci-lint-*-$(UNAME)-amd64/golangci-lint $@
 
