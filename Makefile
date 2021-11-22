@@ -295,7 +295,7 @@ bash-my-aws: ~/.bash-my-aws
 ~/bin/semver: | $(WGET) ~/bin ~/.zsh.site-functions
 	wget --quiet https://github.com/mhristof/semver/releases/download/v0.6.0/semver.$(UNAME) -O ~/bin/semver
 	chmod +x ~/bin/semver
-	~/bin/semver autocomplete zsh > ~/.zsh.site-functions/_semver
+	~/bin/semver completion zsh > ~/.zsh.site-functions/_semver
 
 .PHONY: gh
 gh: ~/.local/bin/gh
