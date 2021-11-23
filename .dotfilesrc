@@ -25,12 +25,21 @@ export PATH=$HOME/.brew/opt/make/libexec/gnubin:/usr/local/opt/make/libexec/gnub
 export PATH=$HOME/.brew/opt/gettext/bin:/usr/local/opt/gettext/bin:$PATH
 export PATH=$HOME/.brew/opt/coreutils/libexec/gnubin:/usr/local/opt/coreutils/libexec/gnubin:$PATH
 export PATH=$HOME/.brew/opt/openvpn/sbin:/usr/local/opt/openvpn/sbin:$PATH
-export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.bash-my-aws/bin:$PATH
+export PATH=$HOME/.local/bin:$PATH
 
 export HISTCONTROL=ignoredups:erasedups
 export MANPAGER="sh -c 'col -bx | cat -l man -p'"
 export PYTHONSTARTUP=~/.pythonrc.py
+
+export XDG_CONFIG_HOME=$HOME/.config
+export XDG_CACHE_HOME=$HOME/.cache
+export XDG_DATA_HOME=$HOME/.local/share
+export XDG_STATE_HOME=$HOME/.local/state
+mkdir -p $XDG_CONFIG_HOME
+mkdir -p $XDG_CACHE_HOME
+mkdir -p $XDG_DATA_HOME
+mkdir -p $XDG_STATE_HOME
 
 if [[ $THIS_SHELL == "bash" ]]; then
     # When the shell exits, append to the history file instead of overwriting it
@@ -81,9 +90,7 @@ alias tfp='terraform plan -out plan.out'
 alias kcc='kubectl create'
 alias kcd='kubectl delete'
 alias drit='docker run -it'
-alias fu='fuck'
 alias k=kubectl
-alias kens=kubens
 alias acm-pca-active="aws acm-pca list-certificate-authorities | jq '.CertificateAuthorities[] | select(.Status == \"ACTIVE\") | [.CertificateAuthorityConfiguration.Subject.CommonName, .Arn, .Status] | @csv' -r | column -s, -t"
 alias acm-pca-disabled="aws acm-pca list-certificate-authorities | jq '.CertificateAuthorities[] | select(.Status == \"DISABLED\") | [.CertificateAuthorityConfiguration.Subject.CommonName, .Arn, .Status] | @csv' -r | column -s, -t"
 alias mkgo='cookiecutter gh:mhristof/cookiecutter-golang-cmd'
@@ -118,25 +125,25 @@ while read -r file; do
     source $file && compdef $base ${base/_/}
 done < <(find $HOME/.zsh.site-functions -type f)
 
-src "${HOME}/.iterm2_shell_integration.zsh"
-src "${HOME}/.fzf.zsh"
+src "$HOME/.iterm2_shell_integration.zsh"
+src "$HOME/.fzf.zsh"
 src "$HOME/.brew/etc/profile.d/autojump.sh"
 src "$HOME/.local/etc/profile.d/autojump.sh"
 src "/usr/local/etc/profile.d/autojump.sh"
-src "${HOME}/.bash-my-aws/aliases"
-src "${HOME}/.bash-my-aws/bash_completion.sh"
-src "${HOME}/.brew/etc/profile.d/bash_completion.sh"
+src "$HOME/.bash-my-aws/aliases"
+src "$HOME/.bash-my-aws/bash_completion.sh"
+src "$HOME/.brew/etc/profile.d/bash_completion.sh"
 src "/usr/local/opt/powerlevel10k/powerlevel10k.zsh-theme"
 src "$HOME/.p10k.zsh" # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 
 export PATH=~/bin:$PATH
 export PATH=$(echo -n $PATH | awk -v RS=: -v ORS=: '!arr[$0]++') # remove duplicates
 
-
 export VAULT_ADDR='http://127.0.0.1:8200'
 export AWS_SDK_LOAD_CONFIG=1
 export AWS_PAGER=""
 export HOMEBREW_NO_AUTO_UPDATE=1
+
 
 
 src "${HOME}/.dotfilesrc.local"

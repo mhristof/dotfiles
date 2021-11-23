@@ -59,7 +59,7 @@ git: ~/.gitignore.global ~/.gitconfig ~/.gitconfig.github gh
 ln: dots
 
 .PHONY: dots
-dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbrc ~/.pythonrc.py ~/.tmux.conf ~/.p10k.zsh
+dots: ~/.gitignore.global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbrc ~/.pythonrc.py ~/.tmux.conf ~/.p10k.zsh
 
 ~/.p10k.zsh:
 	brew install romkatv/powerlevel10k/powerlevel10k
@@ -180,8 +180,16 @@ iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app germ
 
 germ: ~/bin/germ
 
-~/bin/germ: ~/.zsh.site-functions
-	wget --quiet https://github.com/mhristof/germ/releases/download/v1.11.1/germ.$(UNAME) -O ~/bin/germ
+GERM := https://github.com/mhristof/germ/releases/download/v1.11.0/germ.$(UNAME)
+GERM_VERSION := $(shell echo $(GERM) | cut -d/ -f8)
+GERM_BIN := $(XDG_CACHE_HOME)/germ-$(GERM_VERSION)
+
+$(GERM_BIN):
+	echo $(GERM_VERSION)
+	wget --quiet --no-clobber $(GERM) -O $(GERM_BIN)
+
+~/bin/germ: $(GERM_BIN) ~/.zsh.site-functions
+	ln -sf $(GERM_BIN) ~/bin/germ
 	chmod +x ~/bin/germ
 	~/bin/germ autocomplete zsh > ~/.zsh.site-functions/_germ
 
