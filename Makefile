@@ -21,6 +21,15 @@ endif
 
 PWD ?= $(shell pwd)
 FIRST_VIM_PLUGIN := ~/.vim/bundle/$(shell basename $(shell grep Plugin .vimrc | head -2 | tail -1 | cut -d"'" -f2) .git)
+WGET := wget --quiet --no-clobber
+
+TOOLS := $(shell cut -d/ -f5 < tools.txt)
+
+makefile.tools.mk: ./generate-makefile-tools.sh tools.txt
+	./generate-makefile-tools.sh
+
+tools: makefile.tools.mk
+	make --silent -f makefile.tools.mk $(TOOLS) UNAME=$(UNAME) WGET="$(WGET)"
 
 .PHONY: default
 default: brew vim essentials
@@ -29,7 +38,7 @@ default: brew vim essentials
 essentials: $(HTOP) $(WATCH) less $(GREP) $(SPONGE) viddy
 
 .PHONY: dev
-dev: essentials dots vim git ~/bin/semver $(LS) $(WATCH) $(JQ) $(AUTOJUMP)
+dev: essentials dots vim git ~/bin/semver $(LS) $(WATCH) $(JQ) $(AUTOJUMP) tools
 
 .PHONY: go
 go: $(GO) ~/go/bin/gojson
@@ -114,10 +123,6 @@ checkov: ~/.local/bin/checkov
 ~/.local/bin/checkov:
 	pip install --user checkov
 
-~/bin/checkov2vim: $(CHECKOV) | ~/bin
-	curl -sL https://github.com/mhristof/checkov2vim/releases/latest/download/checkov2vim.$(UNAME) > $@
-	chmod +x $@
-
 ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim: ~/bin/checkov2vim | $(FIRST_VIM_PLUGIN)
 	~/bin/checkov2vim generate --dest $@
 
@@ -177,26 +182,6 @@ iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app germ
 
 /Applications/iTerm.app: $(BREW_BIN)/python3
 	brew cask install iterm2
-
-germ: ~/bin/germ
-
-GERM := https://github.com/mhristof/germ/releases/download/v1.11.0/germ.$(UNAME)
-GERM_VERSION := $(shell echo $(GERM) | cut -d/ -f8)
-GERM_BIN := $(XDG_CACHE_HOME)/germ-$(GERM_VERSION)
-
-$(GERM_BIN):
-	echo $(GERM_VERSION)
-	wget --quiet --no-clobber $(GERM) -O $(GERM_BIN)
-
-~/bin/germ: $(GERM_BIN) ~/.zsh.site-functions
-	ln -sf $(GERM_BIN) ~/bin/germ
-	chmod +x ~/bin/germ
-	~/bin/germ autocomplete zsh > ~/.zsh.site-functions/_germ
-
-~/bin/githubactions-docs:
-	wget --quiet https://github.com/mhristof/githubactions-docs/releases/download/v0.2.0/$(shell basename $@).$(UNAME) -O $@
-	chmod +x $@
-	$@ autocomplete zsh > ~/.zsh.site-functions/_$(shell basename $@)
 
 dock: $(XARGS) $(BREW_BIN)/dockutil
 	dockutil --list | sed 's/file:.*//g' | xargs --no-run-if-empty -n1 -d'\n' dockutil --remove
@@ -318,13 +303,6 @@ golangci-lint: ~/.local/bin/golangci-lint
 	curl --location --silent https://github.com/golangci/golangci-lint/releases/download/v1.43.0/golangci-lint-1.43.0-$(UNAME)-amd64.tar.gz > /tmp/golangci-lint.tar.gz
 	tar xvf /tmp/golangci-lint.tar.gz -C /tmp/
 	mv /tmp/golangci-lint-*-$(UNAME)-amd64/golangci-lint $@
-
-.PHONY: gitbrowse
-gitbrowse:  ~/bin/gitbrowse
-
-~/bin/gitbrowse:
-	curl --location --silent https://github.com/mhristof/gitbrowse/releases/download/v0.2.0/gitbrowse.$(UNAME) > $@
-	chmod +x $@
 
 .PHONY: yamllint
 yamllint: $(YAMLLINT)

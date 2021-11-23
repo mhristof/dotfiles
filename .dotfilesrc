@@ -144,6 +144,4 @@ export AWS_SDK_LOAD_CONFIG=1
 export AWS_PAGER=""
 export HOMEBREW_NO_AUTO_UPDATE=1
 
-
-
 src "${HOME}/.dotfilesrc.local"
