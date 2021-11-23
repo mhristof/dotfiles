@@ -181,14 +181,14 @@ iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app germ
 germ: ~/bin/germ
 
 ~/bin/germ: ~/.zsh.site-functions
-	wget --quiet https://github.com/mhristof/germ/releases/download/v1.11.1/germ.$(UNAME) -O ~/bin/germ
-	chmod +x ~/bin/germ
-	~/bin/germ autocomplete zsh > ~/.zsh.site-functions/_germ
+	wget --quiet https://github.com/mhristof/germ/releases/download/v1.13.0/germ.$(UNAME) -O $@
+	chmod +x $@
+	$@ completion zsh > ~/.zsh.site-functions/_$(shell basename $@)
 
 ~/bin/githubactions-docs:
-	wget --quiet https://github.com/mhristof/githubactions-docs/releases/download/v0.2.0/$(shell basename $@).$(UNAME) -O $@
+	wget --quiet https://github.com/mhristof/githubactions-docs/releases/download/v0.5.0/$(shell basename $@).$(UNAME) -O $@
 	chmod +x $@
-	$@ autocomplete zsh > ~/.zsh.site-functions/_$(shell basename $@)
+	$@ completion zsh > ~/.zsh.site-functions/_$(shell basename $@)
 
 dock: $(XARGS) $(BREW_BIN)/dockutil
 	dockutil --list | sed 's/file:.*//g' | xargs --no-run-if-empty -n1 -d'\n' dockutil --remove
