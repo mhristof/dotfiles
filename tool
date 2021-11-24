@@ -60,7 +60,20 @@ case "$URL" in
 	ln -sf \$(shell find $| -name $NAME -type f) \$@
 EOF
         ;;
-    *.tar.gz | *.tar.xz)
+    *.tar.xz)
+        cat <<EOF >>"$TOOLS/makefile.$NAME"
+\$(XDG_DATA_HOME)/dotfiles/$NAME-\$(${NAME_U}_VERSION).tar.gz: | \$(XDG_DATA_HOME)/dotfiles
+	wget --quiet \$(${NAME_U}_URL) --output-document \$@
+
+\$(XDG_DATA_HOME)/dotfiles/$NAME-\$(${NAME_U}_VERSION): \$(XDG_DATA_HOME)/dotfiles/$NAME-\$(${NAME_U}_VERSION).tar.gz /usr/bin/tar \$(XZ)
+	mkdir \$(XDG_DATA_HOME)/dotfiles/$NAME-\$(${NAME_U}_VERSION)/
+	tar xf $< -C \$(XDG_DATA_HOME)/dotfiles/$NAME-\$(${NAME_U}_VERSION)/
+
+~/.local/bin/$NAME: | \$(XDG_DATA_HOME)/dotfiles/$NAME-\$(${NAME_U}_VERSION) ~/.local/bin
+	ln -sf \$(shell find $| -name $NAME -type f) \$@
+EOF
+        ;;
+    *.tar.gz)
         cat <<EOF >>"$TOOLS/makefile.$NAME"
 \$(XDG_DATA_HOME)/dotfiles/$NAME-\$(${NAME_U}_VERSION).tar.gz: | \$(XDG_DATA_HOME)/dotfiles
 	wget --quiet \$(${NAME_U}_URL) --output-document \$@
