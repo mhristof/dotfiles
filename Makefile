@@ -10,7 +10,6 @@ endif
 .ONESHELL:
 
 BREW_BIN := /usr/local/bin
-include Makefile.$(shell uname -s)
 
 UNAME := $(shell uname | tr '[:upper:]' '[:lower:]')
 ifeq ($(shell which sw_vers),)
@@ -36,6 +35,7 @@ GOLANGCI-LINT_URL := https://github.com/golangci/golangci-lint/releases/download
 GH_URL := https://github.com/cli/cli/releases/download/v2.2.0/gh_2.2.0_macOS_amd64.tar.gz
 
 -include tools/*
+include Makefile.$(shell uname -s)
 
 .PHONY: default
 default: brew vim essentials
