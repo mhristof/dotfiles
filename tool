@@ -7,7 +7,7 @@ die() {
 
 URL="$*"
 TOOLS="$(dirname "$0")/tools"
-NAME="$(basename "$URL" | sed 's/_\d*.*//' | sed 's/-v\d*.*//')"
+NAME="$(basename "$URL" | sed 's/_[[:digit:]].*//' | sed 's/-v[[:digit:]].*//' | sed 's/-[[:digit:]].*//')"
 NAME_U="$(tr '[:lower:]' '[:upper:]' <<<"$NAME")"
 VERSION="$(cut -d/ -f 8 <<<"$URL")"
 

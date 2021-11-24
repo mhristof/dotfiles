@@ -29,6 +29,7 @@ SEMVER_URL := https://github.com/mhristof/semver/releases/download/v0.7.0/semver
 GITHUBACTIONS-DOCS_URL := https://github.com/mhristof/githubactions-docs/releases/download/v0.5.0/githubactions-docs_0.5.0_Darwin_amd64
 GERM_URL := https://github.com/mhristof/germ/releases/download/v1.15.0/germ_1.15.0_Darwin_amd64
 CHECKOV2VIM_URL := https://github.com/mhristof/checkov2vim/releases/download/v0.2.0/checkov2vim_0.2.0_Darwin_amd64
+GOLANGCI-LINT_URL := https://github.com/golangci/golangci-lint/releases/download/v1.43.0/golangci-lint-1.43.0-darwin-amd64.tar.gz
 GH_URL := https://github.com/cli/cli/releases/download/v2.2.0/gh_2.2.0_macOS_amd64.tar.gz
 
 -include tools/*
@@ -274,7 +275,7 @@ retool:
 	grep -P '^[\w-_]*_URL' Makefile | cut -d= -f2 | sort -u | xargs -n1 tool
 
 .PHONY: tools
-tools:  bat checkov2vim germ gh githubactions-docs semver viddy 
+tools:  bat checkov2vim germ gh githubactions-docs golangci golangci-lint semver viddy 
 
 .PHONY: yamllint
 yamllint: $(YAMLLINT)
