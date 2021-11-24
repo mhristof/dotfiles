@@ -7,7 +7,7 @@ TFLINT_VERSION := $(word 7,$(subst /, ,$(TFLINT_URL)))
 $(XDG_DATA_HOME)/dotfiles/tflint-$(TFLINT_VERSION).tar.gz: | $(XDG_DATA_HOME)/dotfiles
 	wget --quiet $(TFLINT_URL) --output-document $@
 
-$(XDG_DATA_HOME)/dotfiles/tflint-$(TFLINT_VERSION): $(XDG_DATA_HOME)/dotfiles/tflint-$(TFLINT_VERSION).tar.gz /usr/bin/tar
+$(XDG_DATA_HOME)/dotfiles/tflint-$(TFLINT_VERSION): $(XDG_DATA_HOME)/dotfiles/tflint-$(TFLINT_VERSION).tar.gz /usr/bin/unzip
 	mkdir $(XDG_DATA_HOME)/dotfiles/tflint-$(TFLINT_VERSION)/
 	unzip $< -d $(XDG_DATA_HOME)/dotfiles/tflint-$(TFLINT_VERSION)/
 

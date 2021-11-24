@@ -52,7 +52,7 @@ case "$URL" in
 \$(XDG_DATA_HOME)/dotfiles/$NAME-\$(${NAME_U}_VERSION).tar.gz: | \$(XDG_DATA_HOME)/dotfiles
 	wget --quiet \$(${NAME_U}_URL) --output-document \$@
 
-\$(XDG_DATA_HOME)/dotfiles/$NAME-\$(${NAME_U}_VERSION): \$(XDG_DATA_HOME)/dotfiles/$NAME-\$(${NAME_U}_VERSION).tar.gz /usr/bin/tar
+\$(XDG_DATA_HOME)/dotfiles/$NAME-\$(${NAME_U}_VERSION): \$(XDG_DATA_HOME)/dotfiles/$NAME-\$(${NAME_U}_VERSION).tar.gz /usr/bin/unzip
 	mkdir \$(XDG_DATA_HOME)/dotfiles/$NAME-\$(${NAME_U}_VERSION)/
 	unzip $< -d \$(XDG_DATA_HOME)/dotfiles/$NAME-\$(${NAME_U}_VERSION)/
 
