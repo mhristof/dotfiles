@@ -23,6 +23,7 @@ PWD ?= $(shell pwd)
 FIRST_VIM_PLUGIN := ~/.vim/bundle/$(shell basename $(shell grep Plugin .vimrc | head -2 | tail -1 | cut -d"'" -f2) .git)
 
 # tools
+TFLINT_URL := https://github.com/terraform-linters/tflint/releases/download/v0.33.1/tflint_Darwin_amd64.zip
 BAT_URL := https://github.com/sharkdp/bat/releases/download/v0.18.3/bat-v0.18.3-x86_64-apple-Darwin.tar.gz
 VIDDY_URL := https://github.com/sachaos/viddy/releases/download/v0.3.3/viddy_0.3.3_Darwin_x86_64.tar.gz
 SEMVER_URL := https://github.com/mhristof/semver/releases/download/v0.7.0/semver_0.7.0_Darwin_amd64
@@ -105,14 +106,10 @@ $(FIRST_VIM_PLUGIN):
 
 .PHONY: tflint
 tflint: ~/.local/bin/tflint ~/.tflint.d/plugins/tflint-ruleset-aws
+
 .PHONY: tflint-clean
 tflint-clean: 
 	rm ~/.local/bin/tflint ~/.tflint.d -r
-
-~/.local/bin/tflint: ~/.local/bin /usr/bin/unzip
-	curl --location --silent https://github.com/terraform-linters/tflint/releases/download/v0.33.1/tflint_$(UNAME)_amd64.zip > /tmp/tflint.zip
-	unzip /tmp/tflint.zip
-	mv tflint $@
 
 ~/.tflint.d/plugins/tflint-ruleset-aws: $(TFLINT) ~/.tflint.hcl /usr/bin/unzip
 	curl --location --silent https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v0.9.0/tflint-ruleset-aws_$(UNAME)_amd64.zip > /tmp/tflint-ruleset-aws.zip
@@ -275,7 +272,7 @@ retool:
 	grep -P '^[\w-_]*_URL' Makefile | cut -d= -f2 | sort -u | xargs -n1 tool
 
 .PHONY: tools
-tools:  bat checkov2vim germ gh githubactions-docs golangci golangci-lint semver viddy 
+tools:  bat checkov2vim germ gh githubactions-docs golangci-lint semver tflint viddy 
 
 .PHONY: yamllint
 yamllint: $(YAMLLINT)
