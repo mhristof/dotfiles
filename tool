@@ -7,7 +7,7 @@ die() {
 
 URL="$*"
 TOOLS="$(dirname "$0")/tools"
-NAME="$(basename "$URL" | sed "s/_$(uname).*//i" | sed 's/_[[:digit:]].*//' | sed 's/-v[[:digit:]].*//' | sed 's/-[[:digit:]].*//')"
+NAME="$(basename "$URL" | sed "s/_$(uname).*//i" | sed 's/_[[:digit:]].*//' | sed 's/[-_]v[[:digit:]].*//' | sed 's/-[[:digit:]].*//')"
 NAME_U="$(tr '[:lower:]' '[:upper:]' <<<"$NAME")"
 VERSION="$(cut -d/ -f 8 <<<"$URL")"
 
@@ -92,5 +92,5 @@ sed -i '' '/^# tools/a\
 '$NAME_U'_URL := '$URL'
 ' Makefile
 
-TOOLS="$(tr ' ' '\n' <<<"$NAME $(grep '^tools:' Makefile | cut -d: -f2)" | sort | uniq | tr '\n' ' ')"
+TOOLS="$(tr ' ' '\n' <<<"$NAME $(grep '^tools:' Makefile | cut -d: -f2)" | sort | uniq | tr '\n' ' ' | sed 's/ $//')"
 sed -i '' "s/^tools:.*/tools: $TOOLS/g" Makefile

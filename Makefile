@@ -24,8 +24,10 @@ FIRST_VIM_PLUGIN := ~/.vim/bundle/$(shell basename $(shell grep Plugin .vimrc | 
 
 # tools
 TFLINT_URL := https://github.com/terraform-linters/tflint/releases/download/v0.33.1/tflint_Darwin_amd64.zip
+TERRAFORM-DOCS_URL := https://github.com/terraform-docs/terraform-docs/releases/download/v0.16.0/terraform-docs-v0.16.0-darwin-amd64.tar.gz
 BAT_URL := https://github.com/sharkdp/bat/releases/download/v0.18.3/bat-v0.18.3-x86_64-apple-Darwin.tar.gz
 VIDDY_URL := https://github.com/sachaos/viddy/releases/download/v0.3.3/viddy_0.3.3_Darwin_x86_64.tar.gz
+SHFMT_URL := https://github.com/mvdan/sh/releases/download/v3.4.0/shfmt_v3.4.0_Darwin_amd64
 SEMVER_URL := https://github.com/mhristof/semver/releases/download/v0.7.0/semver_0.7.0_Darwin_amd64
 GITHUBACTIONS-DOCS_URL := https://github.com/mhristof/githubactions-docs/releases/download/v0.5.0/githubactions-docs_0.5.0_Darwin_amd64
 GERM_URL := https://github.com/mhristof/germ/releases/download/v1.15.0/germ_1.15.0_Darwin_amd64
@@ -221,20 +223,6 @@ random: /tmp/alfred-random.alfredworkflow
 ~/go/bin/gojson:
 	go get github.com/ChimeraCoder/gojson/gojson
 
-.PHONY: shfmt
-shfmt: ~/.local/bin/shfmt
-
-~/.local/bin/shfmt:
-	curl --silent --location --output $@ https://github.com/mvdan/sh/releases/download/v3.4.0/shfmt_v3.4.0_$(UNAME)_amd64
-	chmod +x $@
-
-.PHONY: terraform-docs
-terraform-docs:  ~/.local/bin/terraform-docs
-
-~/.local/bin/terraform-docs: | ~/.local/bin
-	curl --silent --location --output $@ https://github.com/terraform-docs/terraform-docs/releases/download/v0.16.0/terraform-docs-v0.16.0-$(shell tr '[:upper:]' '[:lower:]' <<< "$(UNAME)")-amd64
-	chmod +x $@
-
 slack:
 	brew cask install slack
 
@@ -272,7 +260,7 @@ retool:
 	grep -P '^[\w-_]*_URL' Makefile | cut -d= -f2 | sort -u | xargs -n1 tool
 
 .PHONY: tools
-tools:  bat checkov2vim germ gh githubactions-docs golangci-lint semver tflint viddy 
+tools:  bat checkov2vim germ gh githubactions-docs golangci-lint semver shfmt terraform-docs tflint viddy
 
 .PHONY: yamllint
 yamllint: $(YAMLLINT)
