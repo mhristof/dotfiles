@@ -31,6 +31,7 @@ SEMVER_URL := https://github.com/mhristof/semver/releases/download/v0.7.0/semver
 GITHUBACTIONS-DOCS_URL := https://github.com/mhristof/githubactions-docs/releases/download/v0.5.0/githubactions-docs_0.5.0_Darwin_amd64
 GERM_URL := https://github.com/mhristof/germ/releases/download/v1.15.0/germ_1.15.0_Darwin_amd64
 CHECKOV2VIM_URL := https://github.com/mhristof/checkov2vim/releases/download/v0.2.0/checkov2vim_0.2.0_Darwin_amd64
+SHELLCHECK_URL := https://github.com/koalaman/shellcheck/releases/download/v0.8.0/shellcheck-v0.8.0.$(UNAME).x86_64.tar.xz
 GOLANGCI-LINT_URL := https://github.com/golangci/golangci-lint/releases/download/v1.43.0/golangci-lint-1.43.0-darwin-amd64.tar.gz
 GH_URL := https://github.com/cli/cli/releases/download/v2.2.0/gh_2.2.0_macOS_amd64.tar.gz
 
@@ -90,8 +91,7 @@ $(BREW_BIN)/src-hilite-lesspipe.sh:
 ~/.vim: ~/.vim/bundle/Vundle.vim ~/.vimrc vim-tools vim-linters $(FIRST_VIM_PLUGIN) ~/bin/gitbrowse
 
 .PHONY: vim-linters
-vim-linters: $(BANDIT) $(SHELLCHECK) $(PYCODESTYLE)  $(PYLINT)  tflint golangci-lint ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim  ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim $(YAMLLINT) shfmt
-
+vim-linters: $(BANDIT) shellcheck $(PYCODESTYLE)  $(PYLINT)  tflint golangci-lint ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim  ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim $(YAMLLINT) shfmt
 
 .PHONY: bandit
 bandit: $(BANDIT)
@@ -260,7 +260,7 @@ retool:
 	grep -P '^[\w-_]*_URL' Makefile | cut -d= -f2 | sort -u | xargs -n1 tool
 
 .PHONY: tools
-tools:  bat checkov2vim germ gh githubactions-docs golangci-lint semver shfmt terraform-docs tflint viddy
+tools:  bat checkov2vim germ gh githubactions-docs golangci-lint semver shellcheck shfmt terraform-docs tflint viddy
 
 .PHONY: yamllint
 yamllint: $(YAMLLINT)
@@ -274,19 +274,20 @@ yamllint: $(YAMLLINT)
 ~/.%:
 	ln -sf $(PWD)/$(shell basename $@) $@
 
-build: dockerfiles/linux.apt
+.build: dockerfiles/linux.apt
 	docker build -f dockerfiles/linux.apt -t dotfiles-apt .
+	touch .build
 
-linux-test:
+linux-test: .build
 	docker run dotfiles-apt make vim
 
 hub: build
 	docker build -f dockerfiles/hub -t mhristof/dotfiles-apt .
 
-push:
+push: .build
 	docker push mhristof/dotfiles-apt
 
-run: build
+run: .build
 	docker run -it dotfiles-apt bash
 
 .PHONY: build.amazon

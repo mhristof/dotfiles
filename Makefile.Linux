@@ -17,7 +17,6 @@ PIP3 := /usr/bin/pip3
 PYCODESTYLE := ~/.local/bin/pycodestyle
 PYLINT := ~/.local/bin/pylint
 PYTHON3 := /usr/bin/python3
-SHELLCHECK := ~/.local/bin/shellcheck
 SPONGE := /usr/bin/sponge
 SRCHILITE := /usr/share/source-highlight/src-hilite-lesspipe.sh
 VIM := /usr/bin/vim
@@ -46,14 +45,6 @@ $(AUTOJUMP): ~/.autojump $(PYTHON3) ~/.local/bin
 $(JQ):
 	curl --location --silent "https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64" > $@
 	chmod +x $@
-
-$(SHELLCHECK): $(PIP3) $(XZ) $(CURL) /usr/bin/tar
-	cd /tmp/
-	curl -L --silent "https://github.com/koalaman/shellcheck/releases/download/stable/shellcheck-stable.linux.x86_64.tar.xz" | tar -xJv
-	mkdir -p ~/.local/bin
-	cp "shellcheck-stable/shellcheck" ~/.local/bin/
-
-
 
 $(BANDIT): $(PIP3)
 	pip3 install --user bandit

@@ -60,7 +60,7 @@ case "$URL" in
 	ln -sf \$(shell find $| -name $NAME -type f) \$@
 EOF
         ;;
-    *.tar.gz)
+    *.tar.gz | *.tar.xz)
         cat <<EOF >>"$TOOLS/makefile.$NAME"
 \$(XDG_DATA_HOME)/dotfiles/$NAME-\$(${NAME_U}_VERSION).tar.gz: | \$(XDG_DATA_HOME)/dotfiles
 	wget --quiet \$(${NAME_U}_URL) --output-document \$@
