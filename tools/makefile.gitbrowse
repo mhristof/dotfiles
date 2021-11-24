@@ -1,0 +1,10 @@
+.PHONY: gitbrowse
+gitbrowse: ~/bin/gitbrowse
+
+$(XDG_DATA_HOME)/dotfiles/gitbrowse-v0.2.0: | $(XDG_DATA_HOME)/dotfiles
+    wget --quiet $(GITBROWSE_URL) --output-document $@
+
+~/bin/gitbrowse: $(XDG_DATA_HOME)/dotfiles/gitbrowse-v0.2.0 | ~/bin ~/.zsh.site-functions
+	chmod +x $<
+	ln -sf $< $@
+	$@ completion zsh > ~/.zsh.site-functions/_gitbrowse || true

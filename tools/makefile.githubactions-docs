@@ -1,0 +1,10 @@
+.PHONY: githubactions-docs
+githubactions-docs: ~/bin/githubactions-docs
+
+$(XDG_DATA_HOME)/dotfiles/githubactions-docs-v0.5.0: | $(XDG_DATA_HOME)/dotfiles
+    wget --quiet $(GITHUBACTIONS-DOCS_URL) --output-document $@
+
+~/bin/githubactions-docs: $(XDG_DATA_HOME)/dotfiles/githubactions-docs-v0.5.0 | ~/bin ~/.zsh.site-functions
+	chmod +x $<
+	ln -sf $< $@
+	$@ completion zsh > ~/.zsh.site-functions/_githubactions-docs || true
