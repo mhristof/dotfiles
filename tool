@@ -33,6 +33,8 @@ mkdir -p "$TOOLS"
 echo "Adding $NAME from $URL"
 
 cat <<EOF >"$TOOLS/makefile.lib"
+XDG_DATA_HOME ?= ~/.local/share
+
 \$(XDG_DATA_HOME)/dotfiles:
 	mkdir \$@
 EOF

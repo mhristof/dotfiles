@@ -1,2 +1,4 @@
+XDG_DATA_HOME ?= ~/.local/share
+
 $(XDG_DATA_HOME)/dotfiles:
 	mkdir $@
