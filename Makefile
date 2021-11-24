@@ -23,13 +23,15 @@ PWD ?= $(shell pwd)
 FIRST_VIM_PLUGIN := ~/.vim/bundle/$(shell basename $(shell grep Plugin .vimrc | head -2 | tail -1 | cut -d"'" -f2) .git)
 
 # tools
-CHECKOV2VIM_URL := https://github.com/mhristof/checkov2vim/releases/download/v0.2.0/checkov2vim_0.2.0_Darwin_amd64
+BAT_URL := https://github.com/sharkdp/bat/releases/download/v0.18.3/bat-v0.18.3-x86_64-apple-Darwin.tar.gz
+VIDDY_URL := https://github.com/sachaos/viddy/releases/download/v0.3.3/viddy_0.3.3_Darwin_x86_64.tar.gz
 SEMVER_URL := https://github.com/mhristof/semver/releases/download/v0.7.0/semver_0.7.0_Darwin_amd64
-GITBROWSE_URL := https://github.com/mhristof/gitbrowse/releases/download/v0.2.0/gitbrowse.Darwin
-GERM_URL := https://github.com/mhristof/germ/releases/download/v1.15.0/germ_1.15.0_Darwin_amd64
 GITHUBACTIONS-DOCS_URL := https://github.com/mhristof/githubactions-docs/releases/download/v0.5.0/githubactions-docs_0.5.0_Darwin_amd64
+GERM_URL := https://github.com/mhristof/germ/releases/download/v1.15.0/germ_1.15.0_Darwin_amd64
+CHECKOV2VIM_URL := https://github.com/mhristof/checkov2vim/releases/download/v0.2.0/checkov2vim_0.2.0_Darwin_amd64
+GH_URL := https://github.com/cli/cli/releases/download/v2.2.0/gh_2.2.0_macOS_amd64.tar.gz
 
-include tools/*
+-include tools/*
 
 .PHONY: default
 default: brew vim essentials
@@ -130,14 +132,6 @@ checkov: ~/.local/bin/checkov
 	mkdir -p ~/.vim/bundle/ale/ale_linters/groovy/
 	cd ~/.vim/bundle/ale/ale_linters/groovy/
 	curl -sLO https://raw.githubusercontent.com/mhristof/ale-jenkinsfile/master/ale_jenkinsfile.vim
-
-.PHONY: viddy
-viddy: ~/.local/bin/viddy
-
-~/.local/bin/viddy: | ~/.local/bin /usr/bin/tar
-	wget -O /tmp/viddy.tar.gz https://github.com/sachaos/viddy/releases/download/v0.3.3/viddy_0.3.3_$(shell uname)_x86_64.tar.gz
-	tar xvf /tmp/viddy.tar.gz -C /tmp/
-	mv /tmp/viddy ~/.local/bin/
 
 .PHONY: ctags
 ctags: $(CTAGS) ~/.ctags.d
@@ -255,16 +249,6 @@ helm: $(HELM)
 .PHONY: k9s
 k9s: $(K9S)
 
-.PHONY: bat
-bat: ~/.local/bin/bat
-
-~/.local/bin/bat:
-	curl --silent --location --output /tmp/bat.tar.gz https://github.com/sharkdp/bat/releases/download/v0.18.3/bat-v0.18.3-x86_64-$(VENDOR)-$(UNAME).tar.gz
-	$(eval TEMPDIR := $(shell mktemp -d))
-	tar xvf /tmp/bat.tar.gz -C $(TEMPDIR)
-	mv $(TEMPDIR)/bat*/bat $@
-	rm -rf $(TEMPDIR)
-
 .PHONY: shortcut
 shortcut:
 	./setup-mac-shortcuts.sh
@@ -285,26 +269,12 @@ bash-my-aws: ~/.bash-my-aws
 	$(BREW) tap homebrew/core
 	$(BREW) --version
 
-.PHONY: gh
-gh: ~/.local/bin/gh
-~/.local/bin/gh: | ~/.local/bin
-	wget --quiet https://github.com/cli/cli/releases/download/v2.2.0/gh_2.2.0_$(GH_OS)_amd64.tar.gz -O /tmp/gh.tar.gz
-	tar xf /tmp/gh.tar.gz -C /tmp/
-	mv /tmp/gh_*/bin/gh $@
-
-.PHONY: golangci-lint
-golangci-lint: ~/.local/bin/golangci-lint
-~/.local/bin/golangci-lint: | ~/.local/bin
-	curl --location --silent https://github.com/golangci/golangci-lint/releases/download/v1.43.0/golangci-lint-1.43.0-$(UNAME)-amd64.tar.gz > /tmp/golangci-lint.tar.gz
-	tar xvf /tmp/golangci-lint.tar.gz -C /tmp/
-	mv /tmp/golangci-lint-*-$(UNAME)-amd64/golangci-lint $@
-
 .PHONY: retool
 retool: 
-	grep -P '^[\w-_]*_URL' Makefile | cut -d= -f2 | xargs -n1 tool
+	grep -P '^[\w-_]*_URL' Makefile | cut -d= -f2 | sort -u | xargs -n1 tool
 
 .PHONY: tools
-tools:  checkov2vim germ gitbrowse githubactions-docs semver 
+tools:  bat checkov2vim germ gh githubactions-docs semver viddy 
 
 .PHONY: yamllint
 yamllint: $(YAMLLINT)

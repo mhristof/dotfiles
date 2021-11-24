@@ -7,7 +7,7 @@ die() {
 
 URL="$*"
 TOOLS="$(dirname "$0")/tools"
-NAME="$(cut -d/ -f 5 <<<"$URL")"
+NAME="$(basename "$URL" | sed 's/_\d*.*//' | sed 's/-v\d*.*//')"
 NAME_U="$(tr '[:lower:]' '[:upper:]' <<<"$NAME")"
 VERSION="$(cut -d/ -f 8 <<<"$URL")"
 
@@ -44,6 +44,24 @@ $NAME: ~/bin/$NAME
 
 ${NAME_U}_VERSION := \$(word 7,\$(subst /, ,\$(${NAME_U}_URL)))
 
+EOF
+
+case "$URL" in
+    *.tar.gz)
+        cat <<EOF >>"$TOOLS/makefile.$NAME"
+\$(XDG_DATA_HOME)/dotfiles/$NAME-\$(${NAME_U}_VERSION).tar.gz: | \$(XDG_DATA_HOME)/dotfiles
+	wget --quiet \$(${NAME_U}_URL) --output-document \$@
+
+\$(XDG_DATA_HOME)/dotfiles/$NAME-\$(${NAME_U}_VERSION): \$(XDG_DATA_HOME)/dotfiles/$NAME-\$(${NAME_U}_VERSION).tar.gz /usr/bin/tar
+	mkdir \$(XDG_DATA_HOME)/dotfiles/$NAME-\$(${NAME_U}_VERSION)/
+	tar xf $< -C \$(XDG_DATA_HOME)/dotfiles/$NAME-\$(${NAME_U}_VERSION)/
+
+~/bin/$NAME: | \$(XDG_DATA_HOME)/dotfiles/$NAME-\$(${NAME_U}_VERSION)
+	ln -sf \$(shell find $| -name $NAME -type f) \$@
+EOF
+        ;;
+    *)
+        cat <<EOF >>"$TOOLS/makefile.$NAME"
 \$(XDG_DATA_HOME)/dotfiles/$NAME-\$(${NAME_U}_VERSION): | \$(XDG_DATA_HOME)/dotfiles
 	wget --quiet \$(${NAME_U}_URL) --output-document \$@
 
@@ -52,6 +70,8 @@ ${NAME_U}_VERSION := \$(word 7,\$(subst /, ,\$(${NAME_U}_URL)))
 	ln -sf $< \$@
 	\$@ completion zsh > ~/.zsh.site-functions/_$NAME || true
 EOF
+        ;;
+esac
 
 sed -i '' "/^${NAME_U}_URL/d" Makefile
 # shellcheck disable=SC1004,SC2086

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ "$*" =~ "p10k-instant-prompt-output" ]]; then
-    /usr/bin/cat "$@"
+if ! command -v bat &> /dev/null || [[ "$*" =~ "p10k-instant-prompt-output" ]]; then
+    /bin/cat "$@"
 else
     bat "$@"
 fi
