@@ -1,10 +1,12 @@
 .PHONY: semver
 semver: ~/bin/semver
 
-$(XDG_DATA_HOME)/dotfiles/semver-v0.6.0: | $(XDG_DATA_HOME)/dotfiles
+SEMVER_VERSION := $(word 7,$(subst /, ,$(SEMVER_URL)))
+
+$(XDG_DATA_HOME)/dotfiles/semver-$(SEMVER_VERSION): | $(XDG_DATA_HOME)/dotfiles
     wget --quiet $(SEMVER_URL) --output-document $@
 
-~/bin/semver: $(XDG_DATA_HOME)/dotfiles/semver-v0.6.0 | ~/bin ~/.zsh.site-functions
+~/bin/semver: $(XDG_DATA_HOME)/dotfiles/semver-$(SEMVER_VERSION) | ~/bin ~/.zsh.site-functions
 	chmod +x $<
 	ln -sf $< $@
 	$@ completion zsh > ~/.zsh.site-functions/_semver || true

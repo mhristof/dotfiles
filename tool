@@ -41,10 +41,12 @@ cat <<EOF >"$TOOLS/makefile.$NAME"
 .PHONY: $NAME
 $NAME: ~/bin/$NAME
 
-\$(XDG_DATA_HOME)/dotfiles/$NAME-$VERSION: | \$(XDG_DATA_HOME)/dotfiles
+${NAME_U}_VERSION := \$(word 7,\$(subst /, ,\$(${NAME_U}_URL)))
+
+\$(XDG_DATA_HOME)/dotfiles/$NAME-\$(${NAME_U}_VERSION): | \$(XDG_DATA_HOME)/dotfiles
     wget --quiet \$(${NAME_U}_URL) --output-document \$@
 
-~/bin/$NAME: \$(XDG_DATA_HOME)/dotfiles/$NAME-$VERSION | ~/bin ~/.zsh.site-functions
+~/bin/$NAME: \$(XDG_DATA_HOME)/dotfiles/$NAME-\$(${NAME_U}_VERSION) | ~/bin ~/.zsh.site-functions
 	chmod +x $<
 	ln -sf $< \$@
 	\$@ completion zsh > ~/.zsh.site-functions/_$NAME || true

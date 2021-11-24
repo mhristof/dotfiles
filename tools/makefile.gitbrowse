@@ -1,10 +1,12 @@
 .PHONY: gitbrowse
 gitbrowse: ~/bin/gitbrowse
 
-$(XDG_DATA_HOME)/dotfiles/gitbrowse-v0.2.0: | $(XDG_DATA_HOME)/dotfiles
+GITBROWSE_VERSION := $(word 7,$(subst /, ,$(GITBROWSE_URL)))
+
+$(XDG_DATA_HOME)/dotfiles/gitbrowse-$(GITBROWSE_VERSION): | $(XDG_DATA_HOME)/dotfiles
     wget --quiet $(GITBROWSE_URL) --output-document $@
 
-~/bin/gitbrowse: $(XDG_DATA_HOME)/dotfiles/gitbrowse-v0.2.0 | ~/bin ~/.zsh.site-functions
+~/bin/gitbrowse: $(XDG_DATA_HOME)/dotfiles/gitbrowse-$(GITBROWSE_VERSION) | ~/bin ~/.zsh.site-functions
 	chmod +x $<
 	ln -sf $< $@
 	$@ completion zsh > ~/.zsh.site-functions/_gitbrowse || true
