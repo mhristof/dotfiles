@@ -23,7 +23,7 @@ PWD ?= $(shell pwd)
 FIRST_VIM_PLUGIN := ~/.vim/bundle/$(shell basename $(shell grep Plugin .vimrc | head -2 | tail -1 | cut -d"'" -f2) .git)
 
 # tools
-CHECKOV2VIM_URL := https://github.com/mhristof/checkov2vim/releases/latest/download/checkov2vim.Darwin
+CHECKOV2VIM_URL := https://github.com/mhristof/checkov2vim/releases/v0.1.2/download/checkov2vim.Darwin
 SEMVER_URL := https://github.com/mhristof/semver/releases/download/v0.6.0/semver.Darwin
 GITBROWSE_URL := https://github.com/mhristof/gitbrowse/releases/download/v0.2.0/gitbrowse.Darwin
 GERM_URL := https://github.com/mhristof/germ/releases/download/v1.15.0/germ_1.15.0_Darwin_amd64
