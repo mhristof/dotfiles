@@ -4,7 +4,7 @@ gitbrowse: ~/bin/gitbrowse
 GITBROWSE_VERSION := $(word 7,$(subst /, ,$(GITBROWSE_URL)))
 
 $(XDG_DATA_HOME)/dotfiles/gitbrowse-$(GITBROWSE_VERSION): | $(XDG_DATA_HOME)/dotfiles
-    wget --quiet $(GITBROWSE_URL) --output-document $@
+	wget --quiet $(GITBROWSE_URL) --output-document $@
 
 ~/bin/gitbrowse: $(XDG_DATA_HOME)/dotfiles/gitbrowse-$(GITBROWSE_VERSION) | ~/bin ~/.zsh.site-functions
 	chmod +x $<

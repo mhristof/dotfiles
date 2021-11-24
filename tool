@@ -13,7 +13,7 @@ VERSION="$(cut -d/ -f 8 <<<"$URL")"
 
 case "$URL" in
     https://github.com/*) ;;
-    *) die "Error, cannot handle this url" ;;
+    *) die "Error, cannot handle this url [$URL]" ;;
 esac
 
 if [[ -z "$NAME" ]]; then
@@ -44,7 +44,7 @@ $NAME: ~/bin/$NAME
 ${NAME_U}_VERSION := \$(word 7,\$(subst /, ,\$(${NAME_U}_URL)))
 
 \$(XDG_DATA_HOME)/dotfiles/$NAME-\$(${NAME_U}_VERSION): | \$(XDG_DATA_HOME)/dotfiles
-    wget --quiet \$(${NAME_U}_URL) --output-document \$@
+	wget --quiet \$(${NAME_U}_URL) --output-document \$@
 
 ~/bin/$NAME: \$(XDG_DATA_HOME)/dotfiles/$NAME-\$(${NAME_U}_VERSION) | ~/bin ~/.zsh.site-functions
 	chmod +x $<

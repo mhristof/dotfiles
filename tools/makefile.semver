@@ -4,7 +4,7 @@ semver: ~/bin/semver
 SEMVER_VERSION := $(word 7,$(subst /, ,$(SEMVER_URL)))
 
 $(XDG_DATA_HOME)/dotfiles/semver-$(SEMVER_VERSION): | $(XDG_DATA_HOME)/dotfiles
-    wget --quiet $(SEMVER_URL) --output-document $@
+	wget --quiet $(SEMVER_URL) --output-document $@
 
 ~/bin/semver: $(XDG_DATA_HOME)/dotfiles/semver-$(SEMVER_VERSION) | ~/bin ~/.zsh.site-functions
 	chmod +x $<

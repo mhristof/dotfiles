@@ -4,7 +4,7 @@ checkov2vim: ~/bin/checkov2vim
 CHECKOV2VIM_VERSION := $(word 7,$(subst /, ,$(CHECKOV2VIM_URL)))
 
 $(XDG_DATA_HOME)/dotfiles/checkov2vim-$(CHECKOV2VIM_VERSION): | $(XDG_DATA_HOME)/dotfiles
-    wget --quiet $(CHECKOV2VIM_URL) --output-document $@
+	wget --quiet $(CHECKOV2VIM_URL) --output-document $@
 
 ~/bin/checkov2vim: $(XDG_DATA_HOME)/dotfiles/checkov2vim-$(CHECKOV2VIM_VERSION) | ~/bin ~/.zsh.site-functions
 	chmod +x $<

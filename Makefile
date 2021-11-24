@@ -24,11 +24,10 @@ FIRST_VIM_PLUGIN := ~/.vim/bundle/$(shell basename $(shell grep Plugin .vimrc | 
 
 # tools
 CHECKOV2VIM_URL := https://github.com/mhristof/checkov2vim/releases/latest/download/checkov2vim.Darwin
-GERM_URL := https://github.com/mhristof/germ/releases/download/v1.15.0/germ_1.15.0_Darwin_amd64
+SEMVER_URL := https://github.com/mhristof/semver/releases/download/v0.6.0/semver.Darwin
 GITBROWSE_URL := https://github.com/mhristof/gitbrowse/releases/download/v0.2.0/gitbrowse.Darwin
+GERM_URL := https://github.com/mhristof/germ/releases/download/v1.15.0/germ_1.15.0_Darwin_amd64
 GITHUBACTIONS-DOCS_URL := https://github.com/mhristof/githubactions-docs/releases/download/v0.5.0/githubactions-docs_0.5.0_Darwin_amd64
-SEMVER_URL := https://github.com/mhristof/semver/releases/download/v0.6.0/semver.Darwin
-SEMVER_URL := https://github.com/mhristof/semver/releases/download/v0.6.0/semver.Darwin
 
 include tools/*
 
@@ -302,7 +301,7 @@ golangci-lint: ~/.local/bin/golangci-lint
 
 .PHONY: retool
 retool: 
-	grep _URL Makefile | cut -d= -f2 | xargs -P6 -n1 tool
+	grep -P '^[\w-_]*_URL' Makefile | cut -d= -f2 | xargs -n1 tool
 
 .PHONY: tools
 tools:  checkov2vim germ gitbrowse githubactions-docs semver 

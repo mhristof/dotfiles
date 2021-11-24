@@ -4,7 +4,7 @@ githubactions-docs: ~/bin/githubactions-docs
 GITHUBACTIONS-DOCS_VERSION := $(word 7,$(subst /, ,$(GITHUBACTIONS-DOCS_URL)))
 
 $(XDG_DATA_HOME)/dotfiles/githubactions-docs-$(GITHUBACTIONS-DOCS_VERSION): | $(XDG_DATA_HOME)/dotfiles
-    wget --quiet $(GITHUBACTIONS-DOCS_URL) --output-document $@
+	wget --quiet $(GITHUBACTIONS-DOCS_URL) --output-document $@
 
 ~/bin/githubactions-docs: $(XDG_DATA_HOME)/dotfiles/githubactions-docs-$(GITHUBACTIONS-DOCS_VERSION) | ~/bin ~/.zsh.site-functions
 	chmod +x $<
