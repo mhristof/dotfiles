@@ -19,6 +19,7 @@ VENDOR := apple
 endif
 
 PWD ?= $(shell pwd)
+XDG_DATA_HOME ?= ~/.local/share
 FIRST_VIM_PLUGIN := ~/.vim/bundle/$(shell basename $(shell grep Plugin .vimrc | head -2 | tail -1 | cut -d"'" -f2) .git)
 
 # tools
