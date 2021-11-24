@@ -54,6 +54,7 @@ ${NAME_U}_VERSION := \$(word 7,\$(subst /, ,\$(${NAME_U}_URL)))
 EOF
 
 sed -i '' "/^${NAME_U}_URL/d" Makefile
+# shellcheck disable=SC1004,SC2086
 sed -i '' '/^# tools/a\
 '$NAME_U'_URL := '$URL'
 ' Makefile
