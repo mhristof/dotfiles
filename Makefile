@@ -181,7 +181,7 @@ iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app germ
 germ: ~/bin/germ
 
 ~/bin/germ: ~/.zsh.site-functions
-	wget --quiet https://github.com/mhristof/germ/releases/download/v1.13.0/germ.$(UNAME) -O $@
+	wget --quiet https://github.com/mhristof/germ/releases/download/v1.15.0/germ.$(UNAME) -O $@
 	chmod +x $@
 	$@ completion zsh > ~/.zsh.site-functions/_$(shell basename $@)
 
@@ -240,7 +240,7 @@ random: /tmp/alfred-random.alfredworkflow
 shfmt: ~/.local/bin/shfmt
 
 ~/.local/bin/shfmt:
-	curl --silent --location --output $@ https://github.com/mvdan/sh/releases/download/v3.4.0/shfmt_v3.4.0_$(UNAME)_amd64
+	curl --silent --location --output $@ https://github.com/mvdan/sh/releases/download/v3.4.1/shfmt_v3.4.1_$(UNAME)_amd64
 	chmod +x $@
 
 .PHONY: terraform-docs
@@ -293,7 +293,7 @@ bash-my-aws: ~/.bash-my-aws
 	$(BREW) --version
 
 ~/bin/semver: | $(WGET) ~/bin ~/.zsh.site-functions
-	wget --quiet https://github.com/mhristof/semver/releases/download/v0.6.0/semver.$(UNAME) -O ~/bin/semver
+	wget --quiet https://github.com/mhristof/semver/releases/download/v0.7.0/semver.$(UNAME) -O ~/bin/semver
 	chmod +x ~/bin/semver
 	~/bin/semver completion zsh > ~/.zsh.site-functions/_semver
 
@@ -315,7 +315,7 @@ golangci-lint: ~/.local/bin/golangci-lint
 gitbrowse:  ~/bin/gitbrowse
 
 ~/bin/gitbrowse:
-	curl --location --silent https://github.com/mhristof/gitbrowse/releases/download/v0.2.0/gitbrowse.$(UNAME) > $@
+	curl --location --silent https://github.com/mhristof/gitbrowse/releases/download/v0.4.0/gitbrowse.$(UNAME) > $@
 	chmod +x $@
 
 .PHONY: yamllint
