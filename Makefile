@@ -127,8 +127,8 @@ checkov: ~/.local/bin/checkov
 ~/.local/bin/checkov:
 	pip install --user checkov
 
-~/.vim/bundle/ale/ale_linters/terraform/checkov.vim: ~/bin/checkov2vim | $(FIRST_VIM_PLUGIN)
-	~/bin/checkov2vim generate --dest $@
+~/.vim/bundle/ale/ale_linters/terraform/checkov.vim: checkov2vim | $(FIRST_VIM_PLUGIN)
+	checkov2vim generate --dest $@
 
 ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim: | $(CURL) $(FIRST_VIM_PLUGIN)
 	mkdir -p ~/.vim/bundle/ale/ale_linters/groovy/
