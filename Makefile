@@ -10,9 +10,9 @@ endif
 .ONESHELL:
 
 BREW_BIN := /usr/local/bin
-include Makefile.$(shell uname -s)
 
-UNAME := $(shell uname | tr '[:upper:]' '[:lower:]')
+UNAME := $(shell uname)
+UNAME_L := $(shell uname | tr '[:upper:]' '[:lower:]')
 ifeq ($(shell which sw_vers),)
 VENDOR := linux
 else
@@ -20,7 +20,26 @@ VENDOR := apple
 endif
 
 PWD ?= $(shell pwd)
+XDG_DATA_HOME ?= ~/.local/share
 FIRST_VIM_PLUGIN := ~/.vim/bundle/$(shell basename $(shell grep Plugin .vimrc | head -2 | tail -1 | cut -d"'" -f2) .git)
+
+include Makefile.$(shell uname -s)
+
+# tools
+TFLINT_URL := https://github.com/terraform-linters/tflint/releases/download/v0.33.1/tflint_$(UNAME)_amd64.zip
+TERRAFORM-DOCS_URL := https://github.com/terraform-docs/terraform-docs/releases/download/v0.16.0/terraform-docs-v0.16.0-$(UNAME_L)-amd64.tar.gz
+BAT_URL := https://github.com/sharkdp/bat/releases/download/v0.18.3/bat-v0.18.3-x86_64-$(VENDOR)-$(UNAME).tar.gz
+VIDDY_URL := https://github.com/sachaos/viddy/releases/download/v0.3.3/viddy_0.3.3_$(UNAME)_x86_64.tar.gz
+SHFMT_URL := https://github.com/mvdan/sh/releases/download/v3.4.0/shfmt_v3.4.0_$(UNAME)_amd64
+SEMVER_URL := https://github.com/mhristof/semver/releases/download/v0.7.0/semver_0.7.0_$(UNAME)_amd64
+GITHUBACTIONS-DOCS_URL := https://github.com/mhristof/githubactions-docs/releases/download/v0.5.0/githubactions-docs_0.5.0_$(UNAME)_amd64
+GERM_URL := https://github.com/mhristof/germ/releases/download/v1.15.0/germ_1.15.0_$(UNAME)_amd64
+CHECKOV2VIM_URL := https://github.com/mhristof/checkov2vim/releases/download/v0.2.0/checkov2vim_0.2.0_$(UNAME)_amd64
+SHELLCHECK_URL := https://github.com/koalaman/shellcheck/releases/download/v0.8.0/shellcheck-v0.8.0.$(UNAME_L).x86_64.tar.xz
+GOLANGCI-LINT_URL := https://github.com/golangci/golangci-lint/releases/download/v1.43.0/golangci-lint-1.43.0-$(UNAME_L)-amd64.tar.gz
+GH_URL := https://github.com/cli/cli/releases/download/v2.2.0/gh_2.2.0_$(GH_OS)_amd64.tar.gz
+
+-include tools/*
 
 .PHONY: default
 default: brew vim essentials
@@ -75,8 +94,7 @@ $(BREW_BIN)/src-hilite-lesspipe.sh:
 ~/.vim: ~/.vim/bundle/Vundle.vim ~/.vimrc vim-tools vim-linters $(FIRST_VIM_PLUGIN) ~/bin/gitbrowse
 
 .PHONY: vim-linters
-vim-linters: $(BANDIT) $(SHELLCHECK) $(PYCODESTYLE)  $(PYLINT)  tflint golangci-lint ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim  ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim $(YAMLLINT) shfmt
-
+vim-linters: $(BANDIT) shellcheck $(PYCODESTYLE)  $(PYLINT)  tflint golangci-lint ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim  ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim $(YAMLLINT) shfmt
 
 .PHONY: bandit
 bandit: $(BANDIT)
@@ -93,14 +111,10 @@ $(FIRST_VIM_PLUGIN):
 
 .PHONY: tflint
 tflint: ~/.local/bin/tflint ~/.tflint.d/plugins/tflint-ruleset-aws
+
 .PHONY: tflint-clean
 tflint-clean: 
 	rm ~/.local/bin/tflint ~/.tflint.d -r
-
-~/.local/bin/tflint: ~/.local/bin /usr/bin/unzip
-	curl --location --silent https://github.com/terraform-linters/tflint/releases/download/v0.33.1/tflint_$(UNAME)_amd64.zip > /tmp/tflint.zip
-	unzip /tmp/tflint.zip
-	mv tflint $@
 
 ~/.tflint.d/plugins/tflint-ruleset-aws: $(TFLINT) ~/.tflint.hcl /usr/bin/unzip
 	curl --location --silent https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v0.9.0/tflint-ruleset-aws_$(UNAME)_amd64.zip > /tmp/tflint-ruleset-aws.zip
@@ -114,25 +128,13 @@ checkov: ~/.local/bin/checkov
 ~/.local/bin/checkov:
 	pip install --user checkov
 
-~/bin/checkov2vim: $(CHECKOV) | ~/bin
-	curl -sL https://github.com/mhristof/checkov2vim/releases/latest/download/checkov2vim.$(UNAME) > $@
-	chmod +x $@
-
-~/.vim/bundle/ale/ale_linters/terraform/checkov.vim: ~/bin/checkov2vim | $(FIRST_VIM_PLUGIN)
-	~/bin/checkov2vim generate --dest $@
+~/.vim/bundle/ale/ale_linters/terraform/checkov.vim: checkov2vim | $(FIRST_VIM_PLUGIN)
+	checkov2vim generate --dest $@
 
 ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim: | $(CURL) $(FIRST_VIM_PLUGIN)
 	mkdir -p ~/.vim/bundle/ale/ale_linters/groovy/
 	cd ~/.vim/bundle/ale/ale_linters/groovy/
 	curl -sLO https://raw.githubusercontent.com/mhristof/ale-jenkinsfile/master/ale_jenkinsfile.vim
-
-.PHONY: viddy
-viddy: ~/.local/bin/viddy
-
-~/.local/bin/viddy: | ~/.local/bin /usr/bin/tar
-	wget -O /tmp/viddy.tar.gz https://github.com/sachaos/viddy/releases/download/v0.3.3/viddy_0.3.3_$(shell uname)_x86_64.tar.gz
-	tar xvf /tmp/viddy.tar.gz -C /tmp/
-	mv /tmp/viddy ~/.local/bin/
 
 .PHONY: ctags
 ctags: $(CTAGS) ~/.ctags.d
@@ -177,18 +179,6 @@ iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app germ
 
 /Applications/iTerm.app: $(BREW_BIN)/python3
 	brew cask install iterm2
-
-germ: ~/bin/germ
-
-~/bin/germ: ~/.zsh.site-functions
-	wget --quiet https://github.com/mhristof/germ/releases/download/v1.13.0/germ.$(UNAME) -O $@
-	chmod +x $@
-	$@ completion zsh > ~/.zsh.site-functions/_$(shell basename $@)
-
-~/bin/githubactions-docs:
-	wget --quiet https://github.com/mhristof/githubactions-docs/releases/download/v0.5.0/$(shell basename $@).$(UNAME) -O $@
-	chmod +x $@
-	$@ completion zsh > ~/.zsh.site-functions/_$(shell basename $@)
 
 dock: $(XARGS) $(BREW_BIN)/dockutil
 	dockutil --list | sed 's/file:.*//g' | xargs --no-run-if-empty -n1 -d'\n' dockutil --remove
@@ -236,20 +226,6 @@ random: /tmp/alfred-random.alfredworkflow
 ~/go/bin/gojson:
 	go get github.com/ChimeraCoder/gojson/gojson
 
-.PHONY: shfmt
-shfmt: ~/.local/bin/shfmt
-
-~/.local/bin/shfmt:
-	curl --silent --location --output $@ https://github.com/mvdan/sh/releases/download/v3.4.0/shfmt_v3.4.0_$(UNAME)_amd64
-	chmod +x $@
-
-.PHONY: terraform-docs
-terraform-docs:  ~/.local/bin/terraform-docs
-
-~/.local/bin/terraform-docs: | ~/.local/bin
-	curl --silent --location --output $@ https://github.com/terraform-docs/terraform-docs/releases/download/v0.16.0/terraform-docs-v0.16.0-$(shell tr '[:upper:]' '[:lower:]' <<< "$(UNAME)")-amd64
-	chmod +x $@
-
 slack:
 	brew cask install slack
 
@@ -261,16 +237,6 @@ helm: $(HELM)
 
 .PHONY: k9s
 k9s: $(K9S)
-
-.PHONY: bat
-bat: ~/.local/bin/bat
-
-~/.local/bin/bat:
-	curl --silent --location --output /tmp/bat.tar.gz https://github.com/sharkdp/bat/releases/download/v0.18.3/bat-v0.18.3-x86_64-$(VENDOR)-$(UNAME).tar.gz
-	$(eval TEMPDIR := $(shell mktemp -d))
-	tar xvf /tmp/bat.tar.gz -C $(TEMPDIR)
-	mv $(TEMPDIR)/bat*/bat $@
-	rm -rf $(TEMPDIR)
 
 .PHONY: shortcut
 shortcut:
@@ -292,31 +258,12 @@ bash-my-aws: ~/.bash-my-aws
 	$(BREW) tap homebrew/core
 	$(BREW) --version
 
-~/bin/semver: | $(WGET) ~/bin ~/.zsh.site-functions
-	wget --quiet https://github.com/mhristof/semver/releases/download/v0.6.0/semver.$(UNAME) -O ~/bin/semver
-	chmod +x ~/bin/semver
-	~/bin/semver completion zsh > ~/.zsh.site-functions/_semver
+.PHONY: retool
+retool: 
+	grep -P '^[\w-_]*_URL' Makefile | cut -d= -f2 | sort -u | xargs -n1 tool
 
-.PHONY: gh
-gh: ~/.local/bin/gh
-~/.local/bin/gh: | ~/.local/bin
-	wget --quiet https://github.com/cli/cli/releases/download/v2.2.0/gh_2.2.0_$(GH_OS)_amd64.tar.gz -O /tmp/gh.tar.gz
-	tar xf /tmp/gh.tar.gz -C /tmp/
-	mv /tmp/gh_*/bin/gh $@
-
-.PHONY: golangci-lint
-golangci-lint: ~/.local/bin/golangci-lint
-~/.local/bin/golangci-lint: | ~/.local/bin
-	curl --location --silent https://github.com/golangci/golangci-lint/releases/download/v1.43.0/golangci-lint-1.43.0-$(UNAME)-amd64.tar.gz > /tmp/golangci-lint.tar.gz
-	tar xvf /tmp/golangci-lint.tar.gz -C /tmp/
-	mv /tmp/golangci-lint-*-$(UNAME)-amd64/golangci-lint $@
-
-.PHONY: gitbrowse
-gitbrowse:  ~/bin/gitbrowse
-
-~/bin/gitbrowse:
-	curl --location --silent https://github.com/mhristof/gitbrowse/releases/download/v0.2.0/gitbrowse.$(UNAME) > $@
-	chmod +x $@
+.PHONY: tools
+tools:  bat checkov2vim germ gh githubactions-docs golangci-lint semver shellcheck shfmt terraform-docs tflint viddy
 
 .PHONY: yamllint
 yamllint: $(YAMLLINT)
@@ -330,19 +277,20 @@ yamllint: $(YAMLLINT)
 ~/.%:
 	ln -sf $(PWD)/$(shell basename $@) $@
 
-build: dockerfiles/linux.apt
+.build: dockerfiles/linux.apt
 	docker build -f dockerfiles/linux.apt -t dotfiles-apt .
+	touch .build
 
-linux-test:
+linux-test: .build
 	docker run dotfiles-apt make vim
 
 hub: build
 	docker build -f dockerfiles/hub -t mhristof/dotfiles-apt .
 
-push:
+push: .build
 	docker push mhristof/dotfiles-apt
 
-run: build
+run: .build
 	docker run -it dotfiles-apt bash
 
 .PHONY: build.amazon

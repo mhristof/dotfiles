@@ -18,7 +18,6 @@ LS := $(abspath $(BREW_BIN)/../opt/coreutils)
 PYCODESTYLE := $(BREW_BIN)/pycodestyle
 PYLINT := /usr/local/bin/pylint
 PYTHON3 := $(BREW_BIN)/python3
-SHELLCHECK := $(BREW_BIN)/shellcheck
 SPONGE := $(BREW_BIN)/sponge
 SRCHILITE :=  $(BREW_BIN)/src-hilite-lesspipe.sh
 VIM := $(BREW_BIN)/vim

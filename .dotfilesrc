@@ -31,6 +31,11 @@ export PATH=$HOME/.bash-my-aws/bin:$PATH
 export HISTCONTROL=ignoredups:erasedups
 export MANPAGER="sh -c 'col -bx | cat -l man -p'"
 export PYTHONSTARTUP=~/.pythonrc.py
+export XDG_CACHE_HOME=$HOME/.cache
+export XDG_CONFIG_HOME=$HOME/.config
+export XDG_DATA_HOME=$HOME/.local/share
+export XDG_STATE_HOME=$HOME/.local/state
+
 
 if [[ $THIS_SHELL == "bash" ]]; then
     # When the shell exits, append to the history file instead of overwriting it
