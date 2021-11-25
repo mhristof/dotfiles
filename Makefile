@@ -11,7 +11,8 @@ endif
 
 BREW_BIN := /usr/local/bin
 
-UNAME := $(shell uname | tr '[:upper:]' '[:lower:]')
+UNAME := $(shell uname)
+UNAME_L := $(shell uname | tr '[:upper:]' '[:lower:]')
 ifeq ($(shell which sw_vers),)
 VENDOR := linux
 else
@@ -25,18 +26,18 @@ FIRST_VIM_PLUGIN := ~/.vim/bundle/$(shell basename $(shell grep Plugin .vimrc | 
 include Makefile.$(shell uname -s)
 
 # tools
-TFLINT_URL := https://github.com/terraform-linters/tflint/releases/download/v0.33.1/tflint_Darwin_amd64.zip
-TERRAFORM-DOCS_URL := https://github.com/terraform-docs/terraform-docs/releases/download/v0.16.0/terraform-docs-v0.16.0-darwin-amd64.tar.gz
-BAT_URL := https://github.com/sharkdp/bat/releases/download/v0.18.3/bat-v0.18.3-x86_64-apple-Darwin.tar.gz
-VIDDY_URL := https://github.com/sachaos/viddy/releases/download/v0.3.3/viddy_0.3.3_Darwin_x86_64.tar.gz
-SHFMT_URL := https://github.com/mvdan/sh/releases/download/v3.4.0/shfmt_v3.4.0_Darwin_amd64
-SEMVER_URL := https://github.com/mhristof/semver/releases/download/v0.7.0/semver_0.7.0_Darwin_amd64
-GITHUBACTIONS-DOCS_URL := https://github.com/mhristof/githubactions-docs/releases/download/v0.5.0/githubactions-docs_0.5.0_Darwin_amd64
-GERM_URL := https://github.com/mhristof/germ/releases/download/v1.15.0/germ_1.15.0_Darwin_amd64
-CHECKOV2VIM_URL := https://github.com/mhristof/checkov2vim/releases/download/v0.2.0/checkov2vim_0.2.0_Darwin_amd64
-SHELLCHECK_URL := https://github.com/koalaman/shellcheck/releases/download/v0.8.0/shellcheck-v0.8.0.darwin.x86_64.tar.xz
-GOLANGCI-LINT_URL := https://github.com/golangci/golangci-lint/releases/download/v1.43.0/golangci-lint-1.43.0-darwin-amd64.tar.gz
-GH_URL := https://github.com/cli/cli/releases/download/v2.2.0/gh_2.2.0_macOS_amd64.tar.gz
+TFLINT_URL := https://github.com/terraform-linters/tflint/releases/download/v0.33.1/tflint_$(UNAME)_amd64.zip
+TERRAFORM-DOCS_URL := https://github.com/terraform-docs/terraform-docs/releases/download/v0.16.0/terraform-docs-v0.16.0-$(UNAME_L)-amd64.tar.gz
+BAT_URL := https://github.com/sharkdp/bat/releases/download/v0.18.3/bat-v0.18.3-x86_64-$(VENDOR)-$(UNAME).tar.gz
+VIDDY_URL := https://github.com/sachaos/viddy/releases/download/v0.3.3/viddy_0.3.3_$(UNAME)_x86_64.tar.gz
+SHFMT_URL := https://github.com/mvdan/sh/releases/download/v3.4.0/shfmt_v3.4.0_$(UNAME)_amd64
+SEMVER_URL := https://github.com/mhristof/semver/releases/download/v0.7.0/semver_0.7.0_$(UNAME)_amd64
+GITHUBACTIONS-DOCS_URL := https://github.com/mhristof/githubactions-docs/releases/download/v0.5.0/githubactions-docs_0.5.0_$(UNAME)_amd64
+GERM_URL := https://github.com/mhristof/germ/releases/download/v1.15.0/germ_1.15.0_$(UNAME)_amd64
+CHECKOV2VIM_URL := https://github.com/mhristof/checkov2vim/releases/download/v0.2.0/checkov2vim_0.2.0_$(UNAME)_amd64
+SHELLCHECK_URL := https://github.com/koalaman/shellcheck/releases/download/v0.8.0/shellcheck-v0.8.0.$(UNAME_L).x86_64.tar.xz
+GOLANGCI-LINT_URL := https://github.com/golangci/golangci-lint/releases/download/v1.43.0/golangci-lint-1.43.0-$(UNAME_L)-amd64.tar.gz
+GH_URL := https://github.com/cli/cli/releases/download/v2.2.0/gh_2.2.0_$(GH_OS)_amd64.tar.gz
 
 -include tools/*
 

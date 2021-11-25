@@ -30,6 +30,11 @@ fi
 
 mkdir -p "$TOOLS"
 
+URL=${URL/Darwin/\$(UNAME)}
+URL=${URL/darwin/\$(UNAME_L)}
+URL=${URL/macOS/\$(GH_OS)}
+URL=${URL/apple/\$(VENDOR)}
+
 echo "Adding $NAME from $URL"
 
 cat <<EOF >"$TOOLS/makefile.lib"
