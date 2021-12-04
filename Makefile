@@ -29,7 +29,7 @@ default: brew vim essentials
 essentials: $(HTOP) $(WATCH) less $(GREP) $(SPONGE) viddy
 
 .PHONY: dev
-dev: essentials dots vim git ~/bin/semver $(LS) $(WATCH) $(JQ) $(AUTOJUMP)
+dev: essentials dots vim bat git ~/bin/semver $(LS) $(WATCH) $(JQ) $(AUTOJUMP)
 
 .PHONY: go
 go: $(GO) ~/go/bin/gojson
@@ -115,7 +115,7 @@ checkov: ~/.local/bin/checkov
 	pip install --user checkov
 
 ~/bin/checkov2vim: $(CHECKOV) | ~/bin
-	curl -sL https://github.com/mhristof/checkov2vim/releases/latest/download/checkov2vim.$(UNAME) > $@
+	curl -sL https://github.com/mhristof/checkov2vim/releases/download/v0.2.0/checkov2vim_0.2.0_$(UNAME)_amd64 > $@
 	chmod +x $@
 
 ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim: ~/bin/checkov2vim | $(FIRST_VIM_PLUGIN)
@@ -129,7 +129,7 @@ checkov: ~/.local/bin/checkov
 .PHONY: viddy
 viddy: ~/.local/bin/viddy
 
-~/.local/bin/viddy: | ~/.local/bin /usr/bin/tar
+~/.local/bin/viddy: $(BREW_BIN)/wget | ~/.local/bin /usr/bin/tar
 	wget -O /tmp/viddy.tar.gz https://github.com/sachaos/viddy/releases/download/v0.3.3/viddy_0.3.3_$(shell uname)_x86_64.tar.gz
 	tar xvf /tmp/viddy.tar.gz -C /tmp/
 	mv /tmp/viddy ~/.local/bin/
@@ -169,14 +169,13 @@ aws-azure-login: $(BREW_BIN)/node
 	npm install -g aws-azure-login@1.13.0
 
 .PHONY: iterm
-iterm: ~/.iterm2_shell_integration.zsh /Applications/iTerm.app germ
+iterm: /Applications/iTerm.app germ
 
 ~/.iterm2_shell_integration.zsh: $(BREW_BIN)/curl/bin/curl
 	curl -L https://iterm2.com/shell_integration/install_shell_integration_and_utilities.sh | bash
-	patch -p1 -R < data/iterm-zsh.patch
 
 /Applications/iTerm.app: $(BREW_BIN)/python3
-	brew cask install iterm2
+	brew install iterm2
 
 germ: ~/bin/germ
 
@@ -293,7 +292,7 @@ bash-my-aws: ~/.bash-my-aws
 	$(BREW) --version
 
 ~/bin/semver: | $(WGET) ~/bin ~/.zsh.site-functions
-	wget --quiet https://github.com/mhristof/semver/releases/download/v0.7.0/semver.$(UNAME) -O ~/bin/semver
+	wget --quiet https://github.com/mhristof/semver/releases/download/v0.7.0/semver_0.7.0_$(UNAME)_amd64 -O ~/bin/semver
 	chmod +x ~/bin/semver
 	~/bin/semver completion zsh > ~/.zsh.site-functions/_semver
 
