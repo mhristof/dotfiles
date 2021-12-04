@@ -193,7 +193,7 @@ dock: $(XARGS) $(BREW_BIN)/dockutil
 	dockutil --list | sed 's/file:.*//g' | xargs --no-run-if-empty -n1 -d'\n' dockutil --remove
 
 /Applications/Alfred 4.app:
-	brew cask install alfred
+	brew install alfred
 	open /Applications/Alfred\ 4.app/Contents/MacOS/Alfred
 
 $(BREW_BIN)/make/libexec/gnubin/make:
@@ -208,7 +208,7 @@ docker: /Applications/Docker.app/Contents/MacOS/Docker
 pbpaste: /tmp/alfred-pbpaste.alfredworkflow
 	open /tmp/alfred-pbpaste.alfredworkflow
 
-alfred: $(BREW_BIN)/wget /tmp/alfred-tf-snippets.alfredworkflow pbpaste $(GREP) /tmp/alfred-qrencode.alfredworkflow
+alfred: $(BREW_BIN)/wget pbpaste $(GREP) /tmp/alfred-qrencode.alfredworkflow
 	open /tmp/alfred-tf-snippets.alfredworkflow
 
 
@@ -227,7 +227,7 @@ random: /tmp/alfred-random.alfredworkflow
 	open $@
 
 /tmp/alfred-pbpaste.alfredworkflow:
-	wget --quiet https://github.com/mhristof/alfred-pbpaste/releases/download/0.6.3/alfred-pbpaste.alfredworkflow -O alfred-pbpaste.alfredworkflow
+	wget --quiet https://github.com/mhristof/alfred-pbpaste/releases/download/0.6.3/alfred-pbpaste.alfredworkflow -O /tmp/alfred-pbpaste.alfredworkflow
 
 /tmp/alfred-tf-snippets.alfredworkflow: $(BREW_BIN)/jq
 	wget https://github.com/mhristof/alfred-tf-snippets/releases/download/0.7.0/alfred-tf-snippets.alfredworkflow -O /tmp/alfred-tf-snippets.alfredworkflow
