@@ -15,6 +15,7 @@ fi
 dest=${URL/https:\/\//~/code/}
 dest=${dest/http:\/\//~/code/}
 dest=${dest/git@github.com:/~/code/github.com/}
+dest=${dest/git@gitlab.com:/~/code/gitlab.com/}
 dest=${dest/.git/}
 
 git clone "$URL" "$dest"
