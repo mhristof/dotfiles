@@ -10,6 +10,7 @@ endif
 .ONESHELL:
 
 BREW_BIN := /usr/local/bin
+DEV := essentials dots vim bat git ~/bin/semver $(LS) $(WATCH) $(JQ) $(AUTOJUMP)
 include Makefile.$(shell uname -s)
 
 UNAME := $(shell uname | tr '[:upper:]' '[:lower:]')
@@ -29,7 +30,7 @@ default: brew vim essentials
 essentials: $(HTOP) $(WATCH) less $(GREP) $(SPONGE) viddy
 
 .PHONY: dev
-dev: essentials dots vim bat git ~/bin/semver $(LS) $(WATCH) $(JQ) $(AUTOJUMP)
+dev: $(DEV)
 
 .PHONY: go
 go: $(GO) ~/go/bin/gojson
@@ -123,8 +124,7 @@ checkov: ~/.local/bin/checkov
 
 ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim: | $(CURL) $(FIRST_VIM_PLUGIN)
 	mkdir -p ~/.vim/bundle/ale/ale_linters/groovy/
-	cd ~/.vim/bundle/ale/ale_linters/groovy/
-	curl -sLO https://raw.githubusercontent.com/mhristof/ale-jenkinsfile/master/ale_jenkinsfile.vim
+	curl -sLO https://raw.githubusercontent.com/mhristof/ale-jenkinsfile/master/ale_jenkinsfile.vim --output ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim
 
 .PHONY: viddy
 viddy: ~/.local/bin/viddy
@@ -179,7 +179,7 @@ iterm: /Applications/iTerm.app germ
 
 germ: ~/bin/germ
 
-~/bin/germ: ~/.zsh.site-functions
+~/bin/germ: $(BREW_BIN)/wget ~/.zsh.site-functions ~/bin
 	wget --quiet https://github.com/mhristof/germ/releases/download/v1.15.0/germ_1.15.0_$(UNAME)_amd64 -O $@
 	chmod +x $@
 	$@ completion zsh > ~/.zsh.site-functions/_$(shell basename $@)
@@ -277,9 +277,6 @@ shortcut:
 
 ~/bin:
 	ln -sf $(PWD) ~/bin
-
-pterm:
-	pip3 install -U pterm
 
 bash-my-aws: ~/.bash-my-aws
 

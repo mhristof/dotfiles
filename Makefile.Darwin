@@ -28,6 +28,8 @@ XARGS := $(abspath $(BREW_BIN)/../opt/findutils)
 YAMLLINT := $(BREW_BIN)/yamllint
 ZSH := $(BREW_BIN)/zsh
 
+DEV += exa
+
 ifeq (, $(shell which brew))
 BREW := ~/.brew/bin/brew
 else
