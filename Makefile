@@ -180,7 +180,7 @@ iterm: /Applications/iTerm.app germ
 germ: ~/bin/germ
 
 ~/bin/germ: ~/.zsh.site-functions
-	wget --quiet https://github.com/mhristof/germ/releases/download/v1.15.0/germ.$(UNAME) -O $@
+	wget --quiet https://github.com/mhristof/germ/releases/download/v1.15.0/germ_1.15.0_$(UNAME)_amd64 -O $@
 	chmod +x $@
 	$@ completion zsh > ~/.zsh.site-functions/_$(shell basename $@)
 
