@@ -190,7 +190,9 @@ germ: ~/bin/germ
 	$@ completion zsh > ~/.zsh.site-functions/_$(shell basename $@)
 
 dock: $(XARGS) $(BREW_BIN)/dockutil
-	dockutil --list | sed 's/file:.*//g' | xargs --no-run-if-empty -n1 -d'\n' dockutil --remove
+	dockutil --list | sed 's/file:.*//g' | xargs --no-run-if-empty -n1 dockutil --remove
+	dockutil --remove 'App Store'
+	dockutil --remove 'System Preferences'
 
 /Applications/Alfred 4.app:
 	brew install alfred
