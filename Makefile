@@ -177,7 +177,10 @@ iterm: /Applications/iTerm.app germ
 /Applications/iTerm.app: $(BREW_BIN)/python3
 	brew install iterm2
 
-germ: ~/bin/germ
+germ: ~/bin/germ $(HOME)/Library/Python/3.9/lib/python/site-packages/iterm2
+
+$(HOME)/Library/Python/3.9/lib/python/site-packages/iterm2:
+	pip install --user iterm2
 
 ~/bin/germ: $(BREW_BIN)/wget ~/.zsh.site-functions ~/bin
 	wget --quiet https://github.com/mhristof/germ/releases/download/v1.15.0/germ_1.15.0_$(UNAME)_amd64 -O $@
