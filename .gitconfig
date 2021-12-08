@@ -11,7 +11,6 @@
 	email = mhristof@gmail.com
 	name = Mike Christofilopoulos
 
-
 [includeIf "gitdir:~/code/github/"]
    path = .gitconfig.github
 
@@ -30,3 +29,5 @@
 	ff = only
 [init]
 	defaultBranch = main
+[gpg]
+	program = gpg
