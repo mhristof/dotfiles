@@ -212,6 +212,7 @@ if has("autocmd")
     autocmd WinLeave * setlocal nocursorline
     autocmd filetype gitrebase :nnoremap s :call Squash()<cr>
     autocmd filetype netrw nnoremap <buffer> t :FZF<cr><cr>
+    autocmd BufEnter,VimEnter *.aws/config set filetype=dosini
 endif
 
 function Squash()
