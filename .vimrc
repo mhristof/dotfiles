@@ -122,7 +122,6 @@ let g:netrw_banner = 0
 let g:netrw_browse_split = 0
 let g:netrw_liststyle = 3
 let g:netrw_sort_sequence = '[\/]$,\<core\%(\.\d\+\)\=\>,\.h$,\.c$,\.cpp$,\~\=\*$,*,\.o$,\.obj$,\.info$,\.swp$,\.bak$,\.clean$,\.rej,\.orig,\~$'
-let g:terraform_fmt_on_save=1
 
 map <C-j> <C-W>j
 map <C-k> <C-W>k
@@ -195,7 +194,6 @@ if has("autocmd")
     autocmd FileType markdown set makeprg=grip\ -b\ %\ &>\ /dev/null
     autocmd FileType python :set makeprg=pep8\ %
     autocmd FileType ruby,eruby call SetupRuby()
-    autocmd FileType terraform :nnoremap K :call TerraformMan()<CR>
     autocmd FileType yaml :nnoremap K :call AnsibleMan()<CR>
     autocmd VimEnter * call SetupObsession()
     autocmd VimResized * wincmd =
@@ -205,7 +203,6 @@ if has("autocmd")
     autocmd WinEnter * setlocal cursorline
     autocmd WinEnter,BufEnter Vagrantfile,*.rb,*.erb call SetupRuby()
     autocmd WinEnter,BufWritePost *.py call PythonCtags()
-    autocmd WinEnter,BufWritePost *.tf call TerraformCtags()
     autocmd WinLeave * :setlocal rnu!
     autocmd WinLeave * setlocal cc=0
     autocmd WinLeave * setlocal nocursorcolumn
@@ -213,6 +210,11 @@ if has("autocmd")
     autocmd filetype gitrebase :nnoremap s :call Squash()<cr>
     autocmd filetype netrw nnoremap <buffer> t :FZF<cr><cr>
     autocmd BufEnter,VimEnter *.aws/config set filetype=dosini
+
+    autocmd WinEnter,BufWritePost *.tf call TerraformCtags()
+    autocmd FileType terraform :nnoremap K :call TerraformMan()<CR>
+    autocmd BufNewFile,BufRead terragrunt.hcl set filetype=terraform syntax=terraform
+    autocmd BufWritePre *.hcl :call terraform#fmt()
 endif
 
 function Squash()
