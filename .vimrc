@@ -100,6 +100,12 @@ set sessionoptions+=localoptions
 set statusline+=%#warningmsg#
 set statusline+=%*
 
+function SourceIfExists(file)
+  if filereadable(expand(a:file))
+    exe 'source' a:file
+  endif
+endfunction
+
 let VCSCommandVCSTypePreference='git'
 let g:CommandTMaxCachedDirectories=0
 let g:DirDiffExcludes = "*.pyc"
@@ -113,7 +119,7 @@ let g:ale_lint_on_text_changed = 'never'
 let g:ale_linters = {'yaml': ['yamllint'], 'python': ['bandit', 'pycodestyle', 'pylint', 'pydocstyle', 'black'], 'go': ['golangci-lint', 'staticcheck'],}
 let g:ale_sh_shfmt_options='-i 4 -ci' " Indent with N spaces
 let g:fzfSwitchProjectAlwaysChooseFile = 1
-let g:fzfSwitchProjectWorkspaces = [ '~/code']
+call SourceIfExists("~/.fzf.projects.vim") "let g:fzfSwitchProjectProjects
 let g:fzf_layout = { 'down': '40%' } " disable the weird center pop up window
 let g:go_fmt_command="gopls"
 let g:go_gopls_gofumpt=1
