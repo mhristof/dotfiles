@@ -28,7 +28,7 @@ Plugin 'ngmy/vim-rubocop'
 Plugin 'serialdoom/VisIncr.git'
 Plugin 'serialdoom/comments.vim.git'
 Plugin 'serialdoom/vcscommand.vim.git'
-Plugin 'serialdoom/vim-ansible-yaml.git'
+"Plugin 'serialdoom/vim-ansible-yaml.git'
 Plugin 'tomasr/molokai.git'
 Plugin 'tommcdo/vim-lion'
 Plugin 'tomtom/tlib_vim.git'
@@ -41,7 +41,7 @@ Plugin 'vim-scripts/DrawIt'
 Plugin 'w0rp/ale'
 Plugin 'zimbatm/haproxy.vim'
 Plugin 'benwainwright/fzf-project'
-
+Plugin 'mattn/vim-findroot'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -184,7 +184,7 @@ hi SpellLocal term=underline cterm=underline
 
 if has("autocmd")
     autocmd BufEnter *.dsl :set ft=groovy
-    autocmd BufEnter *.yml :set ft=ansible
+    "autocmd BufEnter *.yml :set ft=ansible
     autocmd BufEnter .pre-commit-config.yaml :set ft=yaml.pre-commit
     autocmd BufEnter *.github/workflows/*.yml :set ft=yaml.github-actions
     autocmd BufEnter *.mkf :set ft=make
@@ -219,9 +219,18 @@ if has("autocmd")
 
     autocmd WinEnter,BufWritePost *.tf call TerraformCtags()
     autocmd FileType terraform :nnoremap K :call TerraformMan()<CR>
-    autocmd BufNewFile,BufRead terragrunt.hcl set filetype=terraform syntax=terraform
-    autocmd BufWritePre *.hcl :call terraform#fmt()
+    autocmd BufNewFile,BufRead terragrunt.hcl set filetype=terraform.terragrunt syntax=terraform
+    autocmd BufWritePre terraform :call terraform#fmt()
+
+    autocmd BufNewFile,BufRead *.pkr.hcl setlocal filetype=packer syntax=terraform
+    autocmd BufWriteCmd *.pkr.hcl call PackerFormat()
 endif
+
+function PackerFormat()
+    exec "silent !packer fmt -write " . expand('%')
+    bufdo edit!
+    set syntax=terraform
+endfunction
 
 function Squash()
     exec ":2,$s/^pick/squash/g"
