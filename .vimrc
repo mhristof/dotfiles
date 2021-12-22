@@ -116,7 +116,7 @@ let g:ale_fix_on_save = 1
 let g:ale_fixers = {'sh': ['shfmt']}
 let g:ale_history_log_output = 1
 let g:ale_lint_on_text_changed = 'never'
-let g:ale_linters = {'yaml': ['yamllint'], 'python': ['bandit', 'pycodestyle', 'pylint', 'pydocstyle', 'black'], 'go': ['golangci-lint', 'staticcheck'],}
+let g:ale_linters = {'yaml': ['yamllint', 'prettier'], 'python': ['bandit', 'pycodestyle', 'pylint', 'pydocstyle', 'black'], 'go': ['golangci-lint', 'staticcheck'],}
 let g:ale_sh_shfmt_options='-i 4 -ci' " Indent with N spaces
 let g:fzfSwitchProjectAlwaysChooseFile = 1
 call SourceIfExists("~/.fzf.projects.vim") "let g:fzfSwitchProjectProjects
@@ -219,17 +219,23 @@ if has("autocmd")
 
     autocmd WinEnter,BufWritePost *.tf call TerraformCtags()
     autocmd FileType terraform :nnoremap K :call TerraformMan()<CR>
-    autocmd BufNewFile,BufRead terragrunt.hcl set filetype=terraform.terragrunt syntax=terraform
-    autocmd BufWritePre terraform :call terraform#fmt()
+    autocmd BufNewFile,BufRead terragrunt.hcl setlocal filetype=terraform.terragrunt syntax=terraform
+    autocmd BufWritePre terragrunt.hcl :call TerraformFormat()
 
-    autocmd BufNewFile,BufRead *.pkr.hcl setlocal filetype=packer syntax=terraform
-    autocmd BufWriteCmd *.pkr.hcl call PackerFormat()
+    autocmd BufNewFile,BufRead *.pkr.hcl setlocal filetype=packer syntax=hcl
+    autocmd BufWritePre *.pkr.hcl call PackerFormat()
 endif
 
+function TerraformFormat()
+    let save_pos = getpos(".")
+    exec "%!terraform fmt -"
+    call setpos(".", save_pos)
+endfunction
+
 function PackerFormat()
-    exec "silent !packer fmt -write " . expand('%')
-    bufdo edit!
-    set syntax=terraform
+    let save_pos = getpos(".")
+    exec "%!packer fmt -"
+    call setpos(".", save_pos)
 endfunction
 
 function Squash()
