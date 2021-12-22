@@ -2,7 +2,7 @@
 set -euo pipefail
 
 function usage {
-    cat << EOF
+    cat <<EOF
 Usage: ./$0 [-a account_nubmer]
 
 Prints out the amis for the given account
@@ -12,25 +12,25 @@ Args:
 EOF
 }
 
-
-while getopts "a:hv" OPTION
-do
-     case $OPTION in
-         a)
-             ACCOUNT=$OPTARG;;
-         h)
-             usage
-             exit 1
-             ;;
-         *) usage; exit 1;;
-     esac
+while getopts "a:hv" OPTION; do
+    case $OPTION in
+        a)
+            ACCOUNT=$OPTARG
+            ;;
+        h)
+            usage
+            exit 1
+            ;;
+        *)
+            usage
+            exit 1
+            ;;
+    esac
 done
 
 if [[ "${ACCOUNT:-invalid}" == "invalid" ]]; then
     ACCOUNT=$(aws sts get-caller-identity | jq .Account -r)
 fi
 
-
-aws ec2 describe-images  --owners "$ACCOUNT" |\
-    jq -r '.Images[] | [.CreationDate, .ImageId, .Name, .Desription] | @csv' | \
-    sort | tr -d '"'
+aws ec2 describe-images --executable-users "$ACCOUNT" |
+    jq -r '.Images[] | [.CreationDate, .ImageId, .Name, .Desription] | @tsv' | sort | column -t

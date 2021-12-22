@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+aws ec2 describe-security-groups | jq '.SecurityGroups[] | [.GroupId, .GroupName, .VpcId] | @tsv' -r | column -t
