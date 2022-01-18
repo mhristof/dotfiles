@@ -87,12 +87,7 @@ alias acm-pca-disabled="aws acm-pca list-certificate-authorities | jq '.Certific
 alias mkgo='cookiecutter gh:mhristof/cookiecutter-golang-cmd'
 alias mkalfredgo='cookiecutter gh:mhristof/cookiecutter-alfred-go'
 alias dmas='git diff master -- . || git diff main -- .'
-
-(
-    unalias gp || true
-    unalias gap || true
-    unalias gam || true
-) &> /dev/null
+alias hgroot='cd $(git rev-parse --show-toplevel)'
 
 
 if command -v exa &> /dev/null; then
@@ -136,5 +131,13 @@ export AWS_SDK_LOAD_CONFIG=1
 export AWS_PAGER=""
 export HOMEBREW_NO_AUTO_UPDATE=1
 
+(
+    unalias gp || true
+    unalias gap || true
+    unalias gam || true
+    unalias stacks || true
+) &> /dev/null
+
 
 src "${HOME}/.dotfilesrc.local"
+complete -C '/usr/local/bin/aws_completer' aws
