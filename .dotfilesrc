@@ -7,7 +7,7 @@ else
 fi
 
 export GIT_EMAIL="mhristof@gmail.com"
-export EDITOR="vim -X"
+export EDITOR="nvim"
 export GOPATH=$HOME/go
 
 # allow the next section to re-arrange paths
@@ -47,8 +47,8 @@ alias ..='c ../'
 alias ...='c ../../'
 alias ....='c ../../../'
 alias .....='c ../../../../'
-alias v='vim'
-alias vrc='vim ~/.vimrc'
+alias v='nvim'
+alias vrc='vim ~/.config/nvim/init.vim'
 alias history_populate="history | tr -s ' ' | cut -d ' ' -f3 | sort | uniq -c | sort -rn  | head"
 alias grep='grep --color=auto'
 alias df='df -h'
