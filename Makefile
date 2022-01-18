@@ -60,7 +60,10 @@ git: ~/.gitignore.global ~/.gitconfig ~/.gitconfig.github gh
 ln: dots
 
 .PHONY: dots
-dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbrc ~/.pythonrc.py ~/.tmux.conf ~/.p10k.zsh
+dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbrc ~/.pythonrc.py ~/.tmux.conf ~/.p10k.zsh ~/.config/nvim/init.vim
+
+~/.config/nvim/init.vim:
+	ln -sf $(PWD)/.config/nvim/init.vim $@
 
 ~/.p10k.zsh:
 	brew install romkatv/powerlevel10k/powerlevel10k
