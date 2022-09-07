@@ -122,9 +122,6 @@ done < <(find $HOME/.zsh.site-functions -type f)
 
 src "${HOME}/.iterm2_shell_integration.zsh"
 src "${HOME}/.fzf.zsh"
-#src "$HOME/.brew/etc/profile.d/autojump.sh"
-#src "$HOME/.local/etc/profile.d/autojump.sh"
-#src "/usr/local/etc/profile.d/autojump.sh"
 src "${HOME}/dotfiles/z.sh"
 src "${HOME}/.bash-my-aws/aliases"
 src "${HOME}/.bash-my-aws/bash_completion.sh"
