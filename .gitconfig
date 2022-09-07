@@ -31,3 +31,5 @@
 	defaultBranch = main
 [gpg]
 	program = gpg
+[diff]
+	external = difft

@@ -10,6 +10,7 @@ Plugin 'VundleVim/Vundle.vim'  " required
 " ===================
 
 Plugin 'MarcWeber/vim-addon-mw-utils.git'
+Plugin 'benwainwright/fzf-project'
 Plugin 'ekalinin/Dockerfile.vim'
 Plugin 'elzr/vim-json'
 Plugin 'fatih/vim-go'
@@ -18,13 +19,15 @@ Plugin 'hashivim/vim-terraform.git'
 Plugin 'hynek/vim-python-pep8-indent'
 Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plugin 'junegunn/fzf.vim'
+"Plugin 'mattn/vim-findroot'
 Plugin 'mhristof/vim-snipmate.git'
 Plugin 'mhristof/vim-template.git'
 Plugin 'mileszs/ack.vim.git'
-Plugin 'ngmy/vim-rubocop'
+"Plugin 'ngmy/vim-rubocop'
 Plugin 'serialdoom/VisIncr.git'
 Plugin 'serialdoom/comments.vim.git'
 Plugin 'serialdoom/vcscommand.vim.git'
+Plugin 'skywind3000/asyncrun.vim'
 Plugin 'tomasr/molokai.git'
 Plugin 'tommcdo/vim-lion'
 Plugin 'tomtom/tlib_vim.git'
@@ -33,12 +36,10 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-obsession'
 Plugin 'tpope/vim-surround'
 Plugin 'vim-scripts/DirDiff.vim.git'
-Plugin 'vim-scripts/DrawIt'
+" Plugin 'vim-scripts/DrawIt'
 Plugin 'w0rp/ale'
 Plugin 'zimbatm/haproxy.vim'
-Plugin 'benwainwright/fzf-project'
-Plugin 'mattn/vim-findroot'
-Plugin 'skywind3000/asyncrun.vim'
+Plugin 'mbbill/undotree'
 
 " ===================
 " end of plugins
@@ -175,9 +176,10 @@ if has("autocmd")
     "autocmd BufEnter *.yml :set ft=ansible
     autocmd BufEnter .pre-commit-config.yaml :set ft=yaml.pre-commit
     autocmd BufEnter *.github/workflows/*.yml :set ft=yaml.github-actions
+    autocmd BufEnter .mega-linter.yml :set ft=yaml.megalinter
     autocmd BufEnter *.mkf :set ft=make
     autocmd BufEnter .travis.yml :set ft=yaml
-    autocmd BufEnter Jenkinsfile :set ft=groovy
+    autocmd BufEnter *.Jenkinsfile,Jenkinsfile :set ft=groovy
     autocmd BufEnter Jenkinsfile :setlocal shiftwidth=2 tabstop=2
     autocmd BufEnter haproxy.cfg* :set ft=haproxy
     autocmd BufRead * if (expand('%:e') =~ "yaml" || expand('%:e') =~ "yml") && search('apiVersion:', 'nw') | setlocal ft=yaml.k8s | endif
@@ -202,7 +204,8 @@ if has("autocmd")
     autocmd WinLeave * setlocal nocursorcolumn
     autocmd WinLeave * setlocal nocursorline
     autocmd filetype gitrebase :nnoremap s :call Squash()<cr>
-    autocmd FileType gitrebase,gitcommit set tw=72 fo=t
+    autocmd FileType gitrebase,gitcommit set tw=72 fo=cqt wm=0
+    autocmd WinEnter,BufEnter *.sh.tpl setlocal ft=bash
     "autocmd FileType gitrebase,gitcommit set fo+=t
     autocmd filetype netrw nnoremap <buffer> t :FZF<cr><cr>
     autocmd BufEnter,VimEnter *.aws/config set filetype=dosini
@@ -211,7 +214,7 @@ if has("autocmd")
     autocmd BufWritePre *.tf :call TerraformFormat()
 
     autocmd FileType terraform :nnoremap K :call TerraformMan()<CR>
-    autocmd BufNewFile,BufRead terragrunt.hcl setlocal filetype=terraform.terragrunt syntax=terraform
+    autocmd BufNewFile,BufRead *.tfvars,env.hcl,account.hcl,terragrunt.hcl setlocal filetype=terraform.terragrunt syntax=terraform
     autocmd BufWritePre terragrunt.hcl :call TerraformFormat()
 
     autocmd BufNewFile,BufRead *.pkr.hcl setlocal filetype=packer syntax=hcl
@@ -235,7 +238,7 @@ function Squash()
 endfunction
 
 function PythonCtags()
-    let pyctags = job_start(["ctags", "-R", "--fields=+l", "--languages=python", "--python-kinds=-iv", "."])
+    exec ":AsyncRun ctags -R --fields=+l --languages=python --python-kinds=-iv ."
 endfunction
 
 function TerraformCtags()
@@ -255,6 +258,9 @@ if has("user_commands")
     cabbrev ack Ack
     cabbrev ag Ag
     cabbrev Call call
+    cabbrev gob Gob
+    cabbrev gcmp !bash ~/.zsh.autoload/gcmp
+
     cabbrev bb :call GitBrowse()<cr>
     " map the damn :W so that you dont type it twice. Or even 3 times. Fucking noob.
     command! -bang Wqa wqa<bang>
@@ -343,7 +349,14 @@ function SetupGithubActions()
 endfunction
 
 function GitBrowse()
-    let line=line(".") + 1
-    exec "silent !open $(gitbrowse " . expand('%') . " --line " . line . ")"
+    let line=line(".")
+    exec "silent !open $(gi browse " . expand('%') . " --line " . line . ")"
     exec ":redraw!"
 endfunction
+
+function! GitCheckout(branch)
+    execute ':silent !git checkout '.a:branch
+endfunction
+command! Gob call fzf#run({
+    \  'source': "git branch --all",
+    \  'sink':    function('GitCheckout')})

@@ -2,7 +2,10 @@
 
 image="${1:-mhristof/dotfiles}"
 
-die() { echo "$*" 1>&2 ; exit 1; }
+die() {
+    echo "$*" 1>&2
+    exit 1
+}
 
 ARGS=()
 
@@ -16,6 +19,7 @@ fi
 
 # shellcheck disable=SC2068
 docker run -it \
+    --entrypoint /bin/sh \
     -v "$PWD:/work" -w /work \
     ${ARGS[@]} \
     "$image"

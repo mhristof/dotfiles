@@ -3,12 +3,10 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-JIRAS="$(git log --pretty=format:%s master.. | grep -oP '[A-Z]{1,}-[0-9]{1,}' | sort -u | paste -s -d ','): " || {
-    JIRAS=""
-}
-
-git reset --soft "$(git merge-base master "$(git rev-parse --abbrev-ref HEAD)")"
-git commit -am "${JIRAS}$(git rev-parse --abbrev-ref HEAD)"
-git rebase master
+main=$(git-main.sh)
+message=$(git --no-pager log -n1 --format=%B "$(git cherry "$main" -v | head -1 | awk '{print $2}')")
+git reset --soft "$(git merge-base "$main" "$(git rev-parse --abbrev-ref HEAD)")"
+git commit -am "$message"
+git rebase "$main"
 
 exit 0

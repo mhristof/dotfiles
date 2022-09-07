@@ -5,12 +5,19 @@ IFS=$'\n\t'
 
 REMOTE="$(git config --get remote.origin.url)"
 
-if [[ $REMOTE =~ 'git@github' ]]; then
-    echo "Remote $REMOTE seems to be ssh, aborting"
-    exit 0
-fi
+case $REMOTE in
+    git@github*) die "Remote $REMOTE is ssh, aborting" ;;
+    git@gitlab*) die "Remote $REMOTE is ssh, aborting" ;;
+esac
 
-REPO="git@github.com:$(git config --get remote.origin.url | sed 's!https://github.com/!!').git"
+case $REMOTE in
+    *gitlab*) gl=gitlab ;;
+    *github*) gl=github ;;
+esac
+
+# shellcheck disable=SC2001
+REPO="git@$gl.com:$(sed "s!https://$gl.com/!!" <<<"$REMOTE").git"
+
 REPO="${REPO/.git.git/.git}"
 
 git remote set-url --add origin "$REPO"

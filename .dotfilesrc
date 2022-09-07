@@ -7,26 +7,33 @@ else
 fi
 
 export GIT_EMAIL="mhristof@gmail.com"
+export NVIM_LISTEN_ADDRESS=/tmp/nvim
 export EDITOR="nvim"
 export GOPATH=$HOME/go
+export GOPROXY=direct
 
 # allow the next section to re-arrange paths
 export PATH=$HOME/.aws-cli/aws-cli:$PATH # aws has its own python in there, so add it to the bottom of the food chain
 export PATH=$GOPATH/bin:$PATH
-export PATH=$HOME/.brew/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:$PATH
+export PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:$PATH
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
-export PATH=$HOME/.brew/opt/curl/bin:/usr/local/opt/curl/bin:$PATH
-export PATH=$HOME/.brew/opt/python/libexec/bin:/usr/local/opt/python/libexec/bin:$PATH
+export PATH=/usr/local/opt/curl/bin:$PATH
+export PATH=/usr/local/opt/python/libexec/bin:$PATH
 export PATH=$HOME/Library/Python/3.7/bin:$PATH
 export PATH=$HOME/Library/Python/3.9/bin:$PATH
-export PATH=$HOME/.brew/opt/findutils/libexec/gnubin:/usr/local/opt/findutils/libexec/gnubin:$PATH
-export PATH=$HOME/.brew/opt/grep/libexec/gnubin:/usr/local/opt/grep/libexec/gnubin:$PATH
-export PATH=$HOME/.brew/opt/make/libexec/gnubin:/usr/local/opt/make/libexec/gnubin:$PATH
-export PATH=$HOME/.brew/opt/gettext/bin:/usr/local/opt/gettext/bin:$PATH
-export PATH=$HOME/.brew/opt/coreutils/libexec/gnubin:/usr/local/opt/coreutils/libexec/gnubin:$PATH
+export PATH=/usr/local/opt/findutils/libexec/gnubin:$PATH
+export PATH=/usr/local/opt/grep/libexec/gnubin:$PATH
+export PATH=/usr/local/opt/make/libexec/gnubin:$PATH
+export PATH=/usr/local/opt/gettext/bin:$PATH
+export PATH=/usr/local/opt/coreutils/libexec/gnubin:$PATH
+export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
 export PATH=$HOME/.brew/opt/openvpn/sbin:/usr/local/opt/openvpn/sbin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.bash-my-aws/bin:$PATH
+export PATH=$HOME/.sessionmanager-bundle/bin:$PATH
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+export XDG_CACHE_HOME=$HOME/.cache
+
 
 export HISTCONTROL=ignoredups:erasedups
 export MANPAGER="sh -c 'col -bx | cat -l man -p'"
@@ -49,12 +56,15 @@ alias ....='c ../../../'
 alias .....='c ../../../../'
 alias v='nvim'
 alias vrc='vim ~/.config/nvim/init.vim'
+alias cv='cd $(dirname $(nvim-pwd.py))'
+alias cvr='cd $(git -C $(dirname $(nvim-pwd.py))  rev-parse --show-toplevel)'
+alias ve='~/bin/nvim-edit.py'
 alias history_populate="history | tr -s ' ' | cut -d ' ' -f3 | sort | uniq -c | sort -rn  | head"
 alias grep='grep --color=auto'
 alias df='df -h'
 alias ctmp='mkdir -p ~/tmp/$(date +"%Y%m%d_%H%M%S") && cd $_'
 alias m='make'
-alias f='find'
+alias f='fd'
 alias rl='readlink -f'
 alias ff='find . -type f -printf "%T@ %p\n" | sort -n | tail -5 | cut -f2- -d" "'
 alias fff='find . -type f -printf "%T@ %p\n" | sort -n | tail -10 | cut -f2- -d" "'
@@ -64,7 +74,6 @@ alias gg='git pull --rebase && git fetch --prune'
 alias gp='git push'
 alias gpt='git push --tags'
 alias s='git status'
-alias d='git diff'
 alias ga='git add'
 alias gs='git stash'
 alias gsa='git stash apply'
@@ -86,8 +95,8 @@ alias acm-pca-active="aws acm-pca list-certificate-authorities | jq '.Certificat
 alias acm-pca-disabled="aws acm-pca list-certificate-authorities | jq '.CertificateAuthorities[] | select(.Status == \"DISABLED\") | [.CertificateAuthorityConfiguration.Subject.CommonName, .Arn, .Status] | @csv' -r | column -s, -t"
 alias mkgo='cookiecutter gh:mhristof/cookiecutter-golang-cmd'
 alias mkalfredgo='cookiecutter gh:mhristof/cookiecutter-alfred-go'
-alias dmas='git diff master -- . || git diff main -- .'
 alias hgroot='cd $(git rev-parse --show-toplevel)'
+alias work='eval $(~/bin/gitlab-work.sh "$(pbpaste)")'
 
 
 if command -v exa &> /dev/null; then
@@ -113,9 +122,10 @@ done < <(find $HOME/.zsh.site-functions -type f)
 
 src "${HOME}/.iterm2_shell_integration.zsh"
 src "${HOME}/.fzf.zsh"
-src "$HOME/.brew/etc/profile.d/autojump.sh"
-src "$HOME/.local/etc/profile.d/autojump.sh"
-src "/usr/local/etc/profile.d/autojump.sh"
+#src "$HOME/.brew/etc/profile.d/autojump.sh"
+#src "$HOME/.local/etc/profile.d/autojump.sh"
+#src "/usr/local/etc/profile.d/autojump.sh"
+src "${HOME}/dotfiles/z.sh"
 src "${HOME}/.bash-my-aws/aliases"
 src "${HOME}/.bash-my-aws/bash_completion.sh"
 src "${HOME}/.brew/etc/profile.d/bash_completion.sh"
@@ -141,3 +151,7 @@ export HOMEBREW_NO_AUTO_UPDATE=1
 
 src "${HOME}/.dotfilesrc.local"
 complete -C '/usr/local/bin/aws_completer' aws
+
+_Z_CMD=j
+alias j=z
+unset -f d

@@ -205,8 +205,8 @@ if has("autocmd")
     autocmd VimResized * wincmd =
     autocmd WinEnter * :setlocal rnu
     autocmd WinEnter * setlocal cc=80
-    autocmd WinEnter * setlocal cursorcolumn
-    autocmd WinEnter * setlocal cursorline
+    autocmd WinEnter,BufRead * setlocal cursorcolumn
+    autocmd WinEnter,BufRead * setlocal cursorline
     autocmd WinEnter,BufEnter Vagrantfile,*.rb,*.erb call SetupRuby()
     autocmd WinEnter,BufWritePost *.py call PythonCtags()
     autocmd WinLeave * :setlocal rnu!

@@ -18,4 +18,14 @@ dest=${dest/git@github.com:/~/code/github.com/}
 dest=${dest/git@gitlab.com:/~/code/gitlab.com/}
 dest=${dest/.git/}
 
-git clone "$URL" "$dest"
+cmd="git clone $URL $dest"
+if [[ "${DRY:-}" == "true" ]]; then
+    echo "dry $cmd"
+    exit 0
+fi
+
+eval "$cmd"
+
+if [[ -f $dest/.pre-commit-config.yaml ]]; then
+    cd "$dest" && pre-commit install
+fi
