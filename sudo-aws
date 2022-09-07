@@ -1,0 +1,9 @@
+#! /usr/bin/env bash
+# http://redsymbol.net/articles/unofficial-bash-strict-mode/
+set -euo pipefail
+IFS=$'\n\t'
+
+data="$(aws sts assume-role --role-arn "$(roles | grep AWSReservedSSO_AdministratorAccess | awk '{print $2}')" --role-session-name "$USER" --duration-seconds 3600)"
+AWS_ACCESS_KEY_ID=$(jq .Credentials.AccessKeyId -r <<<"$data") AWS_SECRET_ACCESS_KEY=$(jq .Credentials.SecretAccessKey -r <<<"$data") AWS_SESSION_TOKEN=$(jq .Credentials.SessionToken -r <<<"$data") $SHELL
+
+exit 0

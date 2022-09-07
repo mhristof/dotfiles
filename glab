@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+function exp {
+    eval "$(/usr/bin/security find-generic-password -s germ -w -a "$1")"
+}
+
+if [[ -z "${GITLAB_TOKEN:-}" ]]; then
+    case "$@" in
+        *mr*update*) exp GITLAB_TOKEN ;;
+        *mr*rebase*) exp GITLAB_TOKEN ;;
+        *mr*create*) exp GITLAB_TOKEN ;;
+        *)
+            exp GITLAB_READONLY_TOKEN
+            export GITLAB_TOKEN=$GITLAB_READONLY_TOKEN
+            ;;
+    esac
+fi
+
+/usr/local/bin/glab "$@"

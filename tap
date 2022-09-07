@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+TOOL=terraform
+ARGS="apply -auto-approve"
+TG="$(find ./ -maxdepth 2 -mindepth 2 -name terragrunt.hcl | wc -l)"
+
+if [[ -f terragrunt.hcl ]]; then
+    TOOL=terragrunt
+fi
+
+if [[ $TG -gt 0 ]]; then
+    TOOL="terragrunt run-all"
+fi
+
+if [[ -f molecule/default/converge.yml ]]; then
+    TOOL="molecule"
+    ARGS="converge"
+fi
+
+CMD="$TOOL $ARGS"
+echo "$CMD"
+eval "$CMD"

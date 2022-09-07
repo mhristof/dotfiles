@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+this=${1:-}
+that=${2:-}
+
+if [[ -d $this ]] && [[ -d $that ]]; then
+    git diff --no-ext-diff --no-index "$this" "$that"
+fi
+
+diff -Npaur "$this" "$that"

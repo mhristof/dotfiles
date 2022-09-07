@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+ZONES=${1:-}
+
+if [[ -z $ZONES ]]; then
+    ZONES=$(route53-zones | awk '{print $2}' | xargs -I{} bash -c 'basename {}')
+fi
+
+echoerr() { /bin/cat <<<"$@" 1>&2; }
+
+for zone in $ZONES; do
+    echoerr "$zone"
+    aws route53 list-resource-record-sets --hosted-zone-id "$zone" | jq '.ResourceRecordSets[] | .Zone = "'$zone'"' -c -r
+done

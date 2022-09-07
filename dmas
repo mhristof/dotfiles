@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ -t 1 ]; then
+    args=""
+else
+    args="--no-ext-diff"
+fi
+main=$(git-main.sh)
+
+eval "git diff $args $main -- ."

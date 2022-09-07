@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+TOOL=terraform
+TG="$(find ./ -maxdepth 2 -mindepth 2 -name terragrunt.hcl | wc -l)"
+
+if [[ -f terragrunt.hcl ]]; then
+    TOOL=terragrunt
+fi
+
+if [[ $TG -gt 0 ]]; then
+    TOOL="terragrunt run-all"
+fi
+
+CMD="$TOOL destroy"
+echo "$CMD"
+eval "$CMD"

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+die() {
+    echo "$*" 1>&2
+    exit 1
+}
+
+POLICY=${1:-}
+if [[ -z $POLICY ]]; then
+    die "Error, please provide a policy to delete"
+fi
+
+aws iam list-policies | jq -r '.Policies[] | select(.PolicyName == "'$POLICY'").Arn' | xargs -r -n1 aws iam delete-policy --policy-arn

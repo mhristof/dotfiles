@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+docker run --rm -e AWS_PROFILE \
+    -v "$HOME/.kube:/root/.kube" \
+    -v "$HOME/.aws:/root/.aws" \
+    -v "$PWD:/work" -w /work \
+    amazon/aws-cli:2.7.4 "$@"

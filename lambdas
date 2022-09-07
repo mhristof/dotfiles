@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+aws lambda list-functions | jq '.Functions[] | [.FunctionName, .Runtime, .LastModified, .FunctionArn] | @tsv' -r  | column -t

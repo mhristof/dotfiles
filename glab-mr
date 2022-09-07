@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ -z ${GITLAB_TOKEN:-} ]]; then
+    eval "$(/usr/bin/security find-generic-password -s germ -w -a GITLAB_TOKEN)"
+fi
+
+description=""
+if [[ -f .gitlab/merge_request_templates/Default.md ]]; then
+    description=$(cat .gitlab/merge_request_templates/Default.md)
+fi
+
+glab mr create \
+    --assignee "$(glab api /user | jq .username -r)" \
+    --description "$description" \
+    --title "$(git-first-branch-commit.sh | head -1)" \
+    --no-editor --push \
+    --remove-source-branch \
+    --yes
