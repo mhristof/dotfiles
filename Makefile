@@ -65,6 +65,9 @@ dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbr
 ~/.config/nvim/init.vim:
 	ln -sf $(PWD)/.config/nvim/init.vim $@
 
+~/.fzf-tab:
+	git clone https://github.com/Aloxaf/fzf-tab ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-tab
+
 ~/.p10k.zsh:
 	brew install romkatv/powerlevel10k/powerlevel10k
 	ln -sf $(PWD)/$(shell basename $@) $@
@@ -150,7 +153,8 @@ $(BREW_BIN)/curl/bin/curl:
 	git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh
 
 .PHONY: zsh
-zsh: $(ZSH) ~/.zshrc ~/.dotfilesrc ~/.oh-my-zsh
+zsh: $(ZSH) ~/.zshrc ~/.dotfilesrc ~/.oh-my-zsh ~/.fzf-tab
+
 
 .PHONY: brew
 brew: ~/.brew
@@ -311,7 +315,7 @@ gh: ~/.local/bin/gh
 .PHONY: golangci-lint
 golangci-lint: ~/.local/bin/golangci-lint
 ~/.local/bin/golangci-lint: | ~/.local/bin
-	curl --location --silent https://github.com/golangci/golangci-lint/releases/download/v1.43.0/golangci-lint-1.43.0-$(UNAME)-amd64.tar.gz > /tmp/golangci-lint.tar.gz
+	curl --location --silent https://github.com/golangci/golangci-lint/releases/download/v1.44.0/golangci-lint-1.44.0-$(UNAME)-amd64.tar.gz > /tmp/golangci-lint.tar.gz
 	tar xvf /tmp/golangci-lint.tar.gz -C /tmp/
 	mv /tmp/golangci-lint-*-$(UNAME)-amd64/golangci-lint $@
 
