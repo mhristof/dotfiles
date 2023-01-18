@@ -26,6 +26,10 @@ fi
 
 eval "$cmd"
 
+which pre-commit &>/dev/null || {
+    pip install pre-commit
+}
+
 if [[ -f $dest/.pre-commit-config.yaml ]]; then
     cd "$dest" && pre-commit install
 fi

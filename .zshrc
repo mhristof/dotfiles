@@ -18,7 +18,7 @@ export EDITOR=vim
 ZSH_THEME="robbyrussell"
 HYPHEN_INSENSITIVE="true"
 fpath=($fpath ~/.zsh.autoload ~/.zsh.site-functions)
-plugins=( fzf-tab )
+plugins=( fzf-tab docker )
 
 function src {
     test -f $1 && source $1
@@ -30,6 +30,3 @@ src $ZSH/oh-my-zsh.sh
 src $HOME/.dotfilesrc
 
 autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C /Users/mhristof/.brew/bin/terraform terraform
-source /usr/local/opt/powerlevel10k/powerlevel10k.zsh-theme
-export PATH="/usr/local/opt/openjdk/bin:$PATH"

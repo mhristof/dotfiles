@@ -19,11 +19,9 @@ Plugin 'hashivim/vim-terraform.git'
 Plugin 'hynek/vim-python-pep8-indent'
 Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plugin 'junegunn/fzf.vim'
-"Plugin 'mattn/vim-findroot'
 Plugin 'mhristof/vim-snipmate.git'
 Plugin 'mhristof/vim-template.git'
 Plugin 'mileszs/ack.vim.git'
-"Plugin 'ngmy/vim-rubocop'
 Plugin 'serialdoom/VisIncr.git'
 Plugin 'serialdoom/comments.vim.git'
 Plugin 'serialdoom/vcscommand.vim.git'
@@ -36,10 +34,10 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-obsession'
 Plugin 'tpope/vim-surround'
 Plugin 'vim-scripts/DirDiff.vim.git'
-" Plugin 'vim-scripts/DrawIt'
 Plugin 'w0rp/ale'
 Plugin 'zimbatm/haproxy.vim'
 Plugin 'mbbill/undotree'
+Plugin 'rhadley-recurly/vim-terragrunt'
 
 " ===================
 " end of plugins
@@ -87,6 +85,7 @@ set smartindent
 set sessionoptions+=localoptions
 set statusline+=%#warningmsg#
 set statusline+=%*
+set mouse=
 
 function SourceIfExists(file)
   if filereadable(expand(a:file))
@@ -96,17 +95,21 @@ endfunction
 
 
 call SourceIfExists("~/.fzf.projects.vim") "let g:fzfSwitchProjectProjects
+
 let VCSCommandVCSTypePreference='git'
 let g:CommandTMaxCachedDirectories=0
 let g:DirDiffExcludes = "*.pyc"
 let g:VCSCommandDeleteOnHide=66
 let g:ackprg = 'ag --nogroup --nocolor --column'
-let g:ale_dockerfile_hadolint_use_docker  = "always"
+let g:ale_dockerfile_hadolint_use_docker  = "yes"
 let g:ale_fix_on_save = 1
-let g:ale_fixers = {'sh': ['shfmt']}
+let g:ale_fixers = {
+    \'sh': ['shfmt'],
+    \'python': [ 'add_blank_lines_for_python_control_statements', 'autoflake', 'autoimport', 'autopep8', 'black', 'isort', 'pyflyby', 'remove_trailing_lines', 'reorder-python-imports', 'trim_whitespace'],
+\}
 let g:ale_history_log_output = 1
 let g:ale_lint_on_text_changed = 'never'
-let g:ale_linters = {'yaml': ['yamllint', 'prettier'], 'python': ['bandit', 'pycodestyle', 'pylint', 'pydocstyle', 'black'], 'go': ['golangci-lint', 'staticcheck'],}
+let g:ale_linters = { 'yaml': ['yamllint', 'prettier'], 'python': ['bandit', 'pycodestyle', 'pylint', 'pydocstyle', 'black'], 'go': ['revive', 'golangci-lint', 'staticcheck'], }
 let g:ale_sh_shfmt_options='-i 4 -ci' " Indent with N spaces
 let g:fzfSwitchProjectAlwaysChooseFile = 1
 let g:fzf_layout = { 'down': '40%' } " disable the weird center pop up window
@@ -118,6 +121,8 @@ let g:netrw_banner = 0
 let g:netrw_browse_split = 0
 let g:netrw_liststyle = 3
 let g:netrw_sort_sequence = '[\/]$,\<core\%(\.\d\+\)\=\>,\.h$,\.c$,\.cpp$,\~\=\*$,*,\.o$,\.obj$,\.info$,\.swp$,\.bak$,\.clean$,\.rej,\.orig,\~$'
+let g:terraform_fmt_on_save = 1
+
 map <C-j> <C-W>j
 map <C-k> <C-W>k
 map <C-h> <C-W>h
@@ -176,6 +181,7 @@ if has("autocmd")
     "autocmd BufEnter *.yml :set ft=ansible
     autocmd BufEnter .pre-commit-config.yaml :set ft=yaml.pre-commit
     autocmd BufEnter *.github/workflows/*.yml :set ft=yaml.github-actions
+    autocmd BufEnter .gitlab-ci.yml :set ft=yaml.gitlab
     autocmd BufEnter .mega-linter.yml :set ft=yaml.megalinter
     autocmd BufEnter *.mkf :set ft=make
     autocmd BufEnter .travis.yml :set ft=yaml
@@ -199,6 +205,7 @@ if has("autocmd")
     autocmd WinEnter * setlocal cursorline
     autocmd WinEnter,BufEnter Vagrantfile,*.rb,*.erb call SetupRuby()
     autocmd WinEnter,BufWritePost *.py call PythonCtags()
+    autocmd FileType gitrebase,gitcommit set fo+=t
     autocmd WinLeave * :setlocal rnu!
     autocmd WinLeave * setlocal cc=0
     autocmd WinLeave * setlocal nocursorcolumn
@@ -206,30 +213,26 @@ if has("autocmd")
     autocmd filetype gitrebase :nnoremap s :call Squash()<cr>
     autocmd FileType gitrebase,gitcommit set tw=72 fo=cqt wm=0
     autocmd WinEnter,BufEnter *.sh.tpl setlocal ft=bash
-    "autocmd FileType gitrebase,gitcommit set fo+=t
     autocmd filetype netrw nnoremap <buffer> t :FZF<cr><cr>
     autocmd BufEnter,VimEnter *.aws/config set filetype=dosini
 
     autocmd WinEnter,BufWritePost *.tf call TerraformCtags()
-    autocmd BufWritePre *.tf :call TerraformFormat()
 
     autocmd FileType terraform :nnoremap K :call TerraformMan()<CR>
-    autocmd BufNewFile,BufRead *.tfvars,env.hcl,account.hcl,terragrunt.hcl setlocal filetype=terraform.terragrunt syntax=terraform
-    autocmd BufWritePre terragrunt.hcl :call TerraformFormat()
-
-    autocmd BufNewFile,BufRead *.pkr.hcl setlocal filetype=packer syntax=hcl
-    autocmd BufWritePre *.pkr.hcl call PackerFormat()
+    autocmd BufWritePost *.hcl :call TerraformFormat()
+    autocmd BufNewFile,BufRead,BufWritePost *.pkr.hcl setlocal filetype=packer syntax=hcl
 endif
 
 function TerraformFormat()
     let save_pos = getpos(".")
-    exec "%!terraform fmt -"
+    exec ":silent! terragrunt hclfmt"
+    exec ":e!"
     call setpos(".", save_pos)
 endfunction
 
 function PackerFormat()
     let save_pos = getpos(".")
-    exec "%!packer fmt -"
+    exec ":silent! packer fmt %"
     call setpos(".", save_pos)
 endfunction
 
@@ -260,8 +263,10 @@ if has("user_commands")
     cabbrev Call call
     cabbrev gob Gob
     cabbrev gcmp !bash ~/.zsh.autoload/gcmp
+    cabbrev ww :noautocmd w
 
     cabbrev bb :call GitBrowse()<cr>
+    cabbrev oo :call OpenLocalRepo()<cr>
     " map the damn :W so that you dont type it twice. Or even 3 times. Fucking noob.
     command! -bang Wqa wqa<bang>
     command! -bang Wa wa<bang>
@@ -360,3 +365,8 @@ endfunction
 command! Gob call fzf#run({
     \  'source': "git branch --all",
     \  'sink':    function('GitCheckout')})
+
+function OpenLocalRepo()
+    let path = system("~/bin/local-repo-from-string.sh '" . getline(search("^ *source = ", "n")) . "'")
+    exec ":sp " . path
+endfunction

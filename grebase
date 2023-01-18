@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+git stash
+git checkout "$(git-main.sh)"
+git pull
+git fetch --prune
+git checkout -
+git rebase -i "$(git-main.sh)"
+git stash pop

@@ -1,8 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+command -v bat &>/dev/null || {
+    brew install bat
+}
+
+source $HOME/bin/.lib
+PATH=$(sed "s@$HOME/bin@@" <<<"$PATH")
+
 if [[ "$*" =~ "p10k-instant-prompt-output" ]]; then
-    /usr/bin/cat "$@"
+    cat "$@"
+elif [[ $SHLVL -gt 2 ]]; then
+    cat "$@"
 else
     bat "$@"
 fi

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source $HOME/bin/.lib
+PATH=$(sed "s@$HOME/bin@@" <<<"$PATH")
+install timeout
+timeout "$@"

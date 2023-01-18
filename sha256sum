@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source ~/bin/.lib
+PATH=$(sed "s@$HOME/bin@@" <<<"$PATH")
+install sha256sum
+sha256sum "$@"

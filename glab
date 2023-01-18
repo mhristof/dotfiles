@@ -8,9 +8,13 @@ function exp {
 
 if [[ -z "${GITLAB_TOKEN:-}" ]]; then
     case "$@" in
+        *field*) exp GITLAB_TOKEN ;;
         *mr*update*) exp GITLAB_TOKEN ;;
         *mr*rebase*) exp GITLAB_TOKEN ;;
         *mr*create*) exp GITLAB_TOKEN ;;
+        *mr*approve*) exp GITLAB_TOKEN ;;
+        *mr*merge*) exp GITLAB_TOKEN ;;
+        *api*notes*body*) exp GITLAB_TOKEN ;;
         *)
             exp GITLAB_READONLY_TOKEN
             export GITLAB_TOKEN=$GITLAB_READONLY_TOKEN
@@ -18,4 +22,4 @@ if [[ -z "${GITLAB_TOKEN:-}" ]]; then
     esac
 fi
 
-/usr/local/bin/glab "$@"
+/opt/homebrew/bin/glab "$@"

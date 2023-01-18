@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source $HOME/bin/.lib
+PATH=$(sed "s@$HOME/bin@@" <<<"$PATH")
+which ansible-lint &>/dev/null || pip3 install ansible-lint
+ansible-lint "$@"

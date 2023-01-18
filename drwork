@@ -18,8 +18,7 @@ if [[ -n $NODE_EXTRA_CA_CERTS ]]; then
 fi
 
 # shellcheck disable=SC2068
-docker run -it \
-    --entrypoint /bin/sh \
-    -v "$PWD:/work" -w /work \
-    ${ARGS[@]} \
-    "$image"
+docker run -it --entrypoint /bin/bash -v "$PWD:/work" -w /work ${ARGS[@]} "$image" || {
+    # shellcheck disable=SC2068
+    docker run -it --entrypoint /bin/sh -v "$PWD:/work" -w /work ${ARGS[@]} "$image"
+}

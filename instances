@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+aws ec2 describe-instances            \
+        --output text                       \
+        --query "
+        Reservations[].Instances[][
+            InstanceId,
+            ImageId,
+            InstanceType,
+            State.Name,
+            [Tags[?Key=='Name'].Value][0][0],
+            LaunchTime,
+            Placement.AvailabilityZone,
+            VpcId,
+            StateTransitionReason
+        ]"                |
+        LC_ALL=C sort -b -k 6 |
+        column -s$'\t' -t
+

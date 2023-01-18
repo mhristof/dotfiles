@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+aws ec2 describe-volumes |
+    jq '.Volumes[] | [.VolumeId, .VolumeType, .Size, .CreateTime, .State, (.Tags[] | select(.Key == "Name") | .Value)] | @tsv' -r |
+    sort -k5,5 -k4 |
+    column -t | bat --theme zenburn

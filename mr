@@ -11,8 +11,8 @@ if [[ -f .gitlab/merge_request_templates/Default.md ]]; then
 fi
 
 glab mr create \
-    --assignee "$(glab api /user | jq .username -r)" \
     --description "$description" \
+    --assignee "$(glab api /user | jq .username -r)" \
     --title "$(git-first-branch-commit.sh | head -1)" \
     --no-editor --push \
     --remove-source-branch \

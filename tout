@@ -3,7 +3,7 @@
 set -euo pipefail
 
 TOOL=terraform
-ARGS="apply -auto-approve"
+ARGS="output"
 TG="$(find ./ -maxdepth 2 -mindepth 2 -name terragrunt.hcl | wc -l)"
 
 if [[ -f terragrunt.hcl ]]; then
@@ -21,4 +21,4 @@ fi
 
 CMD="$TOOL $ARGS"
 echo "$CMD"
-eval "$CMD" | tee tap.log
+eval "$CMD"

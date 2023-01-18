@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source $HOME/bin/.lib
+PATH=$(sed "s@$HOME/bin@@" <<<"$PATH")
+which misspell &>/dev/null || {
+    go install github.com/client9/misspell/cmd/misspell@v0.3.4
+}
+
+misspell "$@"

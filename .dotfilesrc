@@ -14,29 +14,32 @@ export GOPROXY=direct
 
 # allow the next section to re-arrange paths
 export PATH=$HOME/.aws-cli/aws-cli:$PATH # aws has its own python in there, so add it to the bottom of the food chain
+export PATH=/usr/local/opt/openjdk/bin:$PATH
 export PATH=$GOPATH/bin:$PATH
-export PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:$PATH
+export PATH=/opt/homebrew/bin:/usr/local/sbin:/usr/local/bin:$PATH
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
-export PATH=/usr/local/opt/curl/bin:$PATH
-export PATH=/usr/local/opt/python/libexec/bin:$PATH
+export PATH=/opt/homebrew/opt/curl/bin:$PATH
+export PATH=/opt/homebrew/opt/python/libexec/bin:$PATH
 export PATH=$HOME/Library/Python/3.7/bin:$PATH
 export PATH=$HOME/Library/Python/3.9/bin:$PATH
-export PATH=/usr/local/opt/findutils/libexec/gnubin:$PATH
-export PATH=/usr/local/opt/grep/libexec/gnubin:$PATH
-export PATH=/usr/local/opt/make/libexec/gnubin:$PATH
-export PATH=/usr/local/opt/gettext/bin:$PATH
-export PATH=/usr/local/opt/coreutils/libexec/gnubin:$PATH
-export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
-export PATH=$HOME/.brew/opt/openvpn/sbin:/usr/local/opt/openvpn/sbin:$PATH
+export PATH=/opt/homebrew/opt/findutils/libexec/gnubin:$PATH
+export PATH=/opt/homebrew/opt/grep/libexec/gnubin:$PATH
+export PATH=/opt/homebrew/opt/make/libexec/gnubin:$PATH
+export PATH=/opt/homebrew/opt/gettext/bin:$PATH
+export PATH=/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH
+export PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
+export PATH=$HOME/.brew/opt/openvpn/sbin:/opt/homebrew/opt/openvpn/sbin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.bash-my-aws/bin:$PATH
 export PATH=$HOME/.sessionmanager-bundle/bin:$PATH
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+eval "$(/opt/homebrew/bin/brew shellenv)"
 export XDG_CACHE_HOME=$HOME/.cache
+export XDG_CONFIG_HOME=$HOME/.config
 
 
 export HISTCONTROL=ignoredups:erasedups
-export MANPAGER="sh -c 'col -bx | cat -l man -p'"
+export MANPAGER="sh -c 'col -bx | bat -p -lman'"
 export PYTHONSTARTUP=~/.pythonrc.py
 
 if [[ $THIS_SHELL == "bash" ]]; then
@@ -49,12 +52,13 @@ fi
 export HISTSIZE=99999999
 export HISTFILESIZE=
 export HISTTIMEFORMAT='%F %T '
+export AWS_MAX_ATTEMPTS=10
 
 alias ..='c ../'
 alias ...='c ../../'
 alias ....='c ../../../'
 alias .....='c ../../../../'
-alias v='nvim'
+alias v='vim'
 alias vrc='vim ~/.config/nvim/init.vim'
 alias cv='cd $(dirname $(nvim-pwd.py))'
 alias cvr='cd $(git -C $(dirname $(nvim-pwd.py))  rev-parse --show-toplevel)'
@@ -126,8 +130,9 @@ src "${HOME}/dotfiles/z.sh"
 src "${HOME}/.bash-my-aws/aliases"
 src "${HOME}/.bash-my-aws/bash_completion.sh"
 src "${HOME}/.brew/etc/profile.d/bash_completion.sh"
-src "/usr/local/opt/powerlevel10k/powerlevel10k.zsh-theme"
+src "/opt/homebrew/opt/powerlevel10k/powerlevel10k.zsh-theme"
 src "$HOME/.p10k.zsh" # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+src "${HOME}/.iterm2_shell_integration.zsh"
 
 export PATH=~/bin:$PATH
 export PATH=$(echo -n $PATH | awk -v RS=: -v ORS=: '!arr[$0]++') # remove duplicates
@@ -143,12 +148,18 @@ export HOMEBREW_NO_AUTO_UPDATE=1
     unalias gap || true
     unalias gam || true
     unalias stacks || true
+    unalias dst || true
+    unalias instances || true
 ) &> /dev/null
 
 
 src "${HOME}/.dotfilesrc.local"
 complete -C '/usr/local/bin/aws_completer' aws
+complete -o nospace -C /Users/mikechristofilopoulos/bin/terraform terraform
 
 _Z_CMD=j
 alias j=z
 unset -f d
+
+export GPG_TTY=$(tty)
+gpgconf --launch gpg-agent

@@ -24,7 +24,8 @@ fi
 
 # shellcheck disable=SC2001
 project="$(sed 's!/-/.*!!' <<<"${URL/https:\/\/gitlab.com\//}")"
-projectURL="$(echo -ne "$project" | hexdump -v -e '/1 "%02x"' | sed 's/\(..\)/%\1/g')"
+projectURL="$(echo -ne "$project" | python3 -c 'import sys; import urllib.parse; print(urllib.parse.quote(sys.stdin.read(), safe=""))')"
+postCD=""
 
 if [[ -z ${GITLAB_TOKEN:-} ]]; then
     GITLAB_TOKEN=$(/usr/bin/security find-generic-password -s germ -w -a GITLAB_READONLY_TOKEN | cut -d"'" -f2)
@@ -41,15 +42,15 @@ case $URL in
         mrID="$(sed 's/.*\(merge_requests.*\)/\1/g' <<<"$URL" | cut -d/ -f2)"
         ;;
     */-/tree/*)
-        # https://gitlab.com/_bcgroup/infra/platform/-/tree/master/terraform/runner.tf#L196
         #shellcheck disable=SC2001
         project=$(sed 's!https://gitlab.com/!!g' <<<"$URL" | sed 's!/-/.*!!g')
 
         #shellcheck disable=SC2001
-        branch=$(sed 's!.*/(tree|tree)/!!g' <<<"$URL" | cut -d/ -f1)
+        branch=$(sed 's!.*/tree/!!g' <<<"$URL" | cut -d/ -f1)
+
+        postCD="&& cd $(sed "s!.*$branch/!!g" <<<"$URL")"
         ;;
     */-/blob/*)
-        # https://gitlab.com/_bcgroup/infra/platform/-/blob/master/terraform/runner.tf#L196
         #shellcheck disable=SC2001
         project=$(sed 's!https://gitlab.com/!!g' <<<"$URL" | sed 's!/-/.*!!g')
 
@@ -74,5 +75,5 @@ if [[ ! -d $dest ]]; then
 fi
 
 cat <<EOF
-cd $dest && git checkout $(git-main.sh) && git pull && git fetch --prune && git checkout $branch && (git pull || git-force-fetch.sh)
+cd $dest && git checkout \$(git-main.sh) && git pull && git fetch --prune && git checkout $branch && (git pull || git-force-fetch.sh) $postCD
 EOF

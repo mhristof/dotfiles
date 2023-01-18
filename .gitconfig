@@ -1,5 +1,5 @@
 [core]
-	excludesfile = ~/.gitignore.global
+	excludesfile = ~/.gitignore_global
 	pager = less -x1,5
 [alias]
 	undo = reset --soft HEAD~1

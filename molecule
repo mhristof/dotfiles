@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source $HOME/bin/.lib
+PATH=$(sed "s@$HOME/bin@@" <<<"$PATH")
+which molecule &>/dev/null || pip3 install molecule molecule-docker molecule-ec2
+molecule "$@"

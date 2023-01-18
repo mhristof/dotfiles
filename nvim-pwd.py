@@ -7,10 +7,13 @@
 
 """
 
+import sys
+
 from pynvim import attach
-nvim = attach('socket', path='/tmp/nvim')
-# nvim.command('echo "hello world!"')
+
+nvim = attach("socket", path="/tmp/nvim")
 
 buffer = nvim.current.buffer
 
 print(buffer.name)
+print(buffer.name, file=sys.stderr)

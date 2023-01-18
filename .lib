@@ -1,0 +1,33 @@
+# vi: ft=sh
+
+function link() {
+    local source
+    local dest
+
+    source=$1
+    dest=$2
+
+    if [[ ! -L $dest ]]; then
+        rm -rf "$dest"
+    fi
+
+    if [[ -e $dest ]]; then
+        return
+    fi
+
+    ln -s "$source" "$dest"
+}
+
+function install() {
+    local command
+
+    command=$1
+
+    case $1 in
+        sha256sum) package=coreutils ;;
+        timeout) package=coreutils ;;
+        *) package=$command ;;
+    esac
+
+    which "$command" &>/dev/null || brew install $package
+}
