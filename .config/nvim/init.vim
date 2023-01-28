@@ -215,6 +215,7 @@ if has("autocmd")
     autocmd WinEnter,BufEnter *.sh.tpl setlocal ft=bash
     autocmd filetype netrw nnoremap <buffer> t :FZF<cr><cr>
     autocmd BufEnter,VimEnter *.aws/config set filetype=dosini
+    autocmd BufEnter,VimEnter Dockerfile map <leader>p :call ApkUnpin()<cr>
 
     autocmd WinEnter,BufWritePost *.tf call TerraformCtags()
 
@@ -238,6 +239,10 @@ endfunction
 
 function Squash()
     exec ":2,$s/^pick/squash/g"
+endfunction
+
+function ApkUnpin()
+    exec ".s/==\\S*//g"
 endfunction
 
 function PythonCtags()
