@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source ~/bin/.lib
+PATH=$(sed "s@$HOME/bin@@" <<<"$PATH")
+link ~/dotfiles/.tflint.hcl "$HOME/.tflint.hcl"
+which tflint &>/dev/null || {
+    curl --location --silent \
+        https://github.com/terraform-linters/tflint/releases/download/v0.44.1/tflint_$(UNAME)_amd64.zip >/tmp/tflint.zip
+    unzip /tmp/tflint.zip
+    mv tflint ~/.local/bin/tflint
+
+    cd $HOME && tflint --init
+}
+
+~/.local/bin/tflint "$@"

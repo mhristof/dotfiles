@@ -82,7 +82,7 @@ $(BREW_BIN)/src-hilite-lesspipe.sh:
 ~/.vim: ~/.vim/bundle/Vundle.vim ~/.vimrc vim-tools vim-linters $(FIRST_VIM_PLUGIN) ~/bin/gitbrowse
 
 .PHONY: vim-linters
-vim-linters: $(BANDIT) $(SHELLCHECK) $(PYCODESTYLE)  $(PYLINT)  tflint golangci-lint ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim  ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim $(YAMLLINT) shfmt
+vim-linters: $(BANDIT) $(SHELLCHECK) $(PYCODESTYLE)  $(PYLINT)  golangci-lint ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim  ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim $(YAMLLINT) shfmt
 
 
 .PHONY: bandit
@@ -97,23 +97,6 @@ vim-tools: $(AG) ctags $(VIM)
 $(FIRST_VIM_PLUGIN):
 	echo $(FIRST_VIM_PLUGIN)
 	vim +PluginInstall +qall
-
-.PHONY: tflint
-tflint: ~/.local/bin/tflint ~/.tflint.d/plugins/tflint-ruleset-aws
-.PHONY: tflint-clean
-tflint-clean: 
-	rm ~/.local/bin/tflint ~/.tflint.d -r
-
-~/.local/bin/tflint: ~/.local/bin /usr/bin/unzip
-	curl --location --silent https://github.com/terraform-linters/tflint/releases/download/v0.33.1/tflint_$(UNAME)_amd64.zip > /tmp/tflint.zip
-	unzip /tmp/tflint.zip
-	mv tflint $@
-
-~/.tflint.d/plugins/tflint-ruleset-aws: $(TFLINT) ~/.tflint.hcl /usr/bin/unzip
-	curl --location --silent https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v0.9.0/tflint-ruleset-aws_$(UNAME)_amd64.zip > /tmp/tflint-ruleset-aws.zip
-	unzip /tmp/tflint-ruleset-aws.zip
-	mkdir -p $(shell dirname $@)
-	mv tflint-ruleset-aws $@
 
 .PHONY: checkov
 checkov: ~/.local/bin/checkov
