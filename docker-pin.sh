@@ -17,12 +17,12 @@ SHA=$(sha256sum Dockerfile | awk '{print $1}')
 SBOM=$CACHE/sbom.$SHA.json
 
 if [[ ! -f $SBOM ]]; then
-    docker build -t sbom:$SHA .
-    docker sbom sbom:$SHA --format syft-json --output $SBOM
+    docker build -t "sbom:$SHA" .
+    docker sbom "sbom:$SHA" --format syft-json --output "$SBOM"
 fi
 
 while read -r package; do
-    sbom=$(jq --arg package $package '.artifacts[] | select(.name == $package)' $SBOM)
+    sbom=$(jq --arg package "$package" '.artifacts[] | select(.name == $package)' "$SBOM")
     if [[ -z "$sbom" ]]; then
         continue
     fi
