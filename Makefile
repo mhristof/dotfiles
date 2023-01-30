@@ -82,7 +82,7 @@ $(BREW_BIN)/src-hilite-lesspipe.sh:
 ~/.vim: ~/.vim/bundle/Vundle.vim ~/.vimrc vim-tools vim-linters $(FIRST_VIM_PLUGIN) ~/bin/gitbrowse
 
 .PHONY: vim-linters
-vim-linters: $(BANDIT) $(SHELLCHECK) $(PYCODESTYLE)  $(PYLINT)  golangci-lint ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim  ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim $(YAMLLINT) shfmt
+vim-linters: $(BANDIT) $(SHELLCHECK) $(PYCODESTYLE)  $(PYLINT)  golangci-lint ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim  $(YAMLLINT) shfmt
 
 
 .PHONY: bandit
@@ -97,19 +97,6 @@ vim-tools: $(AG) ctags $(VIM)
 $(FIRST_VIM_PLUGIN):
 	echo $(FIRST_VIM_PLUGIN)
 	vim +PluginInstall +qall
-
-.PHONY: checkov
-checkov: ~/.local/bin/checkov
-
-~/.local/bin/checkov:
-	pip install --user checkov
-
-~/bin/checkov2vim: $(CHECKOV) | ~/bin
-	curl -sL https://github.com/mhristof/checkov2vim/releases/download/v0.2.0/checkov2vim_0.2.0_$(UNAME)_amd64 > $@
-	chmod +x $@
-
-~/.vim/bundle/ale/ale_linters/terraform/checkov.vim: ~/bin/checkov2vim | $(FIRST_VIM_PLUGIN)
-	~/bin/checkov2vim generate --dest $@
 
 ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim: | $(CURL) $(FIRST_VIM_PLUGIN)
 	mkdir -p ~/.vim/bundle/ale/ale_linters/groovy/
