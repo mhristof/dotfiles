@@ -6,10 +6,15 @@ command -v bat &>/dev/null || {
 }
 
 source $HOME/bin/.lib
-PATH=$(sed "s@$HOME/bin@@" <<<"$PATH")
+PATH=$(sed "s@$HOME/bin:@@" <<<"$PATH")
+
+case $(which cat) in
+    *coreutils*) : ;;
+    *) brew install coreutils ;;
+esac
 
 if [[ "$*" =~ "p10k-instant-prompt-output" ]]; then
-    cat "$@"
+    /bin/cat "$@"
 elif [[ $SHLVL -gt 2 ]]; then
     cat "$@"
 else
