@@ -1,5 +1,7 @@
 # vi: ft=sh
 
+UNAME=$(uname | tr '[:upper:]' '[:lower:]')
+
 function link() {
     local source
     local dest
