@@ -27,7 +27,7 @@ FIRST_VIM_PLUGIN := ~/.vim/bundle/$(shell basename $(shell grep Plugin .vimrc | 
 default: brew vim essentials
 
 .PHONY: essentials
-essentials: $(HTOP) $(WATCH) less $(GREP) $(SPONGE) viddy
+essentials: $(HTOP) $(WATCH) less $(GREP) $(SPONGE)
 
 .PHONY: dev
 dev: $(DEV)
@@ -82,7 +82,7 @@ $(BREW_BIN)/src-hilite-lesspipe.sh:
 ~/.vim: ~/.vim/bundle/Vundle.vim ~/.vimrc vim-tools vim-linters $(FIRST_VIM_PLUGIN) ~/bin/gitbrowse
 
 .PHONY: vim-linters
-vim-linters: $(BANDIT) $(SHELLCHECK) $(PYCODESTYLE)  $(PYLINT)  golangci-lint ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim  $(YAMLLINT) shfmt
+vim-linters: $(BANDIT) $(SHELLCHECK) $(PYCODESTYLE)  $(PYLINT)  golangci-lint $(YAMLLINT) shfmt
 
 
 .PHONY: bandit
@@ -97,18 +97,6 @@ vim-tools: $(AG) ctags $(VIM)
 $(FIRST_VIM_PLUGIN):
 	echo $(FIRST_VIM_PLUGIN)
 	vim +PluginInstall +qall
-
-~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim: | $(CURL) $(FIRST_VIM_PLUGIN)
-	mkdir -p ~/.vim/bundle/ale/ale_linters/groovy/
-	curl -sLO https://raw.githubusercontent.com/mhristof/ale-jenkinsfile/master/ale_jenkinsfile.vim --output ~/.vim/bundle/ale/ale_linters/groovy/ale_jenkinsfile.vim
-
-.PHONY: viddy
-viddy: ~/.local/bin/viddy
-
-~/.local/bin/viddy: $(BREW_BIN)/wget | ~/.local/bin /usr/bin/tar
-	wget -O /tmp/viddy.tar.gz https://github.com/sachaos/viddy/releases/download/v0.3.3/viddy_0.3.3_$(shell uname)_x86_64.tar.gz
-	tar xvf /tmp/viddy.tar.gz -C /tmp/
-	mv /tmp/viddy ~/.local/bin/
 
 .PHONY: ctags
 ctags: $(CTAGS) ~/.ctags.d

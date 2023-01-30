@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-if command -v viddy &>/dev/null; then
-    viddy "$@"
-else
-    watch "$@"
-fi
+source ~/bin/.lib
+PATH=$(sed "s@$HOME/bin:@@" <<<"$PATH")
+
+install viddy
+
+/opt/homebrew/bin/viddy "$@"
