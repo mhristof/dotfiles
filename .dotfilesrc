@@ -30,6 +30,7 @@ export PATH=/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH
 export PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
 export PATH=$HOME/.brew/opt/openvpn/sbin:/opt/homebrew/opt/openvpn/sbin:$PATH
 export PATH=$HOME/.local/bin:$PATH
+export PATH=$HOME/.local/dotfiles/bin:$PATH
 export PATH=$HOME/.bash-my-aws/bin:$PATH
 export PATH=$HOME/.sessionmanager-bundle/bin:$PATH
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
@@ -124,7 +125,6 @@ while read -r file; do
     source $file && compdef $base ${base/_/}
 done < <(find $HOME/.zsh.site-functions -type f)
 
-src "${HOME}/.iterm2_shell_integration.zsh"
 src "${HOME}/.fzf.zsh"
 src "${HOME}/dotfiles/z.sh"
 src "${HOME}/.bash-my-aws/aliases"
@@ -134,7 +134,7 @@ src "/opt/homebrew/opt/powerlevel10k/powerlevel10k.zsh-theme"
 src "$HOME/.p10k.zsh" # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 src "${HOME}/.iterm2_shell_integration.zsh"
 
-export PATH=~/bin:$PATH
+export PATH="$HOME/bin:$PATH"
 export PATH=$(echo -n $PATH | awk -v RS=: -v ORS=: '!arr[$0]++') # remove duplicates
 
 
@@ -159,7 +159,7 @@ complete -o nospace -C /Users/mikechristofilopoulos/bin/terraform terraform
 
 _Z_CMD=j
 alias j=z
-unset -f d
+unset -f d &> /dev/null || true
 
 export GPG_TTY=$(tty)
 gpgconf --launch gpg-agent
