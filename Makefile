@@ -66,7 +66,7 @@ dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbr
 	ln -sf $(PWD)/.config/nvim/init.vim $@
 
 ~/.fzf-tab:
-	git clone https://github.com/Aloxaf/fzf-tab ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-tab
+	git clone https://github.com/Aloxaf/fzf-tab ~/.oh-my-zsh/custom/plugins/fzf-tab
 
 ~/.p10k.zsh:
 	brew install romkatv/powerlevel10k/powerlevel10k
@@ -204,7 +204,6 @@ pbpaste: /tmp/alfred-pbpaste.alfredworkflow
 	open /tmp/alfred-pbpaste.alfredworkflow
 
 alfred: $(BREW_BIN)/wget pbpaste $(GREP) /tmp/alfred-qrencode.alfredworkflow
-	open /tmp/alfred-tf-snippets.alfredworkflow
 
 
 .PHONY: qrencode
@@ -223,9 +222,6 @@ random: /tmp/alfred-random.alfredworkflow
 
 /tmp/alfred-pbpaste.alfredworkflow:
 	wget --quiet https://github.com/mhristof/alfred-pbpaste/releases/download/0.6.3/alfred-pbpaste.alfredworkflow -O /tmp/alfred-pbpaste.alfredworkflow
-
-/tmp/alfred-tf-snippets.alfredworkflow: $(BREW_BIN)/jq
-	wget https://github.com/mhristof/alfred-tf-snippets/releases/download/0.7.0/alfred-tf-snippets.alfredworkflow -O /tmp/alfred-tf-snippets.alfredworkflow
 
 ~/go/bin/gojson:
 	go get github.com/ChimeraCoder/gojson/gojson
