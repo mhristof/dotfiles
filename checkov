@@ -15,4 +15,4 @@ which checkov &>/dev/null || {
     pip install --user checkov
 }
 
-/opt/homebrew/bin/checkov "$@"
+checkov "$@"
