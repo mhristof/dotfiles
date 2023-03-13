@@ -20,11 +20,13 @@ export PATH=/opt/homebrew/bin:/usr/local/sbin:/usr/local/bin:$PATH
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 export PATH=/opt/homebrew/opt/curl/bin:$PATH
 export PATH=/opt/homebrew/opt/python/libexec/bin:$PATH
-export PATH=$HOME/Library/Python/3.7/bin:$PATH
-export PATH=$HOME/Library/Python/3.9/bin:$PATH
+while read -r folder; do
+    export PATH=$folder/bin/:$PATH
+done < <(find $HOME/Library/Python -mindepth 1 -maxdepth 1 -type d)
 export PATH=/opt/homebrew/opt/findutils/libexec/gnubin:$PATH
 export PATH=/opt/homebrew/opt/grep/libexec/gnubin:$PATH
 export PATH=/opt/homebrew/opt/make/libexec/gnubin:$PATH
+export PATH=/opt/homebrew/opt/libpq/bin:$PATH
 export PATH=/opt/homebrew/opt/gettext/bin:$PATH
 export PATH=/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH
 export PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
@@ -155,7 +157,7 @@ export HOMEBREW_NO_AUTO_UPDATE=1
 
 src "${HOME}/.dotfilesrc.local"
 complete -C '/usr/local/bin/aws_completer' aws
-complete -o nospace -C /Users/mikechristofilopoulos/bin/terraform terraform
+complete -o nospace -C $HOME/.local/bin/terraform terraform
 
 _Z_CMD=j
 alias j=z
