@@ -1,5 +1,6 @@
 # vi: ft=sh
 
+DIR=$(dirname "$0")
 UNAME=$(uname | tr '[:upper:]' '[:lower:]')
 
 function link() {
