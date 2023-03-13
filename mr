@@ -6,8 +6,19 @@ if [[ -z ${GITLAB_TOKEN:-} ]]; then
 fi
 
 description=""
+
+jira=$(git rev-parse --abbrev-ref HEAD | grep -oP '^\w*-\d*')
+if [[ -n "${jira}" ]]; then
+    description="$(echo -e "$jira\n")"
+fi
+
+message=$(git --no-pager log --format=%b -n 1 "$(git rev-parse --verify HEAD)")
+if [[ -n "${message}" ]]; then
+    description="$(echo -e "$description\n$message")"
+fi
+
 if [[ -f .gitlab/merge_request_templates/Default.md ]]; then
-    description=$(cat .gitlab/merge_request_templates/Default.md)
+    description="$description$(cat .gitlab/merge_request_templates/Default.md)"
 fi
 
 glab mr create \
