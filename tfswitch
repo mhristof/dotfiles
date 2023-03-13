@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source $HOME/bin/.lib
+PATH=$(sed "s@$HOME/bin:@@" <<<"$PATH")
+
+BIN=$(basename "$0")
+which "$BIN" &>/dev/null || {
+    cat <<EOF >~/.tfswitch.toml
+bin = "$HOME/.local/bin/terraform"
+EOF
+
+    brew install warrensbox/tap/tfswitch
+}
+
+"$BIN" "$@"
