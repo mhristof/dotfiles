@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source $HOME/bin/.lib
+PATH=$(sed "s@$HOME/bin:@@" <<<"$PATH")
+
+BIN=$(basename "$0")
+which "$BIN" &>/dev/null || {
+    (
+        cd /tmp
+        curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/mac/sessionmanager-bundle.zip" -o "sessionmanager-bundle.zip"
+        unzip sessionmanager-bundle.zip
+        sudo ./sessionmanager-bundle/install -i /usr/local/sessionmanagerplugin -b /usr/local/bin/session-manager-plugin
+    )
+
+    (
+        cd /tmp
+        curl "https://awscli.amazonaws.com/AWSCLIV2-2.10.4.pkg" -o "AWSCLIV2.pkg"
+        sudo installer -pkg AWSCLIV2.pkg -target /
+    )
+
+    brew install docker-credential-helper-ecr
+}
+
+"$BIN" "$@"
