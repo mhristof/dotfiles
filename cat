@@ -13,6 +13,26 @@ case $(which cat) in
     *) brew install coreutils ;;
 esac
 
+args=""
+case $@ in
+    *.rb)
+        args="--language Ruby"
+        ;;
+esac
+
+case $@ in
+    # https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/docker-credential-helper-ecr.rb
+    # https://raw.githubusercontent.com/Homebrew/homebrew-core/510ed901bed385af2f87716a7b69967dcb54be57/Formula/docker-credential-helper-ecr.rb
+    https://github.com*)
+        url="$*"
+        url=${url/https:\/\/github.com/https:\/\/raw.githubusercontent.com}
+        url=${url/blob\//}
+        # shellcheck disable=SC2086
+        curl -sL "$url" | bat $args --paging=never --color=always --style=numbers --line-range=:100
+        exit
+        ;;
+esac
+
 if [[ "$*" =~ "p10k-instant-prompt-output" ]]; then
     /bin/cat "$@"
 elif [[ $SHLVL -gt 2 ]]; then
