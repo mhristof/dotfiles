@@ -2,11 +2,6 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-die() {
-    echo "$*" 1>&2
-    exit 1
-}
-
 branch() {
     local commit
     commit=$1
@@ -15,21 +10,14 @@ branch() {
 }
 
 commit=$(git rev-list --max-count=1 HEAD)
+currentBranch=$(branch "$commit")
 
-while true; do
-    currentBranch=$(branch "$commit")
-    parrent=$(git log --pretty=%P -n 1 "$commit")
-    parrentBranch=$(branch "$parrent" | { grep -v "$currentBranch" || true; })
-
-    if [[ "$currentBranch" != "$parrentBranch" ]]; then
-        break
-    fi
-done
+firstCommitOfBranch=$(git --no-pager log --format=%H main..$currentBranch | tail -1)
 
 /bin/cat <<EOF
-$(git --no-pager log --pretty=%s -n 1 "$commit")
+$(git --no-pager log --pretty=%s -n 1 "$firstCommitOfBranch")
 
-$(git --no-pager log --pretty=%b -n 1 "$commit")
+$(git --no-pager log --pretty=%b -n 1 "$firstCommitOfBranch")
 EOF
 
 exit 0
