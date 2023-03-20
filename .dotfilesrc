@@ -165,3 +165,5 @@ unset -f d &> /dev/null || true
 
 export GPG_TTY=$(tty)
 gpgconf --launch gpg-agent
+command -v direnv &> /dev/null && eval "$(direnv hook zsh)"
+
