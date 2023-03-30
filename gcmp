@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+git checkout "$(git-main.sh)" || {
+    STASH=1
+    git stash
+    git checkout "$(git-main.sh)"
+}
+git pull && git fetch --prune
+
+if [[ "$STASH" -eq 1 ]]; then
+    git stash apply
+fi
