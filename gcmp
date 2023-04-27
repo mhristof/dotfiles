@@ -8,6 +8,6 @@ git checkout "$(git-main.sh)" || {
 }
 git pull && git fetch --prune
 
-if [[ "$STASH" -eq 1 ]]; then
+if [[ "${STASH:-}" -eq 1 ]]; then
     git stash apply
 fi
