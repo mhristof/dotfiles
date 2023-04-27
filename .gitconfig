@@ -27,9 +27,14 @@
     path = ~/.gitconfig.local
 [pull]
 	ff = only
+	rebase = true
 [init]
 	defaultBranch = main
 [gpg]
-	program = gpg
+	format = ssh
 [diff]
 	external = difft
+[rebase]
+	autoStash = true
+[push]
+	autoSetupRemote = true
