@@ -101,8 +101,8 @@ let VCSCommandVCSTypePreference='git'
 let g:CommandTMaxCachedDirectories=0
 let g:DirDiffExcludes = "*.pyc"
 let g:VCSCommandDeleteOnHide=66
-let g:ackprg = 'ag --nogroup --nocolor --column'
-let g:ale_dockerfile_hadolint_use_docker  = "yes"
+let g:ackprg = 'ag --hidden --nogroup --nocolor --column'
+"let g:ale_dockerfile_hadolint_use_docker  = "yes"
 let g:ale_fix_on_save = 1
 let g:ale_fixers = {
     \'sh': ['shfmt'],
@@ -403,4 +403,9 @@ function! CheckBackspace() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-let g:copilot_filetypes = {'yam': v:true}
+let g:copilot_filetypes = {
+            \'markdown': v:true,
+            \'yaml': v:true,
+            \'yaml.docker-compose': v:true,
+            \"yaml.gitlab": v:true
+            \}
