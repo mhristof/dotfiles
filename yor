@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+die() {
+    echo "$1"
+    exit 1
+}
+
+usage() {
+    echo "Usage: $0 [-f] [-p]"
+    echo "  -f: force push"
+    echo "  -p: push"
+    exit 1
+}
+
+args=$(getopt hfp "$@")
+# shellcheck disable=SC2086
+set -- $args
+while :; do
+    case "$1" in
+        -f)
+            FORCE=1
+            shift
+            ;;
+        -p)
+            PUSH=1
+            shift
+            ;;
+        --)
+            shift
+            break
+            ;;
+        *)
+            usage
+            ;;
+    esac
+done
+if git status --porcelain ./*.tf | grep -q .; then
+    die "Local changes detected, please commit them first"
+fi
+
+CMD=$(yq '.yor.script[0]' .gitlab-ci.yml)
+
+if [[ -z $CMD ]]; then
+    CMD="yor tag --directory ."
+fi
+
+(
+    # shellcheck disable=SC2001
+    PATH=$(sed "s!$HOME/bin!!g" <<<"$PATH")
+    export PATH
+    $CMD
+)
+
+FILES=$(git status --porcelain | grep '.tf' | awk '{print $2}' | tr -s '\n' ' ' || true)
+if [[ -z $FILES ]]; then
+    exit 0
+fi
+git commit $FILES -m 'ci: update yor tags'
+
+GIT_ARGS=""
+if [[ -n ${FORCE:-} ]]; then
+    GIT_ARGS="-f"
+fi
+
+if [[ -n ${PUSH:-} ]]; then
+    git push $GIT_ARGS
+fi
