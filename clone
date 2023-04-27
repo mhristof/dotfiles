@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-URL=$1
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+URL=${1:-}
 
 die() {
     echo "$*" 1>&2
@@ -9,7 +10,18 @@ die() {
 }
 
 if [[ -z $URL ]]; then
-    die "Error, please provide URL to clone"
+    if [[ -z ${GITLAB_TOKEN:-} ]]; then
+        eval $(/usr/bin/security find-generic-password -s germ -w -a GITLAB_READONLY_TOKEN)
+        export GITLAB_TOKEN=$GITLAB_READONLY_TOKEN
+    fi
+
+    PROJECT=$(sed "s!$HOME/code/git....com/!!g" <<<"$PWD" | cut -d/ -f1)
+    URL=$(glab api "/groups/$PROJECT/projects?include_subgroups=true" --paginate | jq '.[].ssh_url_to_repo' -r | fzf)
+    echo "project: $PROJECT url: $URL"
+fi
+
+if [[ -z $URL ]]; then
+    die "Please provide a URL"
 fi
 
 dest=${URL/https:\/\//~/code/}
@@ -32,4 +44,8 @@ which pre-commit &>/dev/null || {
 
 if [[ -f $dest/.pre-commit-config.yaml ]]; then
     cd "$dest" && pre-commit install
+fi
+
+if [[ -f $DIR/update-fzf-projects-vim.sh ]]; then
+    "$DIR/update-fzf-projects-vim.sh"
 fi
