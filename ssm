@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+# pulled from https://gist.github.com/cornet/01992fd0685484d37b6d9267ddb73c4c
+#
+# Based on https://github.com/corrupt952/ssm-session
+#
+# Requirements:
+#   - fzf (brew install fzf)
+
+set -euo pipefail
+
+ssm_instance_ids() {
+    aws ssm describe-instance-information --query "InstanceInformationList[].InstanceId" \
+        --output=text
+}
+
+list_instances() {
+    instance_ids=$(ssm_instance_ids)
+
+    aws ec2 describe-instances \
+        --instance-ids ${instance_ids} \
+        --filter "Name=instance-state-name,Values=running" \
+        --query "Reservations[*].Instances[*].[InstanceId,Tags[?Key=='Name']|[0].Value]" \
+        --output text
+}
+
+print_usage() {
+    cat <<-EOF
+usage: ssm-session <command>
+command:
+    list:  List target sessions
+    start: Start session manager
+EOF
+}
+
+ARG=${1:-}
+if [[ -z $ARG ]]; then
+    ARG="start"
+fi
+
+case "$ARG" in
+    list)
+        list_instances
+
+        ;;
+    start)
+        # Ignore SIGINT(Ctrl-C) to prevent accidental exit from session
+        trap '' 2
+
+        list_instances |
+            fzf |
+            cut -f 1 |
+            xargs -o aws ssm start-session --document-name AWS-StartInteractiveCommand --parameters '{"command": ["tmux new -A -s mikec"]}' --target
+
+        ;;
+    *)
+        print_usage
+        ;;
+esac
