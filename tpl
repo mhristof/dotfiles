@@ -2,6 +2,7 @@
 
 set -euo pipefail
 
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 TOOL=terraform
 TG="$(find ./ -maxdepth 2 -mindepth 2 -name terragrunt.hcl | wc -l)"
 
@@ -13,6 +14,8 @@ if [[ $TG -gt 0 ]]; then
     TOOL="terragrunt run-all"
 fi
 
-CMD="$TOOL plan -out terraform.tfplan"
+PLAN=$("$DIR/.terraform-plan.sh")
+
+CMD="$TOOL plan -out $PLAN"
 echo "$CMD"
 eval "$CMD"

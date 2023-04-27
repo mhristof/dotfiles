@@ -2,6 +2,7 @@
 
 set -euo pipefail
 
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 TOOL=terraform
 ARGS="apply -auto-approve"
 TG="$(find ./ -maxdepth 2 -mindepth 2 -name terragrunt.hcl | wc -l)"
@@ -19,8 +20,9 @@ if [[ -f molecule/default/converge.yml ]]; then
     ARGS="converge"
 fi
 
-if [[ -f terraform.tfplan ]]; then
-    ARGS="apply terraform.tfplan"
+PLAN=$("$DIR/.terraform-plan.sh")
+if [[ -f $PLAN ]]; then
+    ARGS="apply $PLAN"
 fi
 
 CMD="$TOOL $ARGS"
