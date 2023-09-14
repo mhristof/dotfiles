@@ -1,6 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+ARG=${1:-}
+
+case $ARG in
+    m) AUTOMERGE=1 ;;
+    -h | --help)
+        echo "Usage: $0 [-h]"
+        echo "  m: Merge automatically"
+        echo "  -h: Show this help message"
+        exit 0
+        ;;
+esac
+
 if [[ -z ${GITLAB_TOKEN:-} ]]; then
     eval "$(/usr/bin/security find-generic-password -s germ -w -a GITLAB_TOKEN)"
 fi
@@ -28,3 +40,12 @@ glab mr create \
     --no-editor --push \
     --remove-source-branch \
     --yes
+
+if [[ ${AUTOMERGE:-0} -eq 1 ]]; then
+    while ! glab ci status | grep 'Pipeline State: running' -q; do
+        echo "Waiting for CI pipeline to start..."
+        sleep 5
+    done
+
+    glab mr merge --when-pipeline-succeeds --yes
+fi
