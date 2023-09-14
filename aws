@@ -15,7 +15,7 @@ which "$BIN" &>/dev/null || {
 
     (
         cd /tmp
-        curl "https://awscli.amazonaws.com/AWSCLIV2-2.11.6.pkg" -o "AWSCLIV2.pkg"
+        curl "https://awscli.amazonaws.com/AWSCLIV2-2.12.0.pkg" -o "AWSCLIV2.pkg"
         sudo installer -pkg AWSCLIV2.pkg -target /
     )
 
