@@ -8,6 +8,9 @@ git checkout "$(git-main.sh)" || {
 }
 git pull && git fetch --prune
 
+# shellcheck disable=SC2046
+git branch --merged | { grep -v "$(git-main.sh)" || true; } | xargs --no-run-if-empty git branch -d
+
 if [[ "${STASH:-}" -eq 1 ]]; then
     git stash apply
 fi
