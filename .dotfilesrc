@@ -36,13 +36,17 @@ export PATH=$HOME/.local/dotfiles/bin:$PATH
 export PATH=$HOME/.bash-my-aws/bin:$PATH
 export PATH=$HOME/.sessionmanager-bundle/bin:$PATH
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+
+export DENO_INSTALL="$HOME/.deno"
+export PATH="$DENO_INSTALL/bin:$PATH"
+
 eval "$(/opt/homebrew/bin/brew shellenv)"
 export XDG_CACHE_HOME=$HOME/.cache
 export XDG_CONFIG_HOME=$HOME/.config
 
 
 export HISTCONTROL=ignoredups:erasedups
-export MANPAGER="sh -c 'col -bx | bat -p -lman'"
+export MANPAGER="sh -c 'col -bx | bat -p -lman --theme gruvbox-dark'"
 export PYTHONSTARTUP=~/.pythonrc.py
 
 if [[ $THIS_SHELL == "bash" ]]; then
@@ -58,57 +62,58 @@ export HISTTIMEFORMAT='%F %T '
 export AWS_MAX_ATTEMPTS=10
 export FZF_DEFAULT_COMMAND='ag -l --hidden'
 
+alias .....='c ../../../../'
+alias ....='c ../../../'
+alias ...='c ../../'
 alias ..='c ../'
 alias ..r='cd $(git rev-parse --show-toplevel)'
-alias ...='c ../../'
-alias ....='c ../../../'
-alias .....='c ../../../../'
-alias v='vim'
-alias vrc='vim ~/.config/nvim/init.vim'
-alias cv='cd $(dirname $(nvim-pwd.py))'
-alias cvr='cd $(git -C $(dirname $(nvim-pwd.py))  rev-parse --show-toplevel)'
-alias ve='~/bin/nvim-edit.py'
-alias history_populate="history | tr -s ' ' | cut -d ' ' -f3 | sort | uniq -c | sort -rn  | head"
-alias grep='grep --color=auto'
-alias df='df -h'
-alias ctmp='mkdir -p ~/tmp/$(date +"%Y%m%d_%H%M%S") && cd $_'
-alias m='make'
-alias f='fd'
-alias rl='readlink -f'
-alias ff='find . -type f -printf "%T@ %p\n" | sort -n | tail -5 | cut -f2- -d" "'
-alias fff='find . -type f -printf "%T@ %p\n" | sort -n | tail -10 | cut -f2- -d" "'
-alias al='ansible-playbook -i "localhost," -c local'
-alias ap='ansible-playbook'
-alias gg='git pull --rebase && git fetch --prune'
-alias gp='git push'
-alias gpt='git push --tags'
-alias grim='git rebase -i main'
-alias grc='git rebase --continue'
-alias gss='git stash --keep-index'
-alias gsp='git stash pop'
-alias s='git status'
-alias ga='git add'
-alias gs='git stash'
-alias gsa='git stash apply'
-alias dr='git diff --cached'
-alias gcm='git checkout master'
-alias gl='git log --graph --oneline --decorate --date=relative --all --pretty=format:"%C(yellow)%h%C(reset) %ar %C(green)(%cn) (%ae) %C(reset) %C(red)%x09%d%C(reset) %w(80, 1, 20) %s%n" --color'
-alias wget100='wget -O /dev/null http://speedtest.london.linode.com/100MB-london.bin'
-alias dc='docker-compose'
-alias tf='terraform'
-alias agh='ag --hidden'
-alias agt='ag --terraform'
-alias kcc='kubectl create'
-alias kcd='kubectl delete'
-alias drit='docker run -it'
-alias fu='fuck'
-alias k=kubectl
-alias kens=kubens
 alias acm-pca-active="aws acm-pca list-certificate-authorities | jq '.CertificateAuthorities[] | select(.Status == \"ACTIVE\") | [.CertificateAuthorityConfiguration.Subject.CommonName, .Arn, .Status] | @csv' -r | column -s, -t"
 alias acm-pca-disabled="aws acm-pca list-certificate-authorities | jq '.CertificateAuthorities[] | select(.Status == \"DISABLED\") | [.CertificateAuthorityConfiguration.Subject.CommonName, .Arn, .Status] | @csv' -r | column -s, -t"
-alias mkgo='cookiecutter gh:mhristof/cookiecutter-golang-cmd'
-alias mkalfredgo='cookiecutter gh:mhristof/cookiecutter-alfred-go'
+alias agh='ag --hidden'
+alias agt='ag --terraform'
+alias al='ansible-playbook -i "localhost," -c local'
+alias ap='ansible-playbook'
+alias ctmp='mkdir -p ~/tmp/$(date +"%Y%m%d_%H%M%S") && cd $_'
+alias cv='cd $(dirname $(nvim-pwd.py))'
+alias cvr='cd $(git -C $(dirname $(nvim-pwd.py))  rev-parse --show-toplevel)'
+alias dc='docker-compose'
+alias df='df -h'
+alias dp='git diff --no-ext-diff $(git-main.sh)..HEAD'
+alias dr='git diff --cached'
+alias drit='docker run -it'
+alias f='fd'
+alias ff='find . -type f -printf "%T@ %p\n" | sort -n | tail -5 | cut -f2- -d" "'
+alias fff='find . -type f -printf "%T@ %p\n" | sort -n | tail -10 | cut -f2- -d" "'
+alias fu='fuck'
+alias ga='git add'
+alias gcm='git checkout master'
+alias gg='git pull --rebase && git fetch --prune'
+alias gl='git log --graph --oneline --decorate --date=relative --all --pretty=format:"%C(yellow)%h%C(reset) %ar %C(green)(%cn) (%ae) %C(reset) %C(red)%x09%d%C(reset) %w(80, 1, 20) %s%n" --color'
+alias gp='git push'
+alias gpt='git push --tags'
+alias grc='git rebase --continue'
+alias grep='grep --color=auto'
+alias grim='git rebase -i main'
+alias gs='git stash'
+alias gsa='git stash apply'
+alias gsp='git stash pop'
+alias gss='git stash --keep-index'
 alias hgroot='cd $(git rev-parse --show-toplevel)'
+alias history_populate="history | tr -s ' ' | cut -d ' ' -f3 | sort | uniq -c | sort -rn  | head"
+alias k=kubectl
+alias kcc='kubectl create'
+alias kcd='kubectl delete'
+alias kens=kubens
+alias m='make'
+alias mkalfredgo='cookiecutter gh:mhristof/cookiecutter-alfred-go'
+alias mkgo='cookiecutter gh:mhristof/cookiecutter-golang-cmd'
+alias rl='readlink -f'
+alias s='git status'
+alias tf='terraform'
+alias v='vim'
+alias ve='~/bin/nvim-edit.py'
+alias vrc='vim ~/.config/nvim/init.vim'
+alias wget100='wget -O /dev/null http://speedtest.london.linode.com/100MB-london.bin'
 alias work='eval $(~/bin/gitlab-work.sh "$(pbpaste)")'
 
 
@@ -152,7 +157,6 @@ export AWS_PAGER=""
 export HOMEBREW_NO_AUTO_UPDATE=1
 
 (
-    unalias gp || true
     unalias gap || true
     unalias gam || true
     unalias stacks || true
