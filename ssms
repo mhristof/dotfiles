@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+aws ssm describe-parameters | jq -r '.Parameters[].Name'
