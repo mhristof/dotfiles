@@ -52,10 +52,11 @@ fi
     $CMD
 )
 
-FILES=$(git status --porcelain | grep '.tf' | awk '{print $2}' | tr -s '\n' ' ' || true)
+FILES=$(git status --porcelain | grep '.tf' | grep -v 'temp.*.tf' | awk '{print $2}' | tr -s '\n' ' ' || true)
 if [[ -z $FILES ]]; then
     exit 0
 fi
+rm -f ./temp.*.tf
 git commit $FILES -m 'ci: update yor tags'
 
 GIT_ARGS=""
