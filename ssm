@@ -49,10 +49,19 @@ case "$ARG" in
         list_instances |
             fzf |
             cut -f 1 |
-            xargs -o aws ssm start-session --document-name AWS-StartInteractiveCommand --parameters '{"command": ["tmux new -A -s mikec"]}' --target
-
+            xargs -o aws ssm start-session --document-name AWS-StartInteractiveCommand \
+                --parameters '{"command": ["sudo -u ec2-user -g ec2-user tmux new -A -s mikec || bash"]}' \
+                --target
+        ;;
+    i-*)
+        aws ssm start-session --document-name AWS-StartInteractiveCommand \
+            --parameters '{"command": ["bash"]}' \
+            --target "$ARG"
         ;;
     *)
-        print_usage
+        #  ec2-user LANG=en_US.UTF-8 TERM=ansi tmux new -A -s mikec || bash"]}' \
+        aws ssm start-session --document-name AWS-StartInteractiveCommand \
+            --parameters '{"command": ["sudo -u ec2-user -g ec2-user bash"]}' \
+            --target "$(list_instances | grep "$ARG" | cut -f 1)"
         ;;
 esac
