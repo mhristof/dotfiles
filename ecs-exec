@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# set ft=bash
+set -euo pipefail
+
+services() {
+    while read -r service; do
+        basename $service
+    done < <(aws ecs list-services --cluster $1 | jq '.serviceArns[]' -r) | tr -s '\n' ' '
+}
+
+tasks() {
+    while read -r arn; do
+        cluster=$(basename $(cut -d ':' -f6 <<<"$arn"))
+        #echo "arn: $arn, name: $name"
+        #echo "services: $(services $unn)"
+        while read -r service; do
+            while read -r task; do
+                echo "$cluster $service $(basename $task)"
+            done < <(aws ecs list-tasks --service-name $service --cluster $cluster | jq '.taskArns[]' -r) &
+        done < <(aws ecs describe-services --cluster $cluster --services $(services $cluster) | jq '.services[] | select(.enableExecuteCommand == true).serviceName' -r) &
+    done < <(aws ecs list-clusters | jq '.clusterArns[]' -r)
+}
+
+tasks | fzf | xargs -o -I{} bash -c 'aws ecs execute-command --cluster $(cut -d " " -f1 <<<"{}") --container $(cut -d " " -f2 <<<"{}") --task $(cut -d " " -f3 <<<"{}") --command "bash" --interactive'
