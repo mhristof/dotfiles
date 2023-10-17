@@ -10,14 +10,20 @@ usage() {
     echo "Usage: $0 [-f] [-p]"
     echo "  -f: force push"
     echo "  -p: push"
+    echo "  -C: dont commit"
     exit 1
 }
 
-args=$(getopt hfp "$@")
+COMMIT=1
+args=$(getopt hfpC "$@")
 # shellcheck disable=SC2086
 set -- $args
 while :; do
     case "$1" in
+        -C)
+            COMMIT=0
+            shift
+            ;;
         -f)
             FORCE=1
             shift
@@ -35,8 +41,11 @@ while :; do
             ;;
     esac
 done
-if git status --porcelain ./*.tf | grep -q .; then
-    die "Local changes detected, please commit them first"
+
+if [[ $COMMIT -eq 1 ]]; then
+    if git status --porcelain ./*.tf | grep -q .; then
+        die "Local changes detected, please commit them first"
+    fi
 fi
 
 CMD=$(yq '.yor.script[0]' .gitlab-ci.yml)
@@ -49,7 +58,9 @@ fi
     # shellcheck disable=SC2001
     PATH=$(sed "s!$HOME/bin!!g" <<<"$PATH")
     export PATH
-    $CMD
+    CMD=$(sed "s!^yor!$(which yor)!g" <<<"$CMD")
+    CMD=$(sed 's!--validate!!g' <<<"$CMD")
+    eval "$CMD"
 )
 
 FILES=$(git status --porcelain | grep '.tf' | grep -v 'temp.*.tf' | awk '{print $2}' | tr -s '\n' ' ' || true)
@@ -57,6 +68,10 @@ if [[ -z $FILES ]]; then
     exit 0
 fi
 rm -f ./temp.*.tf
+if [[ $COMMIT -eq 0 ]]; then
+    exit 0
+fi
+
 git commit $FILES -m 'ci: update yor tags'
 
 GIT_ARGS=""
