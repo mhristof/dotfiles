@@ -47,5 +47,5 @@ if [[ ${AUTOMERGE:-0} -eq 1 ]]; then
         sleep 5
     done
 
-    glab mr merge --when-pipeline-succeeds --yes
+    glab mr merge --auto-merge --yes
 fi
