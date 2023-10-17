@@ -11,5 +11,5 @@ set -euo pipefail
 #git checkout --track "$(fzf < $CACHE)"
 
 branches=$(git branch --all | grep -v HEAD)
-branch=$(echo "$branches" | fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m)
+branch=$(echo "$branches" | fzf-tmux -d $((2 + $(wc -l <<<"$branches"))) +m --preview-window=right:60% --preview 'git show --color=always {1}' | sed "s/.* //" | sed "s#remotes/[^/]*/##")
 git checkout "$(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")"
