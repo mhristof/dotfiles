@@ -8,6 +8,7 @@ function exp {
 
 if [[ -z "${GITLAB_TOKEN:-}" ]]; then
     case "$@" in
+        *DELETE*) exp GITLAB_TOKEN ;;
         *field*) exp GITLAB_TOKEN ;;
         *mr*update*) exp GITLAB_TOKEN ;;
         *mr*rebase*) exp GITLAB_TOKEN ;;
