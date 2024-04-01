@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+
+die() {
+    echo "$*" 1>&2
+    exit 1
+}
+
+SOURCE_NAME=${1:-}
+DESTINATION=${2:-}
+
+DESTINATION_NAME=${DESTINATION%%:*}
+DESTINATION_PORT=${DESTINATION#*:}
+
+[[ -z $SOURCE_NAME ]] && die "Usage: $0 <source> <destination>"
+[[ -z $DESTINATION ]] && die "Invalid destination: $DESTINATION"
+[[ -z $DESTINATION_NAME ]] && die "Invalid destination: $DESTINATION"
+[[ -z $DESTINATION_PORT ]] && {
+    echo "Using default port: 80"
+    DESTINATION_PORT=80
+}
+
+NAME="$SOURCE_NAME -> $DESTINATION"
+
+while read -r npath; do
+    name=$(jq -r '.Tags[] | select(.Key=="Name") | .Value' <<<"$npath")
+
+    if [[ $name == "$NAME" ]]; then
+        NI_PATH_ID=$(jq -r '.NetworkInsightsPathId' <<<"$npath")
+        echo "Found existing path: $NI_PATH_ID"
+    fi
+done < <(aws ec2 describe-network-insights-paths | jq .NetworkInsightsPaths[] -c)
+
+if [[ -z $NI_PATH_ID ]]; then
+    SOURCE_ID=$(aws ec2 describe-instances --query "Reservations[].Instances[?Tags[?Key=='Name'&&Value=='$SOURCE_NAME']].InstanceId" --output text)
+    DESTINATION_ID=$(aws ec2 describe-instances --query "Reservations[].Instances[?Tags[?Key=='Name'&&Value=='$DESTINATION_NAME']].InstanceId" --output text)
+
+    [[ -z $SOURCE_ID ]] && die "Source not found: $SOURCE"
+    [[ -z $DESTINATION_ID ]] && die "Destination not found: $DESTINATION"
+
+    NETWORK_INSIGHTS_PATH=$(aws ec2 create-network-insights-path --source "$SOURCE_ID" --destination "$DESTINATION_ID" --destination-port "$DESTINATION_PORT" --protocol tcp --tag-specifications "ResourceType=network-insights-path,Tags=[{Key=Name,Value=\"$NAME\"}]")
+    NI_PATH_ID=$(jq -r '.NetworkInsightsPath.NetworkInsightsPathId' <<<"$NETWORK_INSIGHTS_PATH")
+
+    echo "Created path: $NETWORK_INSIGHTS_PATH with ID: $NI_PATH_ID"
+fi
+
+ANALYSIS=$(aws ec2 start-network-insights-analysis --network-insights-path-id "$NI_PATH_ID")
+ANALYSIS_ID=$(jq -r '.NetworkInsightsAnalysis.NetworkInsightsAnalysisId' <<<"$ANALYSIS")
+echo "Started analysis: $ANALYSIS_ID"
+
+spin[0]="-"
+spin[1]="\\"
+spin[2]="|"
+spin[3]="/"
+i=0
+
+while sleep 1; do
+    STATUS=$(aws ec2 describe-network-insights-analyses --network-insights-path-id "$NI_PATH_ID" --network-insights-analysis-ids "$ANALYSIS_ID" --query "NetworkInsightsAnalyses[].Status" --output text)
+    if [[ $STATUS == "running" ]]; then
+        echo -n -e "\r${spin[i++]} Waiting for analysis to complete..."
+        ((i == 4)) && i=0
+    elif [[ $STATUS == "succeeded" ]]; then
+        break
+    else
+        die "Analysis failed: $STATUS"
+    fi
+done
+
+aws ec2 describe-network-insights-analyses --network-insights-path-id "$NI_PATH_ID" --network-insights-analysis-ids "$ANALYSIS_ID"
+exit 0
