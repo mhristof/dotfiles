@@ -1,5 +1,89 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python
 
-set -euo pipefail
+import sys
+import boto3
+import json
+import subprocess
+from difflib import unified_diff
 
-aws ssm describe-parameters | jq -r '.Parameters[].Name'
+
+def main():
+    path = sys.argv[1] if len(sys.argv) > 1 else ""
+
+    if not path:
+        # faster to use aws cli than retrieve pages with max parameter limit of 50
+        stdout = subprocess.run(
+            ["aws", "ssm", "describe-parameters"], stdout=subprocess.PIPE
+        ).stdout
+        print("\n".join([param["Name"] for param in json.loads(stdout)["Parameters"]]))
+
+        return
+
+    path_parts = path.split(":")
+
+    try:
+        this = int(path_parts[-2])
+        that = int(path_parts[-1])
+        path = path_parts[0]
+        versions = True
+    except ValueError:
+        versions = False
+
+    if versions:
+        this_value = toJsonString(
+            boto3.client("ssm").get_parameter(
+                Name=f"{path}:{this}", WithDecryption=True
+            )["Parameter"]["Value"]
+        )
+        that_value = toJsonString(
+            boto3.client("ssm").get_parameter(
+                Name=f"{path}:{that}", WithDecryption=True
+            )["Parameter"]["Value"]
+        )
+
+        sys.stdout.writelines(
+            unified_diff(
+                this_value.splitlines(keepends=True),
+                that_value.splitlines(keepends=True),
+                fromfile=f"{path}:{this}",
+                tofile=f"{path}:{that}",
+            )
+        )
+
+        return
+
+    parameter = boto3.client("ssm").get_parameter(Name=path, WithDecryption=True)[
+        "Parameter"
+    ]
+
+    print(toJsonString(parameter))
+
+
+def toJsonString(data):
+    try:
+        return json.dumps(json.loads(data), indent=2)
+    except json.JSONDecodeError:
+        return data
+
+
+if __name__ == "__main__":
+    main()
+#
+# #!/usr/bin/env bash
+#
+# set -euo pipefail
+#
+# NAME=${1:-}
+#
+# if [[ -z $NAME ]]; then
+#     aws ssm describe-parameters | jq -r '.Parameters[].Name'
+#     exit 0
+# fi
+#
+# data=$(aws ssm get-parameter --name "$NAME" --with-decryption | jq -r '.Parameter.Value')
+#
+# if jq . <<<"$data" &>/dev/null; then
+#     jq '.' <<<"$data"
+# else
+#     echo "$data"
+# fi
