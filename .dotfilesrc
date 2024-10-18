@@ -1,4 +1,5 @@
 # vim: ft=bash
+#set -x
 
 if [[ ! -z $BASH ]]; then
     THIS_SHELL=bash
@@ -18,11 +19,10 @@ export PATH=/usr/local/opt/openjdk/bin:$PATH
 export PATH=$GOPATH/bin:$PATH
 export PATH=/opt/homebrew/bin:/usr/local/sbin:/usr/local/bin:$PATH
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
 export PATH=/opt/homebrew/opt/curl/bin:$PATH
 export PATH=/opt/homebrew/opt/python/libexec/bin:$PATH
-while read -r folder; do
-    export PATH=$folder/bin/:$PATH
-done < <(find $HOME/Library/Python -mindepth 1 -maxdepth 1 -type d)
 export PATH=/opt/homebrew/opt/findutils/libexec/gnubin:$PATH
 export PATH=/opt/homebrew/opt/grep/libexec/gnubin:$PATH
 export PATH=/opt/homebrew/opt/make/libexec/gnubin:$PATH
@@ -44,6 +44,9 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 export XDG_CACHE_HOME=$HOME/.cache
 export XDG_CONFIG_HOME=$HOME/.config
 
+export LDFLAGS="-L$(brew --prefix openssl)/lib"
+export CPPFLAGS="-I$(brew --prefix openssl)/include"
+export PKG_CONFIG_PATH="$(brew --prefix openssl)/lib/pkgconfig"
 
 export HISTCONTROL=ignoredups:erasedups
 export MANPAGER="sh -c 'col -bx | bat -p -lman --theme gruvbox-dark'"
@@ -95,7 +98,7 @@ alias grc='git rebase --continue'
 alias grep='grep --color=auto'
 alias grim='git rebase -i main'
 alias gs='git stash'
-alias gsa='git stash list | fzf -0 --preview "git show --pretty=oneline --color=always --patch \\\"$(echo {} | cut -d: -f1)\\\"\" | cut -d: -f1 | xargs -r git stash pop'
+alias gsa='git stash list | fzf -0 --preview "git show --pretty=oneline --color=always --patch \\"$(echo {} | cut -d: -f1)\\"" | cut -d: -f1 | xargs -r git stash pop'
 alias gsp='git stash pop'
 alias gss='git stash --keep-index'
 alias hgroot='cd $(git rev-parse --show-toplevel)'
@@ -117,26 +120,22 @@ alias wget100='wget -O /dev/null http://speedtest.london.linode.com/100MB-london
 alias work='eval $(~/bin/gitlab-work.sh "$(pbpaste)")'
 
 
-if command -v exa &> /dev/null; then
-    alias ls='exa'
-    alias l='exa --time-style long-iso --binary --header --group --long  --created -all --git --links'
-    alias lt='l --sort created'
-    alias ltc='l --sort created'
-    alias lts='l --sort size'
-    alias tree='ls --tree'
-    alias tree2='ls --tree --level 2'
-    alias tree3='ls --tree --level 3'
-    alias tree4='ls --tree --level 4'
+if command -v lsd &> /dev/null; then
+    alias ls='lsd --header'
+    l="ls -al --git  --date relative"
+    alias l="[ -d .git ] && $l --sort git || $l --sort version"
+    alias lt="$l --timesort --reverse"
+    alias tree="$l --tree"
 fi
 
 while read -r file; do
     autoload $file
 done < <(find $HOME/.zsh.autoload/ -type f)
 
-while read -r file; do
-    base="$(basename $file)"
-    source $file && compdef $base ${base/_/}
-done < <(find $HOME/.zsh.site-functions -type f)
+# §while read -r file; do
+    # §base="$(basename $file)"
+    # §source $file && compdef $base ${base/_/}
+# §done < <(find $HOME/.zsh.site-functions -type f)
 
 src "${HOME}/.fzf.zsh"
 src "${HOME}/dotfiles/z.sh"
@@ -144,6 +143,7 @@ src "${HOME}/.bash-my-aws/aliases"
 src "${HOME}/.bash-my-aws/bash_completion.sh"
 src "${HOME}/.brew/etc/profile.d/bash_completion.sh"
 src "/opt/homebrew/opt/powerlevel10k/powerlevel10k.zsh-theme"
+src "/opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme"
 src "$HOME/.p10k.zsh" # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 src "${HOME}/.iterm2_shell_integration.zsh"
 
