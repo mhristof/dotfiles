@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+# ecs-force-update v1.4.0
+# Conventional commit: chore: rename script to ecs-force-update per user request
+
+#— Helpers -------------------------------------------------------------------
+require_cmd() {
+  command -v "$1" >/dev/null 2>&1 \
+    || { echo "Error: '$1' is not installed or not in PATH." >&2; exit 1; }
+}
+
+select_cluster() {
+  aws ecs list-clusters --query 'clusterArns' --output text \
+    | tr '\t' '\n' \
+    | sed 's:.*/::' \
+    | fzf --height 20 --prompt="Cluster> "
+}
+
+select_service() {
+  local cluster="$1"
+  aws ecs list-services --cluster "$cluster" --query 'serviceArns' --output text \
+    | tr '\t' '\n' \
+    | sed 's:.*/::' \
+    | fzf --height 20 --prompt="Service (${cluster})> "
+}
+
+#— Completion ---------------------------------------------------------------
+# Fixed script name for completion registration
+SCRIPT_NAME="ecs-force-update"
+
+# fzf-powered completion function
+_ecs_force_update_completions() {
+  local cur_index="${COMP_CWORD}"
+  if [[ $cur_index -eq 1 ]]; then
+    COMPREPLY=( $(select_cluster) )
+  elif [[ $cur_index -eq 2 ]]; then
+    local chosen_cluster="${COMP_WORDS[1]}"
+    COMPREPLY=( $(select_service "$chosen_cluster") )
+  fi
+}
+
+# Detect if script is sourced
+sourced=0
+if (return 0 2>/dev/null); then
+  sourced=1
+fi
+
+# Register completion only when sourced in an interactive shell
+if (( sourced )) && [[ $- == *i* ]]; then
+  complete -F _ecs_force_update_completions "$SCRIPT_NAME" 2>/dev/null || true
+fi
+
+#— Main ----------------------------------------------------------------------
+main() {
+  # Apply strict mode only when executed
+  set -euo pipefail
+
+  require_cmd aws
+  require_cmd fzf
+
+  local cluster="${1:-}"
+  local service="${2:-}"
+
+  [[ -n "$cluster" ]] || cluster="$(select_cluster)" || exit 1
+  [[ -n "$service" ]] || service="$(select_service "$cluster")" || exit 1
+
+  if [[ -z "$cluster" || -z "$service" ]]; then
+    echo "Usage: $SCRIPT_NAME [cluster] [service]" >&2
+    exit 1
+  fi
+
+  echo "Forcing new deployment on ECS service '$service' in cluster '$cluster'..."
+  aws ecs update-service \
+    --cluster "$cluster" \
+    --service "$service" \
+    --force-new-deployment
+
+  echo "✅ Deployment triggered."
+}
+
+# Execute main if not sourced
+if (( ! sourced )); then
+  main "$@"
+fi

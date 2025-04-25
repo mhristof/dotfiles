@@ -146,6 +146,7 @@ src "/opt/homebrew/opt/powerlevel10k/powerlevel10k.zsh-theme"
 src "/opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme"
 src "$HOME/.p10k.zsh" # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 src "${HOME}/.iterm2_shell_integration.zsh"
+src "${HOME}/dotfiles/ecs-force-update"
 
 export PATH="$HOME/bin:$PATH"
 export PATH=$(echo -n $PATH | awk -v RS=: -v ORS=: '!arr[$0]++') # remove duplicates
