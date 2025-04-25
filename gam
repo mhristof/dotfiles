@@ -1,3 +1,23 @@
 #!/usr/bin/env bash
 
+if [[ -z "$*" ]]; then
+    IFS=$' '
+    while read -r file; do
+        echo "file: $file"
+        case "$file" in
+            .terraform.lock.hcl)
+                provider=$(git --no-pager diff --no-ext-diff --staged .terraform.lock.hcl | grep -B1 -- '-  version' | head -1 | awk '{print $2}' | tr -d '"')
+                version=$(git --no-pager diff --no-ext-diff --staged .terraform.lock.hcl | grep '+  version' | awk '{print $4}' | tr -d '"')
+
+                echo "Updating $provider to $version"
+
+                pre-commit run terraform_docs &>/dev/null || true
+                git commit README.md $file --no-verify -m "ci: update $provider to $version"
+                ;;
+        esac
+    done < <(git diff --name-only --cached)
+
+    exit 0
+fi
+
 git commit -am "$*"

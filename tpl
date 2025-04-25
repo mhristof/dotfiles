@@ -16,6 +16,7 @@ fi
 
 PLAN=$("$DIR/.terraform-plan.sh")
 
-CMD="$TOOL plan -out $PLAN"
+CMD="$TOOL plan -out $PLAN $*"
 echo "$CMD"
 eval "$CMD"
+python3 $DIR/terraform-plan-changes.py $PLAN

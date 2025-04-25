@@ -4,7 +4,7 @@ command -v nvim &>/dev/null || brew install nvim
 # shellcheck source=.lib
 source ~/dotfiles/.lib
 
-link ~/dotfiles/.vimrc ~/.vimrc
+link ~/dotfiles/.config/nvim ~/.vimrc
 link ~/dotfiles/.config/nvim ~/.config/nvim
 
 if [[ ! -d ~/.config/nvim/bundle/Vundle.vim ]]; then

@@ -226,6 +226,41 @@ if has("autocmd")
     autocmd BufWritePre *.pkr.hcl call PackerFormat()
 endif
 
+augroup TerraformAutoCmds
+    autocmd!
+    autocmd BufRead,BufNewFile *.tf nnoremap <buffer> <leader>e :call TerraformLocalEdit()<CR>
+augroup END
+
+function! TerraformLocalEdit()
+    " Extract the string in 'source\s*=\s*"..."'
+    let quotedString = matchstr(getline('.'), 'source\s*=\s*"\zs.*\ze"')
+
+    " Ensure the quoted string was found
+    if empty(quotedString)
+        echoerr "No 'source' string found on the current line."
+        return
+    endif
+
+    " Remove the ?ref.* part
+    let sourceURL = substitute(quotedString, '?ref.*$', '', '')
+
+    " Call the external script to get the local path
+    let cmd = "~/bin/terraform-source-to-local-repo.sh '" . sourceURL . "'"
+    let localPath = system(cmd)
+
+    " Check for errors in the external script
+    if v:shell_error
+        echoerr "Error running '" . cmd
+        return
+    endif
+
+    " Trim the newline from the output
+    let localPath = substitute(localPath, '\n', '', '')
+
+    " Replace the quoted string with the local path in the current line
+    exec "s!" . escape(quotedString, '/') . "!" . escape(localPath, '/') . "!"
+endfunction
+
 function TerraformFormat()
     let save_pos = getpos(".")
     exec "%!terraform fmt -"

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys
 import boto3
@@ -8,7 +8,42 @@ from difflib import unified_diff
 
 
 def main():
+    if "-h" in sys.argv:
+        print(
+            """
+        Usage:
+            ssms <path>
+            ssms cp <src> <dest>
+            ssms <path>:<from_version> <path>:<to_version>
+        """
+        )
+
+        return
+
+    info = False
+
+    if "-i" in sys.argv:
+        info = True
+
     path = sys.argv[1] if len(sys.argv) > 1 else ""
+    ssm = boto3.client("ssm")
+
+    if path == "cp":
+        if len(sys.argv) < 4:
+            print("Usage: ssms cp <src> <dest>")
+
+            return
+        src = sys.argv[2]
+        dest = sys.argv[3]
+
+        src_value = ssm.get_parameter(Name=src, WithDecryption=True)["Parameter"][
+            "Value"
+        ]
+        ssm.put_parameter(
+            Name=dest, Value=src_value, Type="SecureString", Overwrite=True
+        )
+
+        return
 
     if not path:
         # faster to use aws cli than retrieve pages with max parameter limit of 50
@@ -28,17 +63,19 @@ def main():
         versions = True
     except ValueError:
         versions = False
+    except IndexError:
+        versions = False
 
     if versions:
         this_value = toJsonString(
-            boto3.client("ssm").get_parameter(
-                Name=f"{path}:{this}", WithDecryption=True
-            )["Parameter"]["Value"]
+            ssm.get_parameter(Name=f"{path}:{this}", WithDecryption=True)["Parameter"][
+                "Value"
+            ]
         )
         that_value = toJsonString(
-            boto3.client("ssm").get_parameter(
-                Name=f"{path}:{that}", WithDecryption=True
-            )["Parameter"]["Value"]
+            ssm.get_parameter(Name=f"{path}:{that}", WithDecryption=True)["Parameter"][
+                "Value"
+            ]
         )
 
         sys.stdout.writelines(
@@ -52,38 +89,28 @@ def main():
 
         return
 
-    parameter = boto3.client("ssm").get_parameter(Name=path, WithDecryption=True)[
-        "Parameter"
-    ]
+    parameter = ssm.get_parameter(Name=path, WithDecryption=True)["Parameter"]
+    value = parameter["Value"]
 
-    print(toJsonString(parameter))
+    print(toJsonString(value))
+
+    if info:
+        parameter.pop("Value")
+        print(
+            json.dumps(
+                parameter,
+                indent=2,
+                default=str,
+            )
+        )
 
 
 def toJsonString(data):
     try:
         return json.dumps(json.loads(data), indent=2)
-    except json.JSONDecodeError:
+    except:
         return data
 
 
 if __name__ == "__main__":
     main()
-#
-# #!/usr/bin/env bash
-#
-# set -euo pipefail
-#
-# NAME=${1:-}
-#
-# if [[ -z $NAME ]]; then
-#     aws ssm describe-parameters | jq -r '.Parameters[].Name'
-#     exit 0
-# fi
-#
-# data=$(aws ssm get-parameter --name "$NAME" --with-decryption | jq -r '.Parameter.Value')
-#
-# if jq . <<<"$data" &>/dev/null; then
-#     jq '.' <<<"$data"
-# else
-#     echo "$data"
-# fi

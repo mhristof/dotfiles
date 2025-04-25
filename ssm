@@ -23,6 +23,15 @@ list_instances() {
         --output text
 }
 
+run_command() {
+    local command="$1"
+    instance_id=$(list_instances | fzf | cut -f 1)
+    aws ssm send-command --document-name "AWS-RunShellScript" \
+        --parameters commands="$command" \
+        --targets "Key=InstanceIds,Values=$instance_id" \
+        --output text
+}
+
 print_usage() {
     cat <<-EOF
 usage: ssm-session <command>
@@ -42,6 +51,15 @@ case "$ARG" in
         list_instances
 
         ;;
+    exec)
+        CMD="${2:-}"
+        if [[ -z $CMD ]]; then
+            echo "Usage: $0 exec <command>"
+            exit 1
+        fi
+        run_command "$2"
+        exit 0
+        ;;
     start)
         # Ignore SIGINT(Ctrl-C) to prevent accidental exit from session
         trap '' 2
@@ -50,18 +68,35 @@ case "$ARG" in
             fzf |
             cut -f 1 |
             xargs -o aws ssm start-session --document-name AWS-StartInteractiveCommand \
-                --parameters '{"command": ["sudo -u ec2-user -g ec2-user tmux new -A -s mikec || bash"]}' \
+                --parameters '{"command": ["sudo -u ec2-user -g ec2-user tmuxa new -A -s mikec || bash"]}' \
                 --target
         ;;
     i-*)
-        aws ssm start-session --document-name AWS-StartInteractiveCommand \
-            --parameters '{"command": ["bash"]}' \
+        PORT=$(cut -d: -f2 <<<"$ARG")
+        DOCUMENT="AWS-StartInteractiveCommand"
+        PARAMS='{"command": ["bash"]}'
+        if [[ "$PORT" != "$ARG" ]]; then
+            echo "Starting port forwarding session on port $PORT"
+            DOCUMENT="AWS-StartPortForwardingSession"
+            PARAMS='{"portNumber":["'$PORT'"],"localPortNumber":["'$PORT'"]}'
+            ARG=$(cut -d: -f1 <<<"$ARG")
+        fi
+        aws ssm start-session --document-name "$DOCUMENT" \
+            --parameters "$PARAMS" \
             --target "$ARG"
         ;;
     *)
+
+        instances=$(list_instances | grep "$ARG$" | cut -f 1)
+
+        if [[ "$(wc -l <<<"$instances")" -gt 1 ]]; then
+            echo "Multiple instances found: [$instances]. Connecting to the last one"
+        fi
+
+        instance=$(tail -1 <<<"$instances")
         #  ec2-user LANG=en_US.UTF-8 TERM=ansi tmux new -A -s mikec || bash"]}' \
         aws ssm start-session --document-name AWS-StartInteractiveCommand \
             --parameters '{"command": ["sudo -u ec2-user -g ec2-user bash"]}' \
-            --target "$(list_instances | grep "$ARG" | cut -f 1)"
+            --target "$instance"
         ;;
 esac

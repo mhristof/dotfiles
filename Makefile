@@ -69,7 +69,7 @@ dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbr
 	git clone https://github.com/Aloxaf/fzf-tab ~/.oh-my-zsh/custom/plugins/fzf-tab
 
 ~/.p10k.zsh:
-	brew install romkatv/powerlevel10k/powerlevel10k
+	brew install powerlevel10k
 	ln -sf $(PWD)/$(shell basename $@) $@
 
 $(BREW_BIN)/src-hilite-lesspipe.sh:
@@ -157,10 +157,9 @@ $(HOME)/Library/Python/3.9/lib/python/site-packages/iterm2:
 	chmod +x $@
 	$@ completion zsh > ~/.zsh.site-functions/_$(shell basename $@)
 
-dock: $(XARGS) $(BREW_BIN)/dockutil
-	dockutil --list | sed 's/file:.*//g' | xargs --no-run-if-empty -n1 dockutil --remove
-	dockutil --remove 'App Store'
-	dockutil --remove 'System Preferences'
+dock:
+	defaults write com.apple.dock static-only -bool TRUE
+	killall Dock
 
 /Applications/Alfred 4.app:
 	brew install alfred
@@ -173,7 +172,7 @@ $(BREW_BIN)/make/libexec/gnubin/make:
 docker: /Applications/Docker.app/Contents/MacOS/Docker
 
 /Applications/Docker.app/Contents/MacOS/Docker:
-	brew cask install docker
+	brew install docker --cask
 
 pbpaste: /tmp/alfred-pbpaste.alfredworkflow
 	open /tmp/alfred-pbpaste.alfredworkflow

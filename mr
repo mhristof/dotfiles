@@ -39,10 +39,14 @@ glab mr create \
     --title "$(git-first-branch-commit.sh | head -1)" \
     --no-editor --push \
     --remove-source-branch \
-    --yes
+    --yes || {
+    glab mr view | less --quit-if-one-screen
+    exit 1
+}
 
 if [[ ${AUTOMERGE:-0} -eq 1 ]]; then
-    while ! glab ci status | grep 'Pipeline State: running' -q; do
+    SHA=$(git rev-parse HEAD)
+    while ! glab ci list --sha "$SHA" | grep -E 'running' -q; do
         echo "Waiting for CI pipeline to start..."
         sleep 5
     done

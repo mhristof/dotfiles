@@ -79,7 +79,7 @@ alias ap='ansible-playbook'
 alias ctmp='mkdir -p ~/tmp/$(date +"%Y%m%d_%H%M%S") && cd $_'
 alias cv='cd $(dirname $(nvim-pwd.py))'
 alias cvr='cd $(git -C $(dirname $(nvim-pwd.py))  rev-parse --show-toplevel)'
-alias dc='docker-compose'
+alias dc='docker compose'
 alias df='df -h'
 alias dp='git diff --no-ext-diff $(git-main.sh)..HEAD'
 alias dr='git diff --cached'
@@ -118,7 +118,7 @@ alias ve='~/bin/nvim-edit.py'
 alias vrc='vim ~/.config/nvim/init.vim'
 alias wget100='wget -O /dev/null http://speedtest.london.linode.com/100MB-london.bin'
 alias work='eval $(~/bin/gitlab-work.sh "$(pbpaste)")'
-
+alias yoink='open -a Yoink'
 
 if command -v lsd &> /dev/null; then
     alias ls='lsd --header'

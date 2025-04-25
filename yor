@@ -11,15 +11,21 @@ usage() {
     echo "  -f: force push"
     echo "  -p: push"
     echo "  -C: dont commit"
+    echo "  -V: git commit with --no-verify"
     exit 1
 }
 
+NO_VERIFY=""
 COMMIT=1
-args=$(getopt hfpC "$@")
+args=$(getopt hfpCV "$@")
 # shellcheck disable=SC2086
 set -- $args
 while :; do
     case "$1" in
+        -V)
+            NO_VERIFY="--no-verify"
+            shift
+            ;;
         -C)
             COMMIT=0
             shift
@@ -48,7 +54,8 @@ if [[ $COMMIT -eq 1 ]]; then
     fi
 fi
 
-CMD=$(yq '.yor.script[0]' .gitlab-ci.yml)
+GIT_ROOT=$(git rev-parse --show-toplevel)
+CMD=$(yq '.yor.script[0]' $GIT_ROOT/.gitlab-ci.yml)
 
 if [[ -z $CMD ]]; then
     CMD="yor tag --directory ."
@@ -56,7 +63,7 @@ fi
 
 (
     # shellcheck disable=SC2001
-    PATH=$(sed "s!$HOME/bin!!g" <<<"$PATH")
+    PATH=$(sed "s+$HOME/bin++g" <<<"$PATH")
     export PATH
     CMD=$(sed "s!^yor!$(which yor)!g" <<<"$CMD")
     CMD=$(sed 's!--validate!!g' <<<"$CMD")
@@ -72,7 +79,7 @@ if [[ $COMMIT -eq 0 ]]; then
     exit 0
 fi
 
-git commit $FILES -m 'ci: update yor tags'
+git commit $NO_VERIFY $FILES -m 'ci: update yor tags'
 
 GIT_ARGS=""
 if [[ -n ${FORCE:-} ]]; then

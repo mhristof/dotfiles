@@ -11,6 +11,7 @@ from datetime import datetime, timedelta
 import logging
 import argparse
 import time
+import re
 
 logger = logging.getLogger(os.path.basename(__file__))
 
@@ -27,6 +28,7 @@ def main():
         default=None,
         help="docker-compose service name",
     )
+    parser.add_argument("-q", "--query", type=str, default=None, help="query string")
     parser.add_argument(
         "-i", "--index", type=str, default="logstash", help="index name"
     )
@@ -77,6 +79,11 @@ def main():
         timestamp = {
             "gte": f"now-3m",
             "lte": f"now",
+        }
+
+    if args.query is not None:
+        match = {
+            args.query.split("=")[0]: args.query.split("=")[1],
         }
 
     query = {
@@ -158,7 +165,7 @@ def main():
                 pass
 
             line += [hit["_source"].get("message", "")]
-            logger.info(" ".join(line))
+            print(escape_ansi(" ".join(line)))
             mid[1].add(hit["_id"])
             last_hit = hit
 
@@ -177,6 +184,12 @@ def main():
         ]["@timestamp"]
 
         mid[0] = mid[1]
+
+
+def escape_ansi(line):
+    ansi_escape = re.compile(r"(\x9B|\x1B\[)[0-?]*[ -/]*[@-~]")
+
+    return ansi_escape.sub("", str(line))
 
 
 if __name__ == "__main__":

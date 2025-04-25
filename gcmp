@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+DIR=${1:-}
+
+if [[ -n "$DIR" ]]; then
+    cd "$DIR"
+fi
+
 git checkout "$(git-main.sh)" || {
     STASH=1
     git stash

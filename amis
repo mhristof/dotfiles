@@ -12,10 +12,15 @@ Args:
 EOF
 }
 
-while getopts "a:hv" OPTION; do
+while getopts "o:a:hv" OPTION; do
     case $OPTION in
+        o)
+            OWNER=$OPTARG
+            shift
+            ;;
         a)
             ACCOUNT=$OPTARG
+            shift
             ;;
         h)
             usage
@@ -28,9 +33,27 @@ while getopts "a:hv" OPTION; do
     esac
 done
 
+ARG=${1:-}
+AWS_ARGS=""
+
+case "$ARG" in
+    ami-*)
+        AWS_ARGS="--image-ids $ARG"
+        ;;
+esac
+
+case "$OWNER" in
+    self)
+        AWS_ARGS="$AWS_ARGS --owners self"
+        ;;
+    *)
+        AWS_ARGS="$AWS_ARGS --owners $OWNER"
+        ;;
+esac
+
 if [[ "${ACCOUNT:-invalid}" == "invalid" ]]; then
     ACCOUNT=$(aws sts get-caller-identity | jq .Account -r)
 fi
 
-aws ec2 describe-images --executable-users "$ACCOUNT" |
+aws ec2 describe-images --executable-users "$ACCOUNT" $AWS_ARGS |
     jq -r '.Images[] | [.CreationDate, .ImageId, .Name, .Desription] | @tsv' | sort | column -t

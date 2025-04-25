@@ -6,4 +6,4 @@ PATH=$(sed "s@$HOME/bin:@@" <<<"$PATH")
 
 install viddy
 
-/opt/homebrew/bin/viddy "$@"
+/opt/homebrew/bin/viddy --disable_mouse "$@"
