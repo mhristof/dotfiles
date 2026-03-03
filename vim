@@ -22,4 +22,8 @@ if [[ ! -d ~/.config/nvim/bundle/Vundle.vim ]]; then
     )
 fi
 
+if pgrep -x "nvim" >/dev/null; then
+    echo "Neovim is already running. Please restart Neovim to load any new plugins."
+    unset NVIM_LISTEN_ADDRESS
+fi
 nvim "$@"

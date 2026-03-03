@@ -24,6 +24,7 @@ export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
 export PATH=/opt/homebrew/opt/curl/bin:$PATH
 export PATH=/opt/homebrew/opt/python/libexec/bin:$PATH
 export PATH=/opt/homebrew/opt/findutils/libexec/gnubin:$PATH
+export PATH=/opt/homebrew/opt/gpatch/libexec/gnubin:$PATH
 export PATH=/opt/homebrew/opt/grep/libexec/gnubin:$PATH
 export PATH=/opt/homebrew/opt/make/libexec/gnubin:$PATH
 export PATH=/opt/homebrew/opt/libpq/bin:$PATH
@@ -119,6 +120,8 @@ alias vrc='vim ~/.config/nvim/init.vim'
 alias wget100='wget -O /dev/null http://speedtest.london.linode.com/100MB-london.bin'
 alias work='eval $(~/bin/gitlab-work.sh "$(pbpaste)")'
 alias yoink='open -a Yoink'
+alias ecs='claws --read-only -s ecs'
+alias ec2='claws --read-only -s ec2'
 
 if command -v lsd &> /dev/null; then
     alias ls='lsd --header'
