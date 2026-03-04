@@ -48,7 +48,24 @@ $(BREW_BIN)/diff:
 	brew install diffutils
 
 .PHONY: vim
-vim: $(VIM) ~/.vim $(PYTHON3)
+vim: ~/.vimrc ~/.vim/bundle/Vundle.vim vim-tools vim-linters vim-plugins ~/bin/gitbrowse
+
+.PHONY: vim-tools
+vim-tools: ctags
+	brew list vim &>/dev/null || brew install vim
+	brew list the_silver_searcher &>/dev/null || brew install the_silver_searcher
+
+.PHONY: vim-linters
+vim-linters: golangci-lint shfmt
+	brew list shellcheck &>/dev/null || brew install shellcheck
+	pip3 show bandit &>/dev/null || pip3 install bandit
+	pip3 show pycodestyle &>/dev/null || pip3 install pycodestyle
+	pip3 show pylint &>/dev/null || pip3 install pylint
+	pip3 show yamllint &>/dev/null || pip3 install yamllint
+
+.PHONY: vim-plugins
+vim-plugins: ~/.vim/bundle/Vundle.vim
+	vim +PluginInstall +qall
 
 .PHONY: less
 less: $(SRCHILITE)
@@ -56,11 +73,34 @@ less: $(SRCHILITE)
 .PHONY: git
 git: ~/.gitignore.global ~/.gitconfig ~/.gitconfig.github gh
 
+.PHONY: ssh-key
+ssh-key:
+	@if [ -f ~/.ssh/id_ed25519 ]; then \
+		echo "SSH key already exists at ~/.ssh/id_ed25519"; \
+		echo "Remove it first if you want to generate a new one"; \
+		exit 1; \
+	fi
+	ssh-keygen -t ed25519 -C "$(GIT_EMAIL)" -f ~/.ssh/id_ed25519
+	chmod 600 ~/.ssh/id_ed25519
+	chmod 644 ~/.ssh/id_ed25519.pub
+	ssh-add ~/.ssh/id_ed25519
+	@echo ""
+	@echo "SSH key generated successfully!"
+	@echo "Public key copied to clipboard. Add it to GitHub:"
+	@echo "https://github.com/settings/ssh/new"
+	@cat ~/.ssh/id_ed25519.pub | pbcopy
+
 .PHONY: ln
 ln: dots
 
+# List of all dotfiles to install
+DOTFILES := .gitignore_global .gitconfig .vimrc .zshrc .dotfilesrc .pythonrc.py .tmux.conf .p10k.zsh .agignore .bash_profile .gitconfig.github .lessfilter .pdbrc .tflint.hcl .Xresources
+
 .PHONY: dots
-dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbrc ~/.pythonrc.py ~/.tmux.conf ~/.p10k.zsh ~/.config/nvim/init.vim
+dots: $(addprefix ~/,$(DOTFILES)) ~/.config/nvim/init.vim ~/bin
+
+.PHONY: $(DOTFILES)
+$(DOTFILES): %: ~/.%
 
 ~/.config/nvim/init.vim:
 	ln -sf $(PWD)/.config/nvim/init.vim $@
@@ -75,27 +115,8 @@ dots: ~/.gitignore_global ~/.gitconfig  ~/.vimrc ~/.zshrc ~/.dotfilesrc  ~/.irbr
 $(BREW_BIN)/src-hilite-lesspipe.sh:
 	$(BREW) install source-highlight
 
-# ~/.vim is defined as PHONY as its created indirectly via the vundle clone.
-# This is a 'fix' to prevent subsequent runs to use the catch-all 'ln -sf' command
-# when typing 'make vim'
-.PHONY: ~/.vim
-~/.vim: ~/.vim/bundle/Vundle.vim ~/.vimrc vim-tools vim-linters $(FIRST_VIM_PLUGIN) ~/bin/gitbrowse
-
-.PHONY: vim-linters
-vim-linters: $(BANDIT) $(SHELLCHECK) $(PYCODESTYLE)  $(PYLINT)  golangci-lint $(YAMLLINT) shfmt
-
-
-.PHONY: bandit
-bandit: $(BANDIT)
-
-.PHONY: vim-tools
-vim-tools: $(AG) ctags $(VIM)
-
 ~/.vim/bundle/Vundle.vim:
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-
-$(FIRST_VIM_PLUGIN):
-	echo $(FIRST_VIM_PLUGIN)
 	vim +PluginInstall +qall
 
 .PHONY: ctags
@@ -115,7 +136,12 @@ zsh: $(ZSH) ~/.zshrc ~/.dotfilesrc ~/.oh-my-zsh ~/.fzf-tab
 
 
 .PHONY: brew
-brew: ~/.brew
+brew: ~/.brew brew-packages
+
+.PHONY: brew-packages
+brew-packages: ~/.brew
+	brew update
+	brew bundle --file=$(PWD)/Brewfile
 
 .PHONY: fzf
 fzf: $(BREW_BIN)/fzf ~/.fzf.zsh

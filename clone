@@ -10,14 +10,25 @@ die() {
 }
 
 if [[ -z $URL ]]; then
-    if [[ -z ${GITLAB_TOKEN:-} ]]; then
-        eval $(/usr/bin/security find-generic-password -s germ -w -a GITLAB_READONLY_TOKEN)
-        export GITLAB_TOKEN=$GITLAB_READONLY_TOKEN
+    if [[ "$PWD" == *"/code/github.com"* ]]; then
+        # GitHub - use gh cli
+        gh auth status &>/dev/null || die "GitHub auth not configured. Run: gh auth login"
+        ORG=$(sed "s!$HOME/code/github.com/!!g" <<<"$PWD" | cut -d/ -f1)
+        if [[ -n "$ORG" ]]; then
+            URL=$(gh repo list "$ORG" --limit 1000 --json sshUrl --jq '.[].sshUrl' | fzf)
+        else
+            URL=$(gh repo list --limit 1000 --json sshUrl --jq '.[].sshUrl' | fzf)
+        fi
+        echo "org: $ORG url: $URL"
+    else
+        # GitLab - use glab cli
+        if [[ -z ${GITLAB_TOKEN:-} ]]; then
+            export GITLAB_TOKEN=$(/usr/bin/security find-generic-password -s germ -w -a GITLAB_READONLY_TOKEN 2>/dev/null | sed "s/.*=//;s/['\"]//g")
+        fi
+        PROJECT=$(sed "s!$HOME/code/git....com/!!g" <<<"$PWD" | cut -d/ -f1)
+        URL=$(glab api "/groups/$PROJECT/projects?include_subgroups=true" --paginate | jq '.[].ssh_url_to_repo' -r | fzf)
+        echo "project: $PROJECT url: $URL"
     fi
-
-    PROJECT=$(sed "s!$HOME/code/git....com/!!g" <<<"$PWD" | cut -d/ -f1)
-    URL=$(glab api "/groups/$PROJECT/projects?include_subgroups=true" --paginate | jq '.[].ssh_url_to_repo' -r | fzf)
-    echo "project: $PROJECT url: $URL"
 fi
 
 if [[ -z $URL ]]; then
