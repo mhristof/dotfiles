@@ -22,10 +22,10 @@ HYPHEN_INSENSITIVE="true"
 fpath=($fpath ~/.zsh.autoload ~/.zsh.site-functions)
 plugins=( fzf-tab docker )
 
-function src {
-    test -f $1 && source $1
+# src function defined in .dotfilesrc
+src() {
+    [[ -f "$1" ]] && source "$1"
 }
-
 
 src $HOME/.zshrc_local || true
 src $ZSH/oh-my-zsh.sh
@@ -38,4 +38,6 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 # CodeWhisperer post block. Keep at the bottom of this file.
 [[ -f "${HOME}/Library/Application Support/codewhisperer/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/codewhisperer/shell/zshrc.post.zsh"
 
-[[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path zsh)"
+if [[ "$TERM_PROGRAM" == "kiro" ]]; then
+    . "$(kiro --locate-shell-integration-path zsh)" || true
+fi

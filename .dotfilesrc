@@ -1,6 +1,11 @@
 # vim: ft=bash
 #set -x
 
+# Source file if it exists
+src() {
+    [[ -f "$1" ]] && source "$1"
+}
+
 if [[ ! -z $BASH ]]; then
     THIS_SHELL=bash
 else
@@ -170,14 +175,18 @@ export HOMEBREW_NO_AUTO_UPDATE=1
 
 
 src "${HOME}/.dotfilesrc.local"
-complete -C '/usr/local/bin/aws_completer' aws
-complete -o nospace -C $HOME/.local/bin/terraform terraform
+
+# Completions - bash vs zsh
+if [[ $THIS_SHELL == "bash" ]]; then
+    complete -C '/usr/local/bin/aws_completer' aws
+    complete -o nospace -C $HOME/.local/bin/terraform terraform
+fi
 
 _Z_CMD=j
 alias j=z
 unset -f d &> /dev/null || true
 
 export GPG_TTY=$(tty)
-gpgconf --launch gpg-agent
+gpgconf --launch gpg-agent 2>/dev/null || true
 command -v direnv &> /dev/null && eval "$(direnv hook zsh)"
 
