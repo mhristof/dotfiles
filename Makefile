@@ -14,11 +14,7 @@ DEV := essentials dots vim bat git ~/bin/semver $(LS) $(WATCH) $(JQ) $(AUTOJUMP)
 include Makefile.$(shell uname -s)
 
 UNAME := $(shell uname | tr '[:upper:]' '[:lower:]')
-ifeq ($(shell which sw_vers),)
-VENDOR := linux
-else
 VENDOR := apple
-endif
 
 PWD ?= $(shell pwd)
 FIRST_VIM_PLUGIN := ~/.vim/bundle/$(shell basename $(shell grep Plugin .vimrc | head -2 | tail -1 | cut -d"'" -f2) .git)
@@ -316,31 +312,6 @@ yamllint: $(YAMLLINT)
 
 ~/.%:
 	ln -sf $(PWD)/$(shell basename $@) $@
-
-build: dockerfiles/linux.apt
-	docker build -f dockerfiles/linux.apt -t dotfiles-apt .
-
-linux-test:
-	docker run dotfiles-apt make vim
-
-hub: build
-	docker build -f dockerfiles/hub -t mhristof/dotfiles-apt .
-
-push:
-	docker push mhristof/dotfiles-apt
-
-run: build
-	docker run -it dotfiles-apt bash
-
-.PHONY: build.amazon
-build.amazon: dockerfiles/linux.amazon
-	docker build -f dockerfiles/linux.amazon -t dotfiles-amazon .
-
-amazon: build.amazon
-	docker run --rm -it dotfiles-amazon bash
-
-amazon-test: build.amazon
-	docker run --rm dotfiles-amazon make zsh dev
 
 # vim:ft=make
 #
