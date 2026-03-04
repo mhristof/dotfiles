@@ -28,8 +28,7 @@ projectURL="$(echo -ne "$project" | python3 -c 'import sys; import urllib.parse;
 postCD=""
 
 if [[ -z ${GITLAB_TOKEN:-} ]]; then
-    GITLAB_TOKEN=$(/usr/bin/security find-generic-password -s germ -w -a GITLAB_READONLY_TOKEN | cut -d"'" -f2)
-    export GITLAB_TOKEN
+    export GITLAB_TOKEN=$(/usr/bin/security find-generic-password -s germ -w -a GITLAB_READONLY_TOKEN)
 fi
 
 case $URL in

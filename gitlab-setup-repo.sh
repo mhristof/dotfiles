@@ -15,7 +15,7 @@ cleanup() {
 }
 
 if [[ -z ${GITLAB_TOKEN:-} ]]; then
-    eval "$(/usr/bin/security find-generic-password -s germ -w -a GITLAB_TOKEN)"
+    export GITLAB_TOKEN=$(/usr/bin/security find-generic-password -s germ -w -a GITLAB_TOKEN)
 fi
 
 export PAGER=/bin/cat

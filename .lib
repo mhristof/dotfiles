@@ -34,3 +34,15 @@ function install() {
 
     which "$command" &>/dev/null || brew install $package
 }
+
+function terraform_plan_name() {
+    if [[ -n "${TF_DATA_DIR:-}" ]]; then
+        suffix="${TF_DATA_DIR#.terraform-}"
+        echo "terraform.${suffix}.tfplan"
+    elif [[ -n "${TF_CLI_ARGS_plan:-}" ]]; then
+        suffix=$(echo "$TF_CLI_ARGS_plan" | grep -oE '[^/]+\.tfvars' | sed 's/\.tfvars//')
+        echo "terraform.${suffix}.tfplan"
+    else
+        echo "terraform.tfplan"
+    fi
+}

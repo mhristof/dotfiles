@@ -23,7 +23,7 @@ if [[ -z $URL ]]; then
     else
         # GitLab - use glab cli
         if [[ -z ${GITLAB_TOKEN:-} ]]; then
-            export GITLAB_TOKEN=$(/usr/bin/security find-generic-password -s germ -w -a GITLAB_READONLY_TOKEN 2>/dev/null | sed "s/.*=//;s/['\"]//g")
+            export GITLAB_TOKEN=$(/usr/bin/security find-generic-password -s germ -w -a GITLAB_READONLY_TOKEN 2>/dev/null)
         fi
         PROJECT=$(sed "s!$HOME/code/git....com/!!g" <<<"$PWD" | cut -d/ -f1)
         URL=$(glab api "/groups/$PROJECT/projects?include_subgroups=true" --paginate | jq '.[].ssh_url_to_repo' -r | fzf)
