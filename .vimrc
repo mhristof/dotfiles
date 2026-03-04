@@ -120,6 +120,14 @@ let g:ale_linters = {'yaml': ['yamllint', 'prettier'], 'python': ['bandit', 'pyc
 let g:ale_sh_shfmt_options='-i 4 -ci' " Indent with N spaces
 let g:fzfSwitchProjectAlwaysChooseFile = 1
 call SourceIfExists("~/.fzf.projects.vim") "let g:fzfSwitchProjectProjects
+
+" Reload fzf projects without restarting vim
+function! ReloadFzfProjects()
+    silent! execute '!~/bin/update-fzf-projects-vim.sh'
+    call SourceIfExists("~/.fzf.projects.vim")
+    echo "FZF projects reloaded"
+endfunction
+command! ReloadProjects call ReloadFzfProjects()
 let g:fzf_layout = { 'down': '40%' } " disable the weird center pop up window
 let g:go_fmt_command="gopls"
 let g:go_gopls_gofumpt=1
