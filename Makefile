@@ -20,7 +20,11 @@ PWD ?= $(shell pwd)
 FIRST_VIM_PLUGIN := ~/.vim/bundle/$(shell basename $(shell grep Plugin .vimrc | head -2 | tail -1 | cut -d"'" -f2) .git)
 
 .PHONY: default
-default: dirs zsh dots vim
+default: dirs zsh dots vim clear-dock
+
+.PHONY: clear-dock
+clear-dock:
+	@./clear-dock.sh
 
 .PHONY: dirs
 dirs: ~/.local/bin ~/.zsh.site-functions
