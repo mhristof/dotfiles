@@ -6,7 +6,7 @@ SHELL := /bin/bash
 ifeq ($(word 1,$(subst ., ,$(MAKE_VERSION))),4)
 .SHELLFLAGS := -eu -o pipefail -c
 endif
-.DEFAULT_GOAL := help
+.DEFAULT_GOAL := default
 .ONESHELL:
 
 BREW_BIN := /usr/local/bin
@@ -20,7 +20,10 @@ PWD ?= $(shell pwd)
 FIRST_VIM_PLUGIN := ~/.vim/bundle/$(shell basename $(shell grep Plugin .vimrc | head -2 | tail -1 | cut -d"'" -f2) .git)
 
 .PHONY: default
-default: brew vim essentials
+default: dirs zsh dots vim
+
+.PHONY: dirs
+dirs: ~/.local/bin ~/.zsh.site-functions
 
 .PHONY: essentials
 essentials: $(HTOP) $(WATCH) less $(GREP) $(SPONGE)
@@ -44,24 +47,25 @@ $(BREW_BIN)/diff:
 	brew install diffutils
 
 .PHONY: vim
-vim: ~/.vimrc ~/.vim/bundle/Vundle.vim vim-tools vim-linters vim-plugins ~/bin/gitbrowse
+vim: ~/.vimrc ~/.vim/bundle/Vundle.vim vim-tools vim-plugins ~/bin/gitbrowse
 
 .PHONY: vim-tools
 vim-tools: ctags
-	brew list vim &>/dev/null || brew install vim
-	brew list the_silver_searcher &>/dev/null || brew install the_silver_searcher
+	@command -v vim &>/dev/null || brew install vim
+	@command -v ag &>/dev/null || brew install the_silver_searcher
 
 .PHONY: vim-linters
 vim-linters: golangci-lint shfmt
 	brew list shellcheck &>/dev/null || brew install shellcheck
-	pip3 show bandit &>/dev/null || pip3 install bandit
-	pip3 show pycodestyle &>/dev/null || pip3 install pycodestyle
-	pip3 show pylint &>/dev/null || pip3 install pylint
-	pip3 show yamllint &>/dev/null || pip3 install yamllint
+	brew list pipx &>/dev/null || brew install pipx
+	pipx install bandit || true
+	pipx install pycodestyle || true
+	pipx install pylint || true
+	pipx install yamllint || true
 
 .PHONY: vim-plugins
 vim-plugins: ~/.vim/bundle/Vundle.vim
-	vim +PluginInstall +qall
+	@test -d $(FIRST_VIM_PLUGIN) || vim +PluginInstall +qall
 
 .PHONY: less
 less: $(SRCHILITE)
@@ -99,21 +103,17 @@ dots: $(addprefix ~/,$(DOTFILES)) ~/.config/nvim/init.vim ~/bin
 $(DOTFILES): %: ~/.%
 
 ~/.config/nvim/init.vim:
-	ln -sf $(PWD)/.config/nvim/init.vim $@
-
-~/.fzf-tab:
-	git clone https://github.com/Aloxaf/fzf-tab ~/.oh-my-zsh/custom/plugins/fzf-tab
+	@test -L $@ || ln -sf $(PWD)/.config/nvim/init.vim $@
 
 ~/.p10k.zsh:
-	brew install powerlevel10k
-	ln -sf $(PWD)/$(shell basename $@) $@
+	@command -v p10k &>/dev/null || brew install powerlevel10k
+	@test -L $@ || ln -sf $(PWD)/$(shell basename $@) $@
 
 $(BREW_BIN)/src-hilite-lesspipe.sh:
 	$(BREW) install source-highlight
 
 ~/.vim/bundle/Vundle.vim:
-	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-	vim +PluginInstall +qall
+	@test -d $@ || git clone https://github.com/VundleVim/Vundle.vim.git $@
 
 .PHONY: ctags
 ctags: $(CTAGS) ~/.ctags.d
@@ -122,13 +122,20 @@ $(BREW_BIN)/curl/bin/curl:
 	$(BREW) install curl
 
 ~/.zshrc: ~/.zsh.autoload
-	ln -sf $(PWD)/$(shell basename $@) $@
+	@test -L $@ || ln -sf $(PWD)/$(shell basename $@) $@
+
+.PHONY: oh-my-zsh
+oh-my-zsh:
+	rm -rf ~/.oh-my-zsh
+	ZSH=~/.oh-my-zsh SHELL=/opt/homebrew/bin/zsh sh -c "$$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc
+	git clone https://github.com/Aloxaf/fzf-tab ~/.oh-my-zsh/custom/plugins/fzf-tab
 
 ~/.oh-my-zsh:
-	git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh
+	@test -d $@/lib || ZSH=$@ SHELL=/opt/homebrew/bin/zsh sh -c "$$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc
+	@test -d $@/custom/plugins/fzf-tab || git clone https://github.com/Aloxaf/fzf-tab $@/custom/plugins/fzf-tab
 
 .PHONY: zsh
-zsh: $(ZSH) ~/.zshrc ~/.dotfilesrc ~/.oh-my-zsh ~/.fzf-tab
+zsh: $(ZSH) ~/.zshrc ~/.dotfilesrc ~/.oh-my-zsh
 
 
 .PHONY: brew
@@ -263,7 +270,7 @@ shortcut:
 	./setup-mac-shortcuts.sh
 
 ~/bin:
-	ln -sf $(PWD) ~/bin
+	@test -L $@ || ln -sf $(PWD) $@
 
 bash-my-aws: ~/.bash-my-aws
 
@@ -298,20 +305,20 @@ golangci-lint: ~/.local/bin/golangci-lint
 gitbrowse:  ~/bin/gitbrowse
 
 ~/bin/gitbrowse:
-	curl --location --silent https://github.com/mhristof/gitbrowse/releases/download/v0.4.0/gitbrowse.$(UNAME) > $@
-	chmod +x $@
+	@test -x $@ || curl --location --silent https://github.com/mhristof/gitbrowse/releases/download/v0.4.0/gitbrowse.$(UNAME) > $@
+	@test -x $@ || chmod +x $@
 
 .PHONY: yamllint
 yamllint: $(YAMLLINT)
 
 ~/.zsh.site-functions:
-	mkdir -p $@
+	@test -d $@ || mkdir -p $@
 
 ~/.local/bin:
-	mkdir -p $@
+	@test -d $@ || mkdir -p $@
 
 ~/.%:
-	ln -sf $(PWD)/$(shell basename $@) $@
+	@test -L $@ || ln -sf $(PWD)/$(shell basename $@) $@
 
 # vim:ft=make
 #
