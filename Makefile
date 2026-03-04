@@ -107,6 +107,7 @@ dots: $(addprefix ~/,$(DOTFILES)) ~/.config/nvim/init.vim ~/bin
 $(DOTFILES): %: ~/.%
 
 ~/.config/nvim/init.vim:
+	@mkdir -p ~/.config/nvim
 	@test -L $@ || ln -sf $(PWD)/.config/nvim/init.vim $@
 
 ~/.p10k.zsh:
