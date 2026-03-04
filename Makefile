@@ -20,7 +20,7 @@ PWD ?= $(shell pwd)
 FIRST_VIM_PLUGIN := ~/.vim/bundle/$(shell basename $(shell grep Plugin .vimrc | head -2 | tail -1 | cut -d"'" -f2) .git)
 
 .PHONY: default
-default: dirs zsh dots vim clear-dock
+default: dirs zsh dots vim clear-dock fzf
 
 .PHONY: clear-dock
 clear-dock:
@@ -151,11 +151,11 @@ brew-packages: ~/.brew
 	brew bundle --file=$(PWD)/Brewfile
 
 .PHONY: fzf
-fzf: $(BREW_BIN)/fzf ~/.fzf.zsh
-	$(brew --prefix)/opt/fzf/install
+fzf: ~/.fzf.zsh
 
 ~/.fzf.zsh:
-	$(shell brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc
+	@command -v fzf &>/dev/null || brew install fzf
+	@test -f $@ || $$(brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc --no-bash --no-fish
 
 $(BREW_BIN)/autojump:
 	$(BREW) install autojump
