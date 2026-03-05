@@ -97,6 +97,14 @@ endfunction
 
 call SourceIfExists("~/.fzf.projects.vim") "let g:fzfSwitchProjectProjects
 
+" Reload fzf projects without restarting vim
+function! ReloadFzfProjects()
+    silent! execute '!~/bin/update-fzf-projects-vim.sh'
+    call SourceIfExists("~/.fzf.projects.vim")
+    echo "FZF projects reloaded"
+endfunction
+command! ReloadProjects call ReloadFzfProjects()
+
 let VCSCommandVCSTypePreference='git'
 let g:CommandTMaxCachedDirectories=0
 let g:DirDiffExcludes = "*.pyc"
