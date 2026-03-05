@@ -1,18 +1,23 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
-" initial checkout
-"    git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
+" Detect if we're running nvim or vim
+let g:is_nvim = has('nvim')
 
-" let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim.git'
+" Set up Vundle path based on vim/nvim
+if g:is_nvim
+    set rtp+=~/.config/nvim/bundle/Vundle.vim
+    call vundle#begin()
+    Plugin 'VundleVim/Vundle.vim'
+else
+    set rtp+=~/.vim/bundle/Vundle.vim
+    call vundle#begin()
+    Plugin 'gmarik/Vundle.vim.git'
+endif
 
+" Common plugins
 Plugin 'MarcWeber/vim-addon-mw-utils.git'
+Plugin 'benwainwright/fzf-project'
 Plugin 'ekalinin/Dockerfile.vim'
 Plugin 'elzr/vim-json'
 Plugin 'fatih/vim-go'
@@ -24,11 +29,9 @@ Plugin 'junegunn/fzf.vim'
 Plugin 'mhristof/vim-snipmate.git'
 Plugin 'mhristof/vim-template.git'
 Plugin 'mileszs/ack.vim.git'
-Plugin 'ngmy/vim-rubocop'
 Plugin 'serialdoom/VisIncr.git'
 Plugin 'serialdoom/comments.vim.git'
 Plugin 'serialdoom/vcscommand.vim.git'
-"Plugin 'serialdoom/vim-ansible-yaml.git'
 Plugin 'tomasr/molokai.git'
 Plugin 'tommcdo/vim-lion'
 Plugin 'tomtom/tlib_vim.git'
@@ -37,29 +40,28 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-obsession'
 Plugin 'tpope/vim-surround'
 Plugin 'vim-scripts/DirDiff.vim.git'
-Plugin 'vim-scripts/DrawIt'
 Plugin 'w0rp/ale'
 Plugin 'zimbatm/haproxy.vim'
-Plugin 'benwainwright/fzf-project'
-Plugin 'mattn/vim-findroot'
 
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"  Instal all with
-"  	vim +PluginInstall +qall
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
+" vim-specific plugins
+if !g:is_nvim
+    Plugin 'ngmy/vim-rubocop'
+    Plugin 'vim-scripts/DrawIt'
+    Plugin 'mattn/vim-findroot'
+endif
 
+" nvim-specific plugins
+if g:is_nvim
+    Plugin 'skywind3000/asyncrun.vim'
+    Plugin 'mbbill/undotree'
+    Plugin 'rhadley-recurly/vim-terragrunt'
+    "Plugin 'github/copilot.vim'
+endif
+
+call vundle#end()
+filetype plugin indent on
+
+" Common settings
 let s:uname = system("uname -s")
 let mapleader = ","
 set t_Co=256
@@ -100,6 +102,11 @@ set sessionoptions+=localoptions
 set statusline+=%#warningmsg#
 set statusline+=%*
 
+" nvim-specific settings
+if g:is_nvim
+    set mouse=
+endif
+
 function SourceIfExists(file)
   if filereadable(expand(a:file))
     exe 'source' a:file
@@ -110,16 +117,27 @@ let VCSCommandVCSTypePreference='git'
 let g:CommandTMaxCachedDirectories=0
 let g:DirDiffExcludes = "*.pyc"
 let g:VCSCommandDeleteOnHide=66
-let g:ackprg = 'ag --nogroup --nocolor --column'
-let g:ale_dockerfile_hadolint_use_docker  = "always"
+let g:ackprg = 'ag --hidden --nogroup --nocolor --column'
 let g:ale_fix_on_save = 1
-let g:ale_fixers = {'sh': ['shfmt']}
 let g:ale_history_log_output = 1
 let g:ale_lint_on_text_changed = 'never'
-let g:ale_linters = {'yaml': ['yamllint', 'prettier'], 'python': ['bandit', 'pycodestyle', 'pylint', 'pydocstyle', 'black'], 'go': ['golangci-lint', 'staticcheck'],}
 let g:ale_sh_shfmt_options='-i 4 -ci' " Indent with N spaces
 let g:fzfSwitchProjectAlwaysChooseFile = 1
 call SourceIfExists("~/.fzf.projects.vim") "let g:fzfSwitchProjectProjects
+
+" vim vs nvim specific ALE configuration
+if g:is_nvim
+    let g:ale_fixers = {
+        \'sh': ['shfmt'],
+        \'python': [ 'add_blank_lines_for_python_control_statements', 'autoflake', 'autoimport', 'autopep8', 'black', 'isort', 'pyflyby', 'remove_trailing_lines', 'reorder-python-imports', 'trim_whitespace'],
+    \}
+    let g:ale_linters = { 'yaml': ['yamllint', 'prettier'], 'python': ['bandit', 'pycodestyle', 'pylint', 'pydocstyle', 'black'], 'go': ['revive', 'golangci-lint', 'staticcheck'], }
+    let g:go_def_mode = "gopls"
+else
+    let g:ale_dockerfile_hadolint_use_docker  = "always"
+    let g:ale_fixers = {'sh': ['shfmt']}
+    let g:ale_linters = {'yaml': ['yamllint', 'prettier'], 'python': ['bandit', 'pycodestyle', 'pylint', 'pydocstyle', 'black'], 'go': ['golangci-lint', 'staticcheck'],}
+endif
 
 " Reload fzf projects without restarting vim
 function! ReloadFzfProjects()
@@ -149,6 +167,7 @@ let g:netrw_banner = 0
 let g:netrw_browse_split = 0
 let g:netrw_liststyle = 3
 let g:netrw_sort_sequence = '[\/]$,\<core\%(\.\d\+\)\=\>,\.h$,\.c$,\.cpp$,\~\=\*$,*,\.o$,\.obj$,\.info$,\.swp$,\.bak$,\.clean$,\.rej,\.orig,\~$'
+let g:terraform_fmt_on_save = 1
 
 map <C-j> <C-W>j
 map <C-k> <C-W>k
@@ -175,8 +194,6 @@ if s:uname == "Darwin\n"
     map `e :GBrowse<cr>
 endif
 
-
-
 vmap X "_d
 vmap x "_d
 
@@ -202,15 +219,16 @@ hi SpellRare term=underline cterm=underline
 hi clear SpellLocal
 hi SpellLocal term=underline cterm=underline
 
-
 if has("autocmd")
     autocmd BufEnter *.dsl :set ft=groovy
     "autocmd BufEnter *.yml :set ft=ansible
     autocmd BufEnter .pre-commit-config.yaml :set ft=yaml.pre-commit
     autocmd BufEnter *.github/workflows/*.yml :set ft=yaml.github-actions
+    autocmd BufEnter .gitlab-ci.yml :set ft=yaml.gitlab
+    autocmd BufEnter .mega-linter.yml :set ft=yaml.megalinter
     autocmd BufEnter *.mkf :set ft=make
     autocmd BufEnter .travis.yml :set ft=yaml
-    autocmd BufEnter Jenkinsfile :set ft=groovy
+    autocmd BufEnter *.Jenkinsfile,Jenkinsfile :set ft=groovy
     autocmd BufEnter Jenkinsfile :setlocal shiftwidth=2 tabstop=2
     autocmd BufEnter haproxy.cfg* :set ft=haproxy
     autocmd BufRead * if (expand('%:e') =~ "yaml" || expand('%:e') =~ "yml") && search('apiVersion:', 'nw') | setlocal ft=yaml.k8s | endif
@@ -226,25 +244,32 @@ if has("autocmd")
     autocmd VimResized * wincmd =
     autocmd WinEnter * :setlocal rnu
     autocmd WinEnter * setlocal cc=80
-    autocmd WinEnter,BufRead * setlocal cursorcolumn
-    autocmd WinEnter,BufRead * setlocal cursorline
+    autocmd WinEnter * setlocal cursorcolumn
+    autocmd WinEnter * setlocal cursorline
     autocmd WinEnter,BufEnter Vagrantfile,*.rb,*.erb call SetupRuby()
-    autocmd WinEnter,BufWritePost *.py call PythonCtags()
+    autocmd FileType gitrebase,gitcommit set fo+=t
     autocmd WinLeave * :setlocal rnu!
     autocmd WinLeave * setlocal cc=0
     autocmd WinLeave * setlocal nocursorcolumn
     autocmd WinLeave * setlocal nocursorline
     autocmd filetype gitrebase :nnoremap s :call Squash()<cr>
+    autocmd FileType gitrebase,gitcommit set tw=72 fo=cqt wm=0
+    autocmd WinEnter,BufEnter *.sh.tpl setlocal ft=bash
     autocmd filetype netrw nnoremap <buffer> t :FZF<cr><cr>
     autocmd BufEnter,VimEnter *.aws/config set filetype=dosini
-
-    autocmd WinEnter,BufWritePost *.tf call TerraformCtags()
+    autocmd BufEnter,VimEnter Dockerfile map <leader>p :call ApkUnpin()<cr>
     autocmd FileType terraform :nnoremap K :call TerraformMan()<CR>
-    autocmd BufNewFile,BufRead terragrunt.hcl setlocal filetype=terraform.terragrunt syntax=terraform
-    autocmd BufWritePre terragrunt.hcl :call TerraformFormat()
-
-    autocmd BufNewFile,BufRead *.pkr.hcl setlocal filetype=packer syntax=hcl
-    autocmd BufWritePre *.pkr.hcl call PackerFormat()
+    autocmd BufWritePost *.hcl :call TerraformFormat()
+    autocmd BufNewFile,BufRead,BufWritePost *.pkr.hcl setlocal filetype=packer syntax=hcl
+    
+    " vim vs nvim specific autocmds
+    if g:is_nvim
+        autocmd WinEnter,BufWritePost *.py call PythonCtagsNvim()
+        autocmd WinEnter,BufWritePost *.tf call TerraformCtagsNvim()
+    else
+        autocmd WinEnter,BufWritePost *.py call PythonCtags()
+        autocmd WinEnter,BufWritePost *.tf call TerraformCtags()
+    endif
 endif
 
 augroup TerraformAutoCmds
@@ -263,7 +288,7 @@ function! TerraformLocalEdit()
     endif
 
     " Remove the ?ref.* part
-    let sourceURL = substitute(quotedString, '?ref.*$', '', '')
+    let sourceURL = substitute(quotedString, '?ref.*', '', '')
 
     " Call the external script to get the local path
     let cmd = "~/bin/terraform-source-to-local-repo.sh '" . sourceURL . "'"
@@ -284,13 +309,14 @@ endfunction
 
 function TerraformFormat()
     let save_pos = getpos(".")
-    exec "%!terraform fmt -"
+    exec ":silent! terragrunt hclfmt"
+    exec ":e!"
     call setpos(".", save_pos)
 endfunction
 
 function PackerFormat()
     let save_pos = getpos(".")
-    exec "%!packer fmt -"
+    exec ":silent! packer fmt %"
     call setpos(".", save_pos)
 endfunction
 
@@ -298,13 +324,31 @@ function Squash()
     exec ":2,$s/^pick/squash/g"
 endfunction
 
-function PythonCtags()
-    let pyctags = job_start(["ctags", "-R", "--fields=+l", "--languages=python", "--python-kinds=-iv", "."])
+function ApkUnpin()
+    exec ".s/==\\S*//g"
 endfunction
 
-function TerraformCtags()
-    let tfctags = job_start(["ctags", "-R", "--languages=terraform", "."])
-endfunction
+" vim-specific ctags functions
+if !g:is_nvim
+    function PythonCtags()
+        let pyctags = job_start(["ctags", "-R", "--fields=+l", "--languages=python", "--python-kinds=-iv", "."])
+    endfunction
+
+    function TerraformCtags()
+        let tfctags = job_start(["ctags", "-R", "--languages=terraform", "."])
+    endfunction
+endif
+
+" nvim-specific ctags functions using AsyncRun
+if g:is_nvim
+    function PythonCtagsNvim()
+        exec ":AsyncRun ctags -R --fields=+l --languages=python --python-kinds=-iv ."
+    endfunction
+
+    function TerraformCtagsNvim()
+        exec ":AsyncRun ctags -R --languages=terraform ."
+    endfunction
+endif
 
 if has("user_commands")
     command! -bang -nargs=? -complete=file E e<bang> <args>
@@ -330,6 +374,14 @@ if has("user_commands")
     command! -bang Qa qa<bang>
     command! -bang Set set<bang>
     command! -bang Vs vs<bang>
+    
+    " nvim-specific commands
+    if g:is_nvim
+        cabbrev gob Gob
+        cabbrev gcmp !bash ~/.zsh.autoload/gcmp
+        cabbrev ww :noautocmd w
+        cabbrev oo :call OpenLocalRepo()<cr>
+    endif
 endif
 
 function! SetupRuby()
@@ -408,7 +460,40 @@ function SetupGithubActions()
 endfunction
 
 function GitBrowse()
-    let line=line(".") + 1
-    exec "silent !open $(gitbrowse " . expand('%') . " --line " . line . ")"
+    let line=line(".")
+    exec "silent !open $(gi browse " . expand('%') . " --line " . line . ")"
     exec ":redraw!"
 endfunction
+
+" nvim-specific functions
+if g:is_nvim
+    function! GitCheckout(branch)
+        execute ':silent !git checkout '.a:branch
+    endfunction
+    command! Gob call fzf#run({
+        \  'source': "git branch --all",
+        \  'sink':    function('GitCheckout')})
+
+    function OpenLocalRepo()
+        let path = system("~/bin/local-repo-from-string.sh '" . getline(search("^ *source = ", "n")) . "'")
+        exec ":sp " . path
+    endfunction
+
+    " Copilot keybindings
+    " alt + j
+    imap ∆ <Plug>(copilot-next)
+    " alt + k
+    imap ˚ <Plug>(copilot-previous)
+
+    function! CheckBackspace() abort
+      let col = col('.') - 1
+      return !col || getline('.')[col - 1]  =~# '\s'
+    endfunction
+
+    let g:copilot_filetypes = {
+                \'markdown': v:true,
+                \'yaml': v:true,
+                \'yaml.docker-compose': v:true,
+                \"yaml.gitlab": v:true
+                \}
+endif
