@@ -105,6 +105,18 @@ function! ReloadFzfProjects()
 endfunction
 command! ReloadProjects call ReloadFzfProjects()
 
+" Open Kiro in current project
+function! OpenKiro()
+    let root = system('git rev-parse --show-toplevel 2>/dev/null')
+    if v:shell_error == 0
+        let root = substitute(root, '\n', '', 'g')
+        execute '!open -a Kiro ' . shellescape(root)
+    else
+        echo "Not in a git repository"
+    endif
+endfunction
+command! Kiro call OpenKiro()
+
 let VCSCommandVCSTypePreference='git'
 let g:CommandTMaxCachedDirectories=0
 let g:DirDiffExcludes = "*.pyc"
@@ -310,6 +322,7 @@ if has("user_commands")
     cabbrev ack Ack
     cabbrev ag Ag
     cabbrev Call call
+    cabbrev kiro Kiro
     cabbrev gob Gob
     cabbrev gcmp !bash ~/.zsh.autoload/gcmp
     cabbrev ww :noautocmd w

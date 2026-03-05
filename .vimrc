@@ -128,6 +128,19 @@ function! ReloadFzfProjects()
     echo "FZF projects reloaded"
 endfunction
 command! ReloadProjects call ReloadFzfProjects()
+
+" Open Kiro in current project
+function! OpenKiro()
+    let root = system('git rev-parse --show-toplevel 2>/dev/null')
+    if v:shell_error == 0
+        let root = substitute(root, '\n', '', 'g')
+        execute '!open -a Kiro ' . shellescape(root)
+    else
+        echo "Not in a git repository"
+    endif
+endfunction
+command! Kiro call OpenKiro()
+
 let g:fzf_layout = { 'down': '40%' } " disable the weird center pop up window
 let g:go_fmt_command="gopls"
 let g:go_gopls_gofumpt=1
@@ -306,6 +319,7 @@ if has("user_commands")
     cabbrev ack Ack
     cabbrev ag Ag
     cabbrev Call call
+    cabbrev kiro Kiro
     cabbrev bb :call GitBrowse()<cr>
     " map the damn :W so that you dont type it twice. Or even 3 times. Fucking noob.
     command! -bang Wqa wqa<bang>
