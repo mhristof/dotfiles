@@ -13,7 +13,6 @@ else
 fi
 
 export GIT_EMAIL="mhristof@gmail.com"
-export NVIM_LISTEN_ADDRESS=/tmp/nvim
 export EDITOR="nvim"
 export GOPATH=$HOME/go
 export GOPROXY=direct
@@ -179,6 +178,11 @@ src "${HOME}/.dotfilesrc.local"
 # Completions - bash vs zsh
 if [[ $THIS_SHELL == "bash" ]]; then
     complete -C '/usr/local/bin/aws_completer' aws
+    complete -o nospace -C $HOME/.local/bin/terraform terraform
+elif [[ $THIS_SHELL == "zsh" ]]; then
+    # AWS completion for zsh
+    complete -C "$(command -v aws_completer)" aws
+    # Terraform completion for zsh
     complete -o nospace -C $HOME/.local/bin/terraform terraform
 fi
 
