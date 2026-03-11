@@ -51,5 +51,9 @@ if [[ ${AUTOMERGE:-0} -eq 1 ]]; then
         sleep 5
     done
 
-    glab mr merge --auto-merge --yes
+    # Try to merge with --when-pipeline-succeeds to handle 405 errors
+    if ! glab mr merge --when-pipeline-succeeds --yes 2>/dev/null; then
+        echo "Standard merge failed, trying --auto-merge..."
+        glab mr merge --auto-merge --yes
+    fi
 fi
