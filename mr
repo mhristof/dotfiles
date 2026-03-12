@@ -40,20 +40,27 @@ glab mr create \
     --no-editor --push \
     --remove-source-branch \
     --yes || {
-    glab mr view | less --quit-if-one-screen
-    exit 1
+    # If MR already exists, that's okay - we'll continue to auto-merge if requested
+    if ! glab mr view &>/dev/null; then
+        # Only exit if there's no MR at all
+        glab mr view | less --quit-if-one-screen
+        exit 1
+    fi
 }
 
 if [[ ${AUTOMERGE:-0} -eq 1 ]]; then
-    SHA=$(git rev-parse HEAD)
-    while ! glab ci list --sha "$SHA" | grep -E 'running' -q; do
-        echo "Waiting for CI pipeline to start..."
-        sleep 5
-    done
-
-    # Try to merge with --when-pipeline-succeeds to handle 405 errors
-    if ! glab mr merge --when-pipeline-succeeds --yes 2>/dev/null; then
-        echo "Standard merge failed, trying --auto-merge..."
-        glab mr merge --auto-merge --yes
+    echo "Setting merge when pipeline succeeds..."
+    
+    if ! glab mr merge --auto-merge --remove-source-branch --yes; then
+        echo ""
+        echo "Could not set auto-merge. The MR will need to be merged manually."
+        echo "This can happen if:"
+        echo "  - Approvals are required"
+        echo "  - Merge conflicts exist"
+        echo "  - Protected branch rules prevent auto-merge"
+        echo ""
+        glab mr view
+    else
+        echo "MR will merge automatically when pipeline succeeds."
     fi
 fi
