@@ -51,16 +51,32 @@ glab mr create \
 if [[ ${AUTOMERGE:-0} -eq 1 ]]; then
     echo "Setting merge when pipeline succeeds..."
     
-    if ! glab mr merge --auto-merge --remove-source-branch --yes; then
+    # Get the MR IID (internal ID) for the current branch
+    mr_iid=$(glab mr list --source-branch "$(git rev-parse --abbrev-ref HEAD)" --json | jq '.[0].iid' 2>/dev/null)
+    
+    if [[ -z "$mr_iid" || "$mr_iid" == "null" ]]; then
+        echo "ERROR: Could not find MR IID for current branch"
+        glab mr view
+        exit 1
+    fi
+    
+    # Use GitLab API directly to set merge_when_pipeline_succeeds
+    # This is the correct way instead of using the /merge endpoint
+    if glab api --method PUT "/projects/:id/merge_requests/${mr_iid}" \
+        --field merge_when_pipeline_succeeds=true \
+        --field remove_source_branch=true \
+        --silent; then
+        echo "✓ MR will merge automatically when pipeline succeeds."
+        glab mr view
+    else
         echo ""
         echo "Could not set auto-merge. The MR will need to be merged manually."
         echo "This can happen if:"
         echo "  - Approvals are required"
         echo "  - Merge conflicts exist"
         echo "  - Protected branch rules prevent auto-merge"
+        echo "  - Pipeline must pass first"
         echo ""
         glab mr view
-    else
-        echo "MR will merge automatically when pipeline succeeds."
     fi
 fi
