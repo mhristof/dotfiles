@@ -143,6 +143,9 @@ endif
 function! ReloadFzfProjects()
     silent! execute '!~/bin/update-fzf-projects-vim.sh'
     call SourceIfExists("~/.fzf.projects.vim")
+    " Force the plugin to reload by re-sourcing its autoload file
+    unlet! g:loaded_fzfproject
+    runtime! autoload/fzfproject.vim
     echo "FZF projects reloaded"
 endfunction
 command! ReloadProjects call ReloadFzfProjects()
