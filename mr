@@ -49,6 +49,14 @@ glab mr create \
 }
 
 if [[ ${AUTOMERGE:-0} -eq 1 ]]; then
-    echo "Setting merge when pipeline succeeds..."
+    SHA=$(git rev-parse HEAD)
+    echo "Waiting for CI pipeline to start..."
+    for i in $(seq 1 30); do
+        if glab ci list --per-page 1 2>/dev/null | grep -qE 'running|pending|success|passed'; then
+            break
+        fi
+        sleep 2
+    done
+
     glab mr merge --auto-merge --remove-source-branch --yes
 fi
