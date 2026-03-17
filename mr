@@ -49,7 +49,6 @@ glab mr create \
 }
 
 if [[ ${AUTOMERGE:-0} -eq 1 ]]; then
-    SHA=$(git rev-parse HEAD)
     echo "Waiting for CI pipeline to start..."
     for i in $(seq 1 30); do
         if glab ci list --per-page 1 2>/dev/null | grep -qE 'running|pending|success|passed'; then
@@ -58,5 +57,15 @@ if [[ ${AUTOMERGE:-0} -eq 1 ]]; then
         sleep 2
     done
 
-    glab mr merge --auto-merge --remove-source-branch --yes
+    # Retry merge with auto-merge since GitLab may need time after pipeline starts
+    for i in $(seq 1 10); do
+        if glab mr merge --auto-merge --remove-source-branch --yes 2>&1; then
+            exit 0
+        fi
+        echo "Merge not ready yet, retrying in 5s... ($i/10)"
+        sleep 5
+    done
+
+    echo "Failed to set auto-merge after 10 attempts"
+    exit 1
 fi
