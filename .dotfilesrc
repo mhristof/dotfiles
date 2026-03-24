@@ -23,6 +23,8 @@ export PATH=/usr/local/opt/openjdk/bin:$PATH
 export PATH=$GOPATH/bin:$PATH
 export PATH=/opt/homebrew/bin:/usr/local/sbin:/usr/local/bin:$PATH
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+export PATH="$PATH:/Applications/Kiro.app/Contents/Resources/app/bin"
+alias kiro='VSCODE_DEV= /Applications/Kiro.app/Contents/Resources/app/bin/code'
 export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
 export PATH=/opt/homebrew/opt/curl/bin:$PATH
@@ -147,6 +149,10 @@ done < <(find $HOME/.zsh.autoload/ -type f)
 src "${HOME}/.fzf.zsh"
 src "${HOME}/dotfiles/z.sh"
 src "${HOME}/.bash-my-aws/aliases"
+if [[ $THIS_SHELL == "zsh" ]]; then
+    autoload -U +X compinit && compinit
+    autoload -U +X bashcompinit && bashcompinit
+fi
 src "${HOME}/.bash-my-aws/bash_completion.sh"
 src "${HOME}/.brew/etc/profile.d/bash_completion.sh"
 src "/opt/homebrew/opt/powerlevel10k/powerlevel10k.zsh-theme"
