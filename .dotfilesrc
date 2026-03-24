@@ -129,11 +129,11 @@ alias yoink='open -a Yoink'
 alias ecs='claws --read-only -s ecs'
 alias ec2='claws --read-only -s ec2'
 
-if command -v lsd &> /dev/null; then
-    alias ls='lsd --header'
-    l="ls -al --git  --date relative"
-    alias l="[ -d .git ] && $l --sort git || $l --sort version"
-    alias lt="$l --timesort --reverse"
+if command -v eza &> /dev/null; then
+    alias ls='eza --header'
+    l="eza --long --all --git --time-style relative"
+    alias l="[ -d .git ] && $l --sort git || $l --sort name"
+    alias lt="$l --sort modified --reverse"
     alias tree="$l --tree"
 fi
 

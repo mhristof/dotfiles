@@ -50,7 +50,7 @@ brew "node"
 brew "jupyterlab", link: false
 brew "lftp"
 brew "libpq"
-brew "lsd"
+brew "eza"
 brew "moreutils", link: false
 brew "neovim"
 brew "nmap"

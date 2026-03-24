@@ -251,8 +251,8 @@ terraform-docs:  ~/.local/bin/terraform-docs
 slack:
 	brew cask install slack
 
-.PHONY: exa
-exa: $(EXA)
+.PHONY: eza
+eza: $(EXA)
 
 .PHONY: helm
 helm: $(HELM)

@@ -7,7 +7,7 @@ BANDIT := $(BREW_BIN)/bandit
 BREW := ~/.brew/bin/brew
 CTAGS := $(BREW_BIN)/ctags
 CURL := $(abspath $(BREW_BIN)/../opt/curl/bin/curl)
-EXA := $(BREW_BIN)/exa
+EXA := $(BREW_BIN)/eza
 GO := $(BREW_BIN)/go
 GREP := $(abspath $(BREW_BIN)/../opt/grep/libexec/gnubin/grep)
 HELM := $(BREW_BIN)/helm
@@ -28,7 +28,7 @@ XARGS := $(abspath $(BREW_BIN)/../opt/findutils)
 YAMLLINT := $(BREW_BIN)/yamllint
 ZSH := $(BREW_BIN)/zsh
 
-DEV += exa
+DEV += eza
 
 ifeq (, $(shell which brew))
 BREW := ~/.brew/bin/brew
