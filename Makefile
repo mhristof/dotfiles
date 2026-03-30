@@ -181,6 +181,7 @@ brew: brew-packages
 brew-packages:
 	$(BREW) update
 	$(BREW) bundle --file=$(PWD)/Brewfile
+	$(BREW) link --overwrite parallel
 
 .PHONY: fzf
 fzf: ~/.fzf.zsh
