@@ -181,6 +181,7 @@ brew: brew-packages
 brew-packages:
 	$(BREW) update
 	$(BREW) bundle --file=$(PWD)/Brewfile
+	$(BREW) link moreutils 2>/dev/null || true
 	$(BREW) link --overwrite parallel
 
 .PHONY: fzf
