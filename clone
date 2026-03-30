@@ -9,6 +9,120 @@ die() {
     exit 1
 }
 
+gitlab_path_from_url() {
+    local url="$1"
+    local path
+
+    path="${url#*gitlab.com/}"
+    path="${path#*gitlab.com:}"
+    path="${path%.git}"
+    path="${path%/}"
+
+    echo "$path"
+}
+
+encode_gitlab_path() {
+    echo "${1//\//%2F}"
+}
+
+https_to_ssh() {
+    local url="$1"
+
+    url=${url%/}
+    url=${url%.git}
+
+    if [[ "$url" == https://gitlab.com/* ]]; then
+        local path="${url#https://gitlab.com/}"
+        echo "git@gitlab.com:${path}.git"
+        return
+    fi
+
+    if [[ "$url" == https://github.com/* ]]; then
+        local path="${url#https://github.com/}"
+        echo "git@github.com:${path}.git"
+        return
+    fi
+
+    echo "$url"
+}
+
+clone_single_repo() {
+    local url
+    url=$(https_to_ssh "$1")
+    local dest
+
+    dest=${url/https:\/\//~/code/}
+    dest=${dest/http:\/\//~/code/}
+    dest=${dest/git@github.com:/~/code/github.com/}
+    dest=${dest/git@gitlab.com:/~/code/gitlab.com/}
+    dest=${dest/.git/}
+
+    local cmd="git clone $url $dest"
+    if [[ "${DRY:-}" == "true" ]]; then
+        echo "dry $cmd"
+        return
+    fi
+
+    if [[ -d "$dest" ]]; then
+        echo "Already cloned: $dest"
+        return
+    fi
+
+    eval "$cmd"
+
+    which pre-commit &>/dev/null || {
+        pip install pre-commit
+    }
+
+    if [[ -f $dest/.pre-commit-config.yaml ]]; then
+        (cd "$dest" && pre-commit install)
+    fi
+}
+
+is_gitlab_group() {
+    local url="$1"
+
+    if [[ "$url" != *"gitlab.com"* ]]; then
+        return 1
+    fi
+
+    local encoded_path
+    encoded_path=$(encode_gitlab_path "$(gitlab_path_from_url "$url")")
+
+    echo "Checking if '$encoded_path' is a GitLab group..." >&2
+    if glab api "/groups/$encoded_path" &>/dev/null; then
+        echo "Detected as group" >&2
+        return 0
+    fi
+    echo "Not a group, treating as repo" >&2
+    return 1
+}
+
+clone_gitlab_group() {
+    local url="$1"
+    local path
+    path=$(gitlab_path_from_url "$url")
+
+    local encoded_path
+    encoded_path=$(encode_gitlab_path "$path")
+
+    local repos
+    repos=$(glab api "/groups/$encoded_path/projects?include_subgroups=true" --paginate | jq -r '.[].ssh_url_to_repo')
+
+    if [[ -z "$repos" ]]; then
+        die "No projects found in group: $path"
+    fi
+
+    local count
+    count=$(wc -l <<<"$repos" | tr -d ' ')
+    echo "Found $count projects in group: $path"
+
+    while IFS= read -r repo; do
+        echo "--- Cloning $repo ---"
+        clone_single_repo "$repo"
+    done <<<"$repos"
+}
+
 if [[ -z $URL ]]; then
     if [[ "$PWD" == *"/code/github.com"* ]]; then
         # GitHub - use gh cli
@@ -22,9 +136,6 @@ if [[ -z $URL ]]; then
         echo "org: $ORG url: $URL"
     else
         # GitLab - use glab cli
-        if [[ -z ${GITLAB_TOKEN:-} ]]; then
-            export GITLAB_TOKEN=$(/usr/bin/security find-generic-password -s germ -w -a GITLAB_READONLY_TOKEN 2>/dev/null)
-        fi
         PROJECT=$(sed "s!$HOME/code/git....com/!!g" <<<"$PWD" | cut -d/ -f1)
         URL=$(glab api "/groups/$PROJECT/projects?include_subgroups=true" --paginate | jq '.[].ssh_url_to_repo' -r | fzf)
         echo "project: $PROJECT url: $URL"
@@ -35,26 +146,10 @@ if [[ -z $URL ]]; then
     die "Please provide a URL"
 fi
 
-dest=${URL/https:\/\//~/code/}
-dest=${dest/http:\/\//~/code/}
-dest=${dest/git@github.com:/~/code/github.com/}
-dest=${dest/git@gitlab.com:/~/code/gitlab.com/}
-dest=${dest/.git/}
-
-cmd="git clone $URL $dest"
-if [[ "${DRY:-}" == "true" ]]; then
-    echo "dry $cmd"
-    exit 0
-fi
-
-eval "$cmd"
-
-which pre-commit &>/dev/null || {
-    pip install pre-commit
-}
-
-if [[ -f $dest/.pre-commit-config.yaml ]]; then
-    cd "$dest" && pre-commit install
+if is_gitlab_group "$URL"; then
+    clone_gitlab_group "$URL"
+else
+    clone_single_repo "$URL"
 fi
 
 if [[ -f $DIR/update-fzf-projects-vim.sh ]]; then
