@@ -129,7 +129,7 @@ ssh-key: ## Generate a new SSH key and copy to clipboard
 ln: dots
 
 # List of all dotfiles to install
-DOTFILES := .gitignore_global .gitconfig .vimrc .zshrc .dotfilesrc .pythonrc.py .tmux.conf .p10k.zsh .agignore .bash_profile .gitconfig.github .lessfilter .pdbrc .tflint.hcl .Xresources
+DOTFILES := .gitignore_global .gitconfig .vimrc .zshrc .dotfilesrc .pythonrc.py .tmux.conf .p10k.zsh .agignore .bash_profile .gitconfig.github .lessfilter .pdbrc .tflint.hcl .Xresources .tfswitch.toml
 
 .PHONY: dots
 dots: $(addprefix ~/,$(DOTFILES)) ~/.config/nvim/init.vim ~/bin ## Symlink dotfiles to home
