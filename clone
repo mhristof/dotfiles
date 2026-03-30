@@ -117,10 +117,9 @@ clone_gitlab_group() {
     count=$(wc -l <<<"$repos" | tr -d ' ')
     echo "Found $count projects in group: $path"
 
-    while IFS= read -r repo; do
-        echo "--- Cloning $repo ---"
-        clone_single_repo "$repo"
-    done <<<"$repos"
+    export -f clone_single_repo https_to_ssh
+    export DRY
+    parallel --jobs 8 clone_single_repo ::: $repos
 }
 
 if [[ -z $URL ]]; then
