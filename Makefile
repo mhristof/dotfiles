@@ -9,12 +9,44 @@ endif
 .DEFAULT_GOAL := default
 .ONESHELL:
 
-BREW_BIN := /usr/local/bin
-DEV := essentials dots vim bat git ~/bin/semver $(LS) $(WATCH) $(JQ) $(AUTOJUMP)
-include Makefile.$(shell uname -s)
-
+BREW_BIN := $(shell brew --prefix)/bin
+GH_OS := macOS
 UNAME := $(shell uname | tr '[:upper:]' '[:lower:]')
 VENDOR := apple
+
+ifeq (, $(shell which brew))
+BREW := ~/.brew/bin/brew
+else
+BREW := $(shell which brew)
+endif
+
+AG := $(BREW_BIN)/ag
+AUTOJUMP := $(BREW_BIN)/autojump
+BANDIT := $(BREW_BIN)/bandit
+CTAGS := $(BREW_BIN)/ctags
+CURL := $(abspath $(BREW_BIN)/../opt/curl/bin/curl)
+EXA := $(BREW_BIN)/eza
+GO := $(BREW_BIN)/go
+GREP := $(abspath $(BREW_BIN)/../opt/grep/libexec/gnubin/grep)
+HELM := $(BREW_BIN)/helm
+HTOP := $(BREW_BIN)/htop
+JQ := $(BREW_BIN)/jq
+K9S := $(BREW_BIN)/k9s
+LS := $(abspath $(BREW_BIN)/../opt/coreutils)
+PYCODESTYLE := $(BREW_BIN)/pycodestyle
+PYLINT := $(BREW_BIN)/pylint
+PYTHON3 := $(BREW_BIN)/python3
+SHELLCHECK := $(BREW_BIN)/shellcheck
+SPONGE := $(BREW_BIN)/sponge
+SRCHILITE := $(BREW_BIN)/src-hilite-lesspipe.sh
+VIM := $(BREW_BIN)/vim
+WATCH := $(BREW_BIN)/watch
+WGET := $(BREW_BIN)/wget
+XARGS := $(abspath $(BREW_BIN)/../opt/findutils)
+YAMLLINT := $(BREW_BIN)/yamllint
+ZSH := $(BREW_BIN)/zsh
+
+DEV := essentials dots vim bat git ~/bin/semver $(LS) $(WATCH) $(JQ) $(AUTOJUMP) eza
 
 PWD ?= $(shell pwd)
 FIRST_VIM_PLUGIN := ~/.vim/bundle/$(shell basename $(shell grep Plugin .vimrc | head -2 | tail -1 | cut -d"'" -f2) .git)
@@ -114,7 +146,7 @@ $(DOTFILES): %: ~/.%
 	@command -v p10k &>/dev/null || brew install powerlevel10k
 	@test -L $@ || ln -sf $(PWD)/$(shell basename $@) $@
 
-$(BREW_BIN)/src-hilite-lesspipe.sh:
+$(SRCHILITE):
 	$(BREW) install source-highlight
 
 ~/.vim/bundle/Vundle.vim:
@@ -132,16 +164,15 @@ $(BREW_BIN)/curl/bin/curl:
 .PHONY: oh-my-zsh
 oh-my-zsh:
 	rm -rf ~/.oh-my-zsh
-	ZSH=~/.oh-my-zsh SHELL=/opt/homebrew/bin/zsh sh -c "$$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc
+	ZSH=~/.oh-my-zsh SHELL=/opt/homebrew/bin/zsh sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc
 	git clone https://github.com/Aloxaf/fzf-tab ~/.oh-my-zsh/custom/plugins/fzf-tab
 
 ~/.oh-my-zsh:
-	@test -d $@/lib || ZSH=$@ SHELL=/opt/homebrew/bin/zsh sh -c "$$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc
+	@test -d $@/lib || ZSH=$@ SHELL=/opt/homebrew/bin/zsh sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc
 	@test -d $@/custom/plugins/fzf-tab || git clone https://github.com/Aloxaf/fzf-tab $@/custom/plugins/fzf-tab
 
 .PHONY: zsh
 zsh: $(ZSH) ~/.zshrc ~/.dotfilesrc ~/.oh-my-zsh
-
 
 .PHONY: brew
 brew: ~/.brew brew-packages
@@ -156,7 +187,7 @@ fzf: ~/.fzf.zsh
 
 ~/.fzf.zsh:
 	@command -v fzf &>/dev/null || brew install fzf
-	@test -f $@ || $$(brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc --no-bash --no-fish
+	@test -f $@ || $(brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc --no-bash --no-fish
 
 $(BREW_BIN)/autojump:
 	$(BREW) install autojump
@@ -212,7 +243,6 @@ pbpaste: /tmp/alfred-pbpaste.alfredworkflow
 	open /tmp/alfred-pbpaste.alfredworkflow
 
 alfred: $(BREW_BIN)/wget pbpaste $(GREP) /tmp/alfred-qrencode.alfredworkflow
-
 
 .PHONY: qrencode
 qrencode: /tmp/alfred-qrencode.alfredworkflow
@@ -316,6 +346,32 @@ gitbrowse:  ~/bin/gitbrowse
 .PHONY: yamllint
 yamllint: $(YAMLLINT)
 
+# Brew install targets from Makefile.Darwin
+$(SPONGE):
+	$(BREW) install moreutils
+	$(BREW) link --overwrite parallel
+
+%/coreutils:
+	$(BREW) install coreutils
+
+%/findutils:
+	$(BREW) install findutils
+
+$(GREP):
+	$(BREW) install grep
+
+$(CTAGS):
+	@brew list universal-ctags &>/dev/null || $(BREW) install universal-ctags
+
+$(PYLINT):
+	pip3 install pylint
+
+$(BANDIT):
+	pip3 install bandit
+
+$(BREW_BIN)/%:
+	@brew list $* &>/dev/null || $(BREW) install $*
+
 ~/.zsh.site-functions:
 	@test -d $@ || mkdir -p $@
 
@@ -326,6 +382,3 @@ yamllint: $(YAMLLINT)
 	@test -L $@ || ln -sf $(PWD)/$(shell basename $@) $@
 
 # vim:ft=make
-#
-
-
