@@ -46,30 +46,34 @@ DEV := essentials dots vim bat git ~/bin/semver $(LS) $(WATCH) $(JQ) $(AUTOJUMP)
 PWD ?= $(shell pwd)
 FIRST_VIM_PLUGIN := ~/.vim/bundle/$(shell basename $(shell grep Plugin .vimrc | head -2 | tail -1 | cut -d"'" -f2) .git)
 
+.PHONY: help
+help: ## Show available targets
+	@grep --extended-regexp '^\S+:.*##' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
+
 .PHONY: default
-default: install-brew dirs zsh dots vim clear-dock fzf brew
+default: install-brew dirs zsh dots vim clear-dock fzf brew ## Full setup (default)
 
 .PHONY: clear-dock
-clear-dock:
+clear-dock: ## Remove all icons from the Dock
 	@./clear-dock.sh
 
 .PHONY: dirs
-dirs: ~/.local/bin ~/.zsh.site-functions
+dirs: ~/.local/bin ~/.zsh.site-functions ## Create required directories
 
 .PHONY: essentials
-essentials: $(HTOP) $(WATCH) less $(GREP) $(SPONGE)
+essentials: $(HTOP) $(WATCH) less $(GREP) $(SPONGE) ## Install essential CLI tools
 
 .PHONY: dev
-dev: $(DEV)
+dev: $(DEV) ## Install dev tools (essentials + vim + git + more)
 
 .PHONY: go
-go: $(GO) ~/go/bin/gojson
+go: $(GO) ~/go/bin/gojson ## Install Go and tools
 
 .PHONY: aws
-aws: bash-my-aws $(BREW_BIN)/aws $(BREW_BIN)/kubectx
+aws: bash-my-aws $(BREW_BIN)/aws $(BREW_BIN)/kubectx ## Install AWS CLI tools
 
 .PHONY: k8s
-k8s: $(K9S)
+k8s: $(K9S) ## Install Kubernetes tools
 
 $(BREW_BIN)/aws:
 	pip3 install aws --user
@@ -78,7 +82,7 @@ $(BREW_BIN)/diff:
 	brew install diffutils
 
 .PHONY: vim
-vim: ~/.vimrc ~/.vim/bundle/Vundle.vim vim-tools vim-plugins ~/bin/gitbrowse
+vim: ~/.vimrc ~/.vim/bundle/Vundle.vim vim-tools vim-plugins ~/bin/gitbrowse ## Setup vim config and plugins
 
 .PHONY: vim-tools
 vim-tools: ctags
@@ -86,7 +90,7 @@ vim-tools: ctags
 	@command -v ag &>/dev/null || brew install the_silver_searcher
 
 .PHONY: vim-linters
-vim-linters: golangci-lint shfmt
+vim-linters: golangci-lint shfmt ## Install vim linters
 	brew list shellcheck &>/dev/null || brew install shellcheck
 	brew list pipx &>/dev/null || brew install pipx
 	pipx install bandit || true
@@ -102,10 +106,10 @@ vim-plugins: ~/.vim/bundle/Vundle.vim
 less: $(SRCHILITE)
 
 .PHONY: git
-git: ~/.gitignore.global ~/.gitconfig ~/.gitconfig.github gh
+git: ~/.gitignore.global ~/.gitconfig ~/.gitconfig.github gh ## Setup git config
 
 .PHONY: ssh-key
-ssh-key:
+ssh-key: ## Generate a new SSH key and copy to clipboard
 	@if [ -f ~/.ssh/id_ed25519 ]; then \
 		echo "SSH key already exists at ~/.ssh/id_ed25519"; \
 		echo "Remove it first if you want to generate a new one"; \
@@ -128,7 +132,7 @@ ln: dots
 DOTFILES := .gitignore_global .gitconfig .vimrc .zshrc .dotfilesrc .pythonrc.py .tmux.conf .p10k.zsh .agignore .bash_profile .gitconfig.github .lessfilter .pdbrc .tflint.hcl .Xresources
 
 .PHONY: dots
-dots: $(addprefix ~/,$(DOTFILES)) ~/.config/nvim/init.vim ~/bin
+dots: $(addprefix ~/,$(DOTFILES)) ~/.config/nvim/init.vim ~/bin ## Symlink dotfiles to home
 
 .PHONY: $(DOTFILES)
 $(DOTFILES): %: ~/.%
@@ -157,7 +161,7 @@ $(BREW_BIN)/curl/bin/curl:
 	@test -L $@ || ln -sf $(PWD)/$(shell basename $@) $@
 
 .PHONY: oh-my-zsh
-oh-my-zsh:
+oh-my-zsh: ## Reinstall oh-my-zsh and fzf-tab
 	rm -rf ~/.oh-my-zsh
 	ZSH=~/.oh-my-zsh SHELL=/opt/homebrew/bin/zsh sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc
 	git clone https://github.com/Aloxaf/fzf-tab ~/.oh-my-zsh/custom/plugins/fzf-tab
@@ -167,14 +171,14 @@ oh-my-zsh:
 	@test -d $@/custom/plugins/fzf-tab || git clone https://github.com/Aloxaf/fzf-tab $@/custom/plugins/fzf-tab
 
 .PHONY: zsh
-zsh: $(ZSH) ~/.zshrc ~/.dotfilesrc ~/.oh-my-zsh
+zsh: $(ZSH) ~/.zshrc ~/.dotfilesrc ~/.oh-my-zsh ## Setup zsh, oh-my-zsh and config
 
 .PHONY: install-brew
-install-brew:
+install-brew: ## Install Homebrew if not present
 	@command -v brew &>/dev/null || /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 .PHONY: brew
-brew: install-brew brew-packages
+brew: install-brew brew-packages ## Install brew and all Brewfile packages
 
 .PHONY: brew-packages
 brew-packages:
@@ -200,7 +204,7 @@ aws-azure-login: $(BREW_BIN)/node
 	npm install -g aws-azure-login@1.13.0
 
 .PHONY: iterm
-iterm: /Applications/iTerm.app germ
+iterm: /Applications/iTerm.app germ ## Install iTerm2 and germ
 
 ~/.iterm2_shell_integration.zsh: $(BREW_BIN)/curl/bin/curl
 	curl -L https://iterm2.com/shell_integration/install_shell_integration_and_utilities.sh | bash
@@ -235,7 +239,7 @@ $(BREW_BIN)/make/libexec/gnubin/make:
 	$(BREW) install make
 
 .PHONY: docker
-docker: /Applications/Docker.app/Contents/MacOS/Docker
+docker: /Applications/Docker.app/Contents/MacOS/Docker ## Install Docker Desktop
 
 /Applications/Docker.app/Contents/MacOS/Docker:
 	brew install docker --cask
@@ -302,7 +306,7 @@ bat: ~/.local/bin/bat
 	rm -rf $(TEMPDIR)
 
 .PHONY: shortcut
-shortcut:
+shortcut: ## Setup macOS keyboard shortcuts
 	./setup-mac-shortcuts.sh
 
 ~/bin:
