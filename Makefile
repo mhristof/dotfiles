@@ -15,7 +15,7 @@ UNAME := $(shell uname | tr '[:upper:]' '[:lower:]')
 VENDOR := apple
 
 ifeq (, $(shell which brew))
-BREW := ~/.brew/bin/brew
+$(error brew is not installed. Install it from https://brew.sh)
 else
 BREW := $(shell which brew)
 endif
@@ -175,12 +175,12 @@ oh-my-zsh:
 zsh: $(ZSH) ~/.zshrc ~/.dotfilesrc ~/.oh-my-zsh
 
 .PHONY: brew
-brew: ~/.brew brew-packages
+brew: brew-packages
 
 .PHONY: brew-packages
-brew-packages: ~/.brew
-	brew update
-	brew bundle --file=$(PWD)/Brewfile
+brew-packages:
+	$(BREW) update
+	$(BREW) bundle --file=$(PWD)/Brewfile
 
 .PHONY: fzf
 fzf: ~/.fzf.zsh
@@ -311,11 +311,6 @@ bash-my-aws: ~/.bash-my-aws
 
 ~/.bash-my-aws:
 	git clone https://github.com/bash-my-aws/bash-my-aws.git ~/.bash-my-aws
-
-~/.brew:
-	git clone https://github.com/Homebrew/brew.git ~/.brew
-	$(BREW) tap homebrew/core
-	$(BREW) --version
 
 ~/bin/semver: | $(WGET) ~/bin ~/.zsh.site-functions
 	wget --quiet https://github.com/mhristof/semver/releases/download/v0.7.0/semver_0.7.0_$(UNAME)_amd64 -O ~/bin/semver
