@@ -146,7 +146,11 @@ done < <(find $HOME/.zsh.autoload/ -type f)
     # §source $file && compdef $base ${base/_/}
 # §done < <(find $HOME/.zsh.site-functions -type f)
 
-src "${HOME}/.fzf.zsh"
+if [[ $THIS_SHELL == "bash" ]]; then
+    eval "$(fzf --bash)"
+else
+    src "${HOME}/.fzf.zsh"
+fi
 src "${HOME}/dotfiles/z.sh"
 src "${HOME}/.bash-my-aws/aliases"
 if [[ $THIS_SHELL == "zsh" ]]; then
