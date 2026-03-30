@@ -16,3 +16,6 @@ zoi
 nake
 stacks
 .terraform/*
+.local
+.bash-my-aws
+.vscode
