@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source $HOME/bin/.lib
-PATH=$(sed "s@$HOME/bin@@" <<<"$PATH")
-which pre-commit &>/dev/null || {
-    pip3 install pre-commit
-}
-pre-commit "$@"
+source "$HOME/bin/.lib"
+
+PIPX_BIN="$HOME/.local/bin/pre-commit"
+
+if [[ ! -x "$PIPX_BIN" ]]; then
+    command -v pipx &>/dev/null || brew install pipx
+    pipx install pre-commit
+fi
+
+exec "$PIPX_BIN" "$@"
