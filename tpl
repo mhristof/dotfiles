@@ -27,4 +27,4 @@ fi
 CMD="$TOOL plan -out $PLAN $*"
 echo "$CMD"
 eval "$CMD"
-python3 $DIR/terraform-plan-changes.py $PLAN
+uv run $DIR/terraform-plan-changes.py $PLAN
