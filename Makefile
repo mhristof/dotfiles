@@ -9,16 +9,11 @@ endif
 .DEFAULT_GOAL := default
 .ONESHELL:
 
-BREW_BIN := $(shell brew --prefix)/bin
+BREW_BIN := $(shell brew --prefix 2>/dev/null)/bin
 GH_OS := macOS
 UNAME := $(shell uname | tr '[:upper:]' '[:lower:]')
 VENDOR := apple
-
-ifeq (, $(shell which brew))
-$(error brew is not installed. Install it from https://brew.sh)
-else
-BREW := $(shell which brew)
-endif
+BREW := $(shell which brew 2>/dev/null)
 
 AG := $(BREW_BIN)/ag
 AUTOJUMP := $(BREW_BIN)/autojump
@@ -52,7 +47,7 @@ PWD ?= $(shell pwd)
 FIRST_VIM_PLUGIN := ~/.vim/bundle/$(shell basename $(shell grep Plugin .vimrc | head -2 | tail -1 | cut -d"'" -f2) .git)
 
 .PHONY: default
-default: dirs zsh dots vim clear-dock fzf
+default: install-brew dirs zsh dots vim clear-dock fzf brew
 
 .PHONY: clear-dock
 clear-dock:
@@ -174,8 +169,12 @@ oh-my-zsh:
 .PHONY: zsh
 zsh: $(ZSH) ~/.zshrc ~/.dotfilesrc ~/.oh-my-zsh
 
+.PHONY: install-brew
+install-brew:
+	@command -v brew &>/dev/null || /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
 .PHONY: brew
-brew: brew-packages
+brew: install-brew brew-packages
 
 .PHONY: brew-packages
 brew-packages:
