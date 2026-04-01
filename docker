@@ -1,8 +1,24 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ $(uname -m) == "arm64" ]] && [[ "$1" == "run" || "$1" == "build" ]]; then
-    /usr/local/bin/docker "$1" --platform linux/amd64 "${@:2}"
+REAL_DOCKER="$(command -v -p docker 2>/dev/null)" || true
+
+if [[ -z "$REAL_DOCKER" || "$REAL_DOCKER" == "$(realpath "$0")" ]]; then
+    for dir in /opt/homebrew/bin /usr/local/bin /usr/bin; do
+        if [[ -x "$dir/docker" && "$(realpath "$dir/docker")" != "$(realpath "$0")" ]]; then
+            REAL_DOCKER="$dir/docker"
+            break
+        fi
+    done
+fi
+
+if [[ -z "$REAL_DOCKER" ]]; then
+    echo "error: could not find real docker binary" >&2
+    exit 1
+fi
+
+if [[ $(uname -m) == "arm64" ]] && [[ "${1:-}" == "run" || "${1:-}" == "build" ]]; then
+    exec "$REAL_DOCKER" "$1" --platform linux/amd64 "${@:2}"
 else
-    /usr/local/bin/docker "$@"
+    exec "$REAL_DOCKER" "$@"
 fi
