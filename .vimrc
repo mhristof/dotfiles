@@ -186,14 +186,46 @@ function! TerraformFmtOnSave() abort
   let ext = expand('%:e')
   let tmpfile = tempname() . '.' . ext
   call writefile(getline(1, '$'), tmpfile)
-  let output = system(g:terraform_binary_path . ' fmt -no-color ' . shellescape(tmpfile))
+  let output = system(g:terraform_binary_path . ' fmt -no-color ' . shellescape(tmpfile) . ' 2>&1')
   if v:shell_error == 0
     let curw = winsaveview()
     silent %delete _
     call setline(1, readfile(tmpfile))
     call winrestview(curw)
+    cclose
+    call setqflist([], 'r')
+  else
+    call s:TerraformParseErrors(output)
   endif
   call delete(tmpfile)
+endfunction
+
+function! s:TerraformParseErrors(output) abort
+  let qflist = []
+  let fname = expand('%:p')
+  let lines = split(a:output, '\n')
+  for line in lines
+    let m = matchlist(line, 'on \S\+ line \(\d\+\)')
+    if !empty(m)
+      let lnum = str2nr(m[1])
+      let errmsg = s:TerraformExtractErrorMsg(lines)
+      call add(qflist, {'filename': fname, 'lnum': lnum, 'text': errmsg, 'type': 'E'})
+    endif
+  endfor
+  if !empty(qflist)
+    call setqflist(qflist, 'r')
+    copen
+  endif
+endfunction
+
+function! s:TerraformExtractErrorMsg(lines) abort
+  for line in a:lines
+    let m = matchlist(line, '\(│ \)\?Error: \(.*\)')
+    if !empty(m)
+      return m[2]
+    endif
+  endfor
+  return 'terraform fmt error'
 endfunction
 
 augroup TerraformFmtNvim
