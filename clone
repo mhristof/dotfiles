@@ -2,6 +2,12 @@
 set -euo pipefail
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+FZF_ONLY=false
+if [[ "${1:-}" == "--fzf-only" ]]; then
+    FZF_ONLY=true
+    shift
+fi
+
 URL=${1:-}
 
 die() {
@@ -122,27 +128,60 @@ clone_gitlab_group() {
     parallel --jobs 8 clone_single_repo ::: $repos
 }
 
+is_cloned() {
+    local url="$1"
+    local dest
+    dest="${url/git@github.com:/~/code/github.com/}"
+    dest="${dest/git@gitlab.com:/~/code/gitlab.com/}"
+    dest="${dest/.git/}"
+    dest="${dest/#\~/$HOME}"
+    [[ -d "$dest" ]]
+}
+
+filter_uncloned() {
+    while IFS= read -r url; do
+        is_cloned "$url" || echo "$url"
+    done
+}
+
+gitlab_group_from_pwd() {
+    local project="${PWD#$HOME/code/gitlab.com/}"
+    local gitroot
+    gitroot=$(git rev-parse --show-toplevel 2>/dev/null || true)
+
+    if [[ -n "$gitroot" ]]; then
+        project="${gitroot#$HOME/code/gitlab.com/}"
+        project="${project%/*}"
+    fi
+
+    echo "$project"
+}
+
 if [[ -z $URL ]]; then
     if [[ "$PWD" == *"/code/github.com"* ]]; then
         # GitHub - use gh cli
         gh auth status &>/dev/null || die "GitHub auth not configured. Run: gh auth login"
         ORG=$(sed "s!$HOME/code/github.com/!!g" <<<"$PWD" | cut -d/ -f1)
         if [[ -n "$ORG" ]]; then
-            URL=$(gh repo list "$ORG" --limit 1000 --json sshUrl --jq '.[].sshUrl' | fzf)
+            URL=$(gh repo list "$ORG" --limit 1000 --json sshUrl --jq '.[].sshUrl' | filter_uncloned | fzf --height 40% --reverse --header "  github.com/$ORG" --prompt "clone> ")
         else
-            URL=$(gh repo list --limit 1000 --json sshUrl --jq '.[].sshUrl' | fzf)
+            URL=$(gh repo list --limit 1000 --json sshUrl --jq '.[].sshUrl' | filter_uncloned | fzf --height 40% --reverse --prompt "clone> ")
         fi
-        echo "org: $ORG url: $URL"
     else
         # GitLab - use glab cli
-        PROJECT=$(sed "s!$HOME/code/git....com/!!g" <<<"$PWD" | cut -d/ -f1)
-        URL=$(glab api "/groups/$PROJECT/projects?include_subgroups=true" --paginate | jq '.[].ssh_url_to_repo' -r | fzf)
-        echo "project: $PROJECT url: $URL"
+        PROJECT=$(gitlab_group_from_pwd)
+        ENCODED=$(encode_gitlab_path "$PROJECT")
+        URL=$(glab api "/groups/$ENCODED/projects?include_subgroups=true" --paginate | jq '.[].ssh_url_to_repo' -r | filter_uncloned | fzf --height 40% --reverse --header "  gitlab/$PROJECT" --prompt "clone> ")
     fi
 fi
 
 if [[ -z $URL ]]; then
     die "Please provide a URL"
+fi
+
+if [[ "$FZF_ONLY" == "true" ]]; then
+    echo "$URL"
+    exit 0
 fi
 
 if is_gitlab_group "$URL"; then

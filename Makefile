@@ -171,7 +171,10 @@ oh-my-zsh: ## Reinstall oh-my-zsh and fzf-tab
 	@test -d $@/custom/plugins/fzf-tab || git clone https://github.com/Aloxaf/fzf-tab $@/custom/plugins/fzf-tab
 
 .PHONY: zsh
-zsh: $(ZSH) ~/.zshrc ~/.dotfilesrc ~/.oh-my-zsh ## Setup zsh, oh-my-zsh and config
+zsh: $(ZSH) ~/.zshrc ~/.dotfilesrc ~/.oh-my-zsh ~/.zsh.site-functions/_clone ## Setup zsh, oh-my-zsh and config
+
+~/.zsh.site-functions/_clone: .zsh.site-functions/_clone | ~/.zsh.site-functions
+	@ln -sf $(PWD)/$< $@
 
 .PHONY: install-brew
 install-brew: ## Install Homebrew if not present
@@ -239,10 +242,9 @@ $(BREW_BIN)/make/libexec/gnubin/make:
 	$(BREW) install make
 
 .PHONY: docker
-docker: /Applications/Docker.app/Contents/MacOS/Docker ## Install Docker Desktop
-
-/Applications/Docker.app/Contents/MacOS/Docker:
-	brew install docker --cask
+docker: ## Install Docker Desktop and Compose plugin
+	@brew list --cask docker &>/dev/null || brew install --cask docker
+	@brew list docker-compose &>/dev/null || brew install docker-compose
 
 pbpaste: /tmp/alfred-pbpaste.alfredworkflow
 	open /tmp/alfred-pbpaste.alfredworkflow

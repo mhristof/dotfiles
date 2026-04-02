@@ -1,0 +1,25 @@
+#compdef clone
+
+_clone_gitlab_group() {
+    local project="$1"
+    local gitroot
+    gitroot=$(git rev-parse --show-toplevel 2>/dev/null || true)
+
+    if [[ -n "$gitroot" ]]; then
+        project="${gitroot#$HOME/code/gitlab.com/}"
+        project="${project%/*}"
+    fi
+
+    echo "$project"
+}
+
+_clone() {
+    local selected
+
+    selected=$(clone --fzf-only 2>/dev/null)
+    [[ -z "$selected" ]] && return
+
+    compadd -U -Q -- "$selected"
+}
+
+_clone "$@"
