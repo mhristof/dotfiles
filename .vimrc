@@ -1,6 +1,14 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
+" Ensure ~/.local/bin is in PATH (needed for terraform, tfswitch, etc.)
+let $PATH = expand('~/.local/bin') . ':' . $PATH
+
+" Use bash for shell commands (zsh breaks vim-terraform fmt shellredir)
+if has('nvim')
+  set shell=/bin/bash
+endif
+
 " Detect if we're running nvim or vim
 let g:is_nvim = has('nvim')
 
@@ -155,12 +163,13 @@ function! OpenKiro()
     let root = system('git rev-parse --show-toplevel 2>/dev/null')
     if v:shell_error == 0
         let root = substitute(root, '\n', '', 'g')
-        execute '!open -a Kiro ' . shellescape(root)
     else
-        echo "Not in a git repository"
+        let root = expand('%:p:h')
     endif
+    execute 'silent !/Applications/Kiro.app/Contents/Resources/app/bin/code ' . shellescape(root)
 endfunction
 command! Kiro call OpenKiro()
+cabbrev kiro Kiro
 
 let g:fzf_layout = { 'down': '40%' } " disable the weird center pop up window
 let g:go_fmt_command="gopls"
@@ -170,7 +179,27 @@ let g:netrw_banner = 0
 let g:netrw_browse_split = 0
 let g:netrw_liststyle = 3
 let g:netrw_sort_sequence = '[\/]$,\<core\%(\.\d\+\)\=\>,\.h$,\.c$,\.cpp$,\~\=\*$,*,\.o$,\.obj$,\.info$,\.swp$,\.bak$,\.clean$,\.rej,\.orig,\~$'
-let g:terraform_fmt_on_save = 1
+let g:terraform_fmt_on_save = 0
+
+" nvim-compatible terraform fmt on save (plugin's shellredir is broken in nvim)
+function! TerraformFmtOnSave() abort
+  let ext = expand('%:e')
+  let tmpfile = tempname() . '.' . ext
+  call writefile(getline(1, '$'), tmpfile)
+  let output = system(g:terraform_binary_path . ' fmt -no-color ' . shellescape(tmpfile))
+  if v:shell_error == 0
+    let curw = winsaveview()
+    silent %delete _
+    call setline(1, readfile(tmpfile))
+    call winrestview(curw)
+  endif
+  call delete(tmpfile)
+endfunction
+
+augroup TerraformFmtNvim
+  autocmd!
+  autocmd BufWritePre *.tf,*.tfvars call TerraformFmtOnSave()
+augroup END
 
 map <C-j> <C-W>j
 map <C-k> <C-W>k
