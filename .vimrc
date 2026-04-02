@@ -248,6 +248,7 @@ nmap <Space> <PageDown>
 nmap + :ts <C-R>=expand("<cword>")<cr><cr>
 nmap <leader>n :cnext<cr>
 nmap <leader>m :cprev<cr>
+
 nmap <leader>b :Gbrowse<cr>
 nmap <leader>t :FzfSwitchProject<cr>
 nmap <C-]> :call TagsOrAck()<cr>
@@ -431,6 +432,13 @@ if has("user_commands")
     cabbrev bb :call GitBrowse()<cr>
     " map the damn :W so that you dont type it twice. Or even 3 times. Fucking noob.
     command! -bang Wqa wqa<bang>
+
+    " ;w instead of :w (missed shift key)
+    nnoremap ;w :w<CR>
+    nnoremap ;wq :wq<CR>
+    nnoremap ;wqa :wqa<CR>
+    nnoremap ;q :q<CR>
+    nnoremap ;qa :qa<CR>
     command! -bang Wa wa<bang>
     command! -bang WA wa<bang>
     command! -bang Q q<bang>
