@@ -171,7 +171,10 @@ oh-my-zsh: ## Reinstall oh-my-zsh and fzf-tab
 	@test -d $@/custom/plugins/fzf-tab || git clone https://github.com/Aloxaf/fzf-tab $@/custom/plugins/fzf-tab
 
 .PHONY: zsh
-zsh: $(ZSH) ~/.zshrc ~/.dotfilesrc ~/.oh-my-zsh ~/.zsh.site-functions/_clone ## Setup zsh, oh-my-zsh and config
+zsh: $(ZSH) ~/.zshrc ~/.dotfilesrc ~/.oh-my-zsh ~/.oh-my-zsh/custom/plugins/fzf-tab ~/.zsh.site-functions/_clone ## Setup zsh, oh-my-zsh and config
+
+~/.oh-my-zsh/custom/plugins/fzf-tab: | ~/.oh-my-zsh
+	@test -d $@ || git clone https://github.com/Aloxaf/fzf-tab $@
 
 ~/.zsh.site-functions/_clone: .zsh.site-functions/_clone | ~/.zsh.site-functions
 	@ln -sf $(PWD)/$< $@

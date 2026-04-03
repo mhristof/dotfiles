@@ -22,8 +22,7 @@ HYPHEN_INSENSITIVE="true"
 fpath=($fpath ~/.zsh.autoload ~/.zsh.site-functions)
 plugins=( fzf-tab docker )
 
-# Zsh completion menu highlighting
-zstyle ':completion:*' menu select
+# Zsh completion colors (fzf-tab handles the menu)
 zstyle ':completion:*' list-colors 'ma=30;46'
 
 # src function defined in .dotfilesrc
@@ -35,8 +34,7 @@ src $HOME/.zshrc_local || true
 src $ZSH/oh-my-zsh.sh
 src $HOME/.dotfilesrc
 
-# Completion highlighting must be set AFTER oh-my-zsh loads
-zstyle ':completion:*' menu select
+# Completion colors must be set AFTER oh-my-zsh loads
 zstyle ':completion:*' list-colors 'ma=7'
 
 autoload -U +X bashcompinit && bashcompinit

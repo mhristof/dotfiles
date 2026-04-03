@@ -156,6 +156,8 @@ src "${HOME}/.bash-my-aws/aliases"
 if [[ $THIS_SHELL == "zsh" ]]; then
     autoload -U +X compinit && compinit
     autoload -U +X bashcompinit && bashcompinit
+    # re-source fzf-tab after compinit and fzf (both override Tab)
+    src "${HOME}/.oh-my-zsh/custom/plugins/fzf-tab/fzf-tab.plugin.zsh"
 fi
 src "${HOME}/.bash-my-aws/bash_completion.sh"
 src "${HOME}/.brew/etc/profile.d/bash_completion.sh"
