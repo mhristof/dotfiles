@@ -163,11 +163,11 @@ $(BREW_BIN)/curl/bin/curl:
 .PHONY: oh-my-zsh
 oh-my-zsh: ## Reinstall oh-my-zsh and fzf-tab
 	rm -rf ~/.oh-my-zsh
-	ZSH=~/.oh-my-zsh SHELL=/opt/homebrew/bin/zsh sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc
+	ZSH=~/.oh-my-zsh SHELL=/opt/homebrew/bin/zsh sh -c "$$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc
 	git clone https://github.com/Aloxaf/fzf-tab ~/.oh-my-zsh/custom/plugins/fzf-tab
 
 ~/.oh-my-zsh:
-	@test -d $@/lib || ZSH=$@ SHELL=/opt/homebrew/bin/zsh sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc
+	@test -d $@/lib || ZSH=$@ SHELL=/opt/homebrew/bin/zsh sh -c "$$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc
 	@test -d $@/custom/plugins/fzf-tab || git clone https://github.com/Aloxaf/fzf-tab $@/custom/plugins/fzf-tab
 
 .PHONY: zsh
