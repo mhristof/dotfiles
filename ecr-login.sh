@@ -4,15 +4,15 @@ set -euo pipefail
 IFS=$'\n\t'
 
 die() {
-    echo "$*" 1>&2
-    exit 1
+  echo "$*" 1>&2
+  exit 1
 }
 
 # example 1213123123.dkr.ecr.region.amazonaws.com/repo/image
 IMAGE="${1:-}"
 
 if [[ -z $IMAGE ]]; then
-    die "Error, please provide the image"
+  die "Error, please provide the image"
 fi
 
 ACCOUNT="$(cut -d. -f1 <<<"$IMAGE")"

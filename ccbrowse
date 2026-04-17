@@ -2,13 +2,13 @@
 set -euo pipefail
 
 if [[ -n $1 ]]; then
-    file=$(readlink -f "$1")
-    dir="$(dirname "$(readlink -f "$1")")"
-    gitRoot="$(cd "$dir" && git rev-parse --show-toplevel)"
-    filePrefix="/--${file/$gitRoot/}"
-    cd "$gitRoot"
+  file=$(readlink -f "$1")
+  dir="$(dirname "$(readlink -f "$1")")"
+  gitRoot="$(cd "$dir" && git rev-parse --show-toplevel)"
+  filePrefix="/--${file/$gitRoot/}"
+  cd "$gitRoot"
 else
-    filePrefix=""
+  filePrefix=""
 fi
 
 # shellcheck source=ccdata

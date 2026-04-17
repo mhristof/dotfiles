@@ -2,4 +2,4 @@
 
 set -euo pipefail
 
-aws route53 list-hosted-zones | jq '.HostedZones[] | [.Name, .Id] | @tsv' -r  | column -t
+aws route53 list-hosted-zones | jq '.HostedZones[] | [.Name, .Id] | @tsv' -r | column -t

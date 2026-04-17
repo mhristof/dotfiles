@@ -6,7 +6,7 @@ PATH=$(sed "s@$HOME/bin:@@" <<<"$PATH")
 
 BIN=$(basename "$0")
 which "$BIN" &>/dev/null || {
-    brew install warrensbox/tap/tfswitch
+  brew install warrensbox/tap/tfswitch
 }
 
 "$BIN" "$@"

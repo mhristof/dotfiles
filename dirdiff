@@ -4,17 +4,17 @@ folder=$1
 dest=$2
 
 if [[ -z $folder ]]; then
-    folder=$PWD
+  folder=$PWD
 fi
 
 if [[ -z $dest ]]; then
-    dest=$PWD
+  dest=$PWD
 fi
 
 if [[ -f $folder ]]; then
-    dest="${1//$2/$3}"
-    diff -Npaur "$folder" "$dest" | source-highlight --out-format=esc --src-lang=diff
-    exit 0
+  dest="${1//$2/$3}"
+  diff -Npaur "$folder" "$dest" | source-highlight --out-format=esc --src-lang=diff
+  exit 0
 fi
 
 find "$folder" -type f | fzf --preview-window="right:70%" --preview "$0 {} $folder $dest"

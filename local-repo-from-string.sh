@@ -3,8 +3,8 @@ set -euo pipefail
 IFS=$'\n\t'
 
 die() {
-    echo "$*" 1>&2
-    exit 1
+  echo "$*" 1>&2
+  exit 1
 }
 
 LOG=/tmp/$(basename "$0" .sh).log
@@ -12,7 +12,7 @@ LOG=/tmp/$(basename "$0" .sh).log
 src="$*"
 
 if [[ -z $src ]]; then
-    die "error, please specify a repo"
+  die "error, please specify a repo"
 fi
 
 repo=$(cut -d'"' -f2 <<<"$src")
@@ -25,7 +25,7 @@ dest=$(awk '{print $5}' <<<"$(clone "$repo")")
 
 file=$dest/$module/variables.tf
 if [[ ! -f $file ]]; then
-    file=$dest/module
+  file=$dest/module
 fi
 
 cat <<EOF >>"$LOG"

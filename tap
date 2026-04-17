@@ -10,22 +10,22 @@ ARGS="apply -auto-approve"
 TG="$(find ./ -maxdepth 2 -mindepth 2 -name terragrunt.hcl | wc -l)"
 
 if [[ -f terragrunt.hcl ]]; then
-    TOOL=terragrunt
+  TOOL=terragrunt
 fi
 
 if [[ $TG -gt 0 ]]; then
-    TOOL="terragrunt run-all"
+  TOOL="terragrunt run-all"
 fi
 
 if [[ -f molecule/default/converge.yml ]]; then
-    TOOL="molecule"
-    ARGS="converge"
+  TOOL="molecule"
+  ARGS="converge"
 fi
 
 PLAN=$(terraform_plan_name)
 
 if [[ -f $PLAN ]]; then
-    ARGS="apply $PLAN"
+  ARGS="apply $PLAN"
 fi
 
 CMD="$TOOL $ARGS"

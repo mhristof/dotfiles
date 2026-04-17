@@ -5,14 +5,14 @@ source ~/bin/.lib
 PATH=$(sed "s@$HOME/bin:@@" <<<"$PATH")
 
 which checkov &>/dev/null || {
-    mkdir -p ~/.vim/bundle/ale/ale_linters/terraform/
-    curl -sL \
-        --output ~/.local/dotfiles/bin/checkov2vim \
-        https://github.com/mhristof/checkov2vim/releases/download/v0.2.0/checkov2vim_0.2.0_$(UNAME)_amd64
-    chmod +x ~/.local/dotfiles/bin/checkov2vim
-    ~/.local/dotfiles/bin/checkov2vim generate --dest ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim:
+  mkdir -p ~/.vim/bundle/ale/ale_linters/terraform/
+  curl -sL \
+    --output ~/.local/dotfiles/bin/checkov2vim \
+    https://github.com/mhristof/checkov2vim/releases/download/v0.2.0/checkov2vim_0.2.0_$(UNAME)_amd64
+  chmod +x ~/.local/dotfiles/bin/checkov2vim
+  ~/.local/dotfiles/bin/checkov2vim generate --dest ~/.vim/bundle/ale/ale_linters/terraform/checkov.vim:
 
-    pip install --user checkov
+  pip install --user checkov
 }
 
 checkov "$@"

@@ -4,18 +4,18 @@ set -euo pipefail
 service=${1:-}
 
 if [[ -z $service ]]; then
-    case $(pwd) in
-        *iam*)
-            service=iam
-            ;;
-        ?)
-            service=ecs
-            ;;
-    esac
+  case $(pwd) in
+    *iam*)
+      service=iam
+      ;;
+    ?)
+      service=ecs
+      ;;
+  esac
 fi
 
 if [[ -z $AWS_PROFILE ]]; then
-    die "error, AWS_PROFILE not set"
+  die "error, AWS_PROFILE not set"
 fi
 
 source /usr/local/bin/assume --console "$AWS_PROFILE" --service "$service"

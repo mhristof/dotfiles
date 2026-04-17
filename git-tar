@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-
 ref=$(git rev-parse HEAD)
 repo=$(basename "$(git config --get remote.origin.url)")
 

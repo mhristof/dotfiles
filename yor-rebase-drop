@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 tmp=$(mktemp)
-grep -v '^pick.*ci: update yor tags$' "$1" > "$tmp"
+grep -v '^pick.*ci: update yor tags$' "$1" >"$tmp"
 mv "$tmp" "$1"

@@ -6,22 +6,22 @@ PATH=$(sed "s@$HOME/bin:@@" <<<"$PATH")
 
 BIN=$(basename "$0")
 which "$BIN" &>/dev/null || {
-    (
-        cd /tmp
-        curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/mac/sessionmanager-bundle.zip" -o "sessionmanager-bundle.zip"
-        unzip sessionmanager-bundle.zip
-        sudo ./sessionmanager-bundle/install -i /usr/local/sessionmanagerplugin -b /usr/local/bin/session-manager-plugin
-    )
+  (
+    cd /tmp
+    curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/mac/sessionmanager-bundle.zip" -o "sessionmanager-bundle.zip"
+    unzip sessionmanager-bundle.zip
+    sudo ./sessionmanager-bundle/install -i /usr/local/sessionmanagerplugin -b /usr/local/bin/session-manager-plugin
+  )
 
-    (
-        cd /tmp
-        curl "https://awscli.amazonaws.com/AWSCLIV2-2.14.5.pkg" -o "AWSCLIV2.pkg"
-        sudo installer -pkg AWSCLIV2.pkg -target /
-    )
+  (
+    cd /tmp
+    curl "https://awscli.amazonaws.com/AWSCLIV2-2.14.5.pkg" -o "AWSCLIV2.pkg"
+    sudo installer -pkg AWSCLIV2.pkg -target /
+  )
 
-    brew install docker-credential-helper-ecr
-    git clone https://github.com/bash-my-aws/bash-my-aws.git "${BMA_HOME:-$HOME/.bash-my-aws}"
-    patch -p1 <~/bin/.bash-my-aws/*
+  brew install docker-credential-helper-ecr
+  git clone https://github.com/bash-my-aws/bash-my-aws.git "${BMA_HOME:-$HOME/.bash-my-aws}"
+  patch -p1 <~/bin/.bash-my-aws/*
 }
 
 "$BIN" "$@"

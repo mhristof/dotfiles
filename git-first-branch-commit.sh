@@ -3,10 +3,10 @@ set -euo pipefail
 IFS=$'\n\t'
 
 branch() {
-    local commit
-    commit=$1
+  local commit
+  commit=$1
 
-    git branch -a --contains "$commit" | grep -v origin | sed 's/^\s*\*\s*//g' | awk '{print $1}'
+  git branch -a --contains "$commit" | grep -v origin | sed 's/^\s*\*\s*//g' | awk '{print $1}'
 }
 
 commit=$(git rev-list --max-count=1 HEAD)

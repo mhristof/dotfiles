@@ -7,11 +7,11 @@ MOUNT="${1:-rootca}"
 DOMAIN="${2:-example.com}"
 
 die() {
-    echo "$*" 1>&2
-    exit 1
+  echo "$*" 1>&2
+  exit 1
 }
 function usage {
-    cat <<EOF
+  cat <<EOF
 Setup a root ca and an intermediate mount in vault to issue certificates.
 
 Usage:
@@ -22,37 +22,37 @@ Args:
     -m path         Vault mount path for the PKI
     -d domain.com   Domain name for the certificate
 EOF
-    exit 1
+  exit 1
 }
 
 # https://stackoverflow.com/a/30026641/2599522
 for arg in "$@"; do
-    shift
-    case "$arg" in
-        "--help") set -- "$@" "-h" ;;
-        *) set -- "$@" "$arg" ;;
-    esac
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    *) set -- "$@" "$arg" ;;
+  esac
 done
 
 while getopts "d:m:hv" OPTION; do
-    case $OPTION in
-        d) DOMAIN=$OPTARG ;;
-        m) MOUNT=$OPTARG ;;
-        h)
-            usage
-            ;;
-        ?)
-            usage
-            ;;
-    esac
+  case $OPTION in
+    d) DOMAIN=$OPTARG ;;
+    m) MOUNT=$OPTARG ;;
+    h)
+      usage
+      ;;
+    ?)
+      usage
+      ;;
+  esac
 done
 
 if [[ -z $VAULT_ADDR ]]; then
-    die "Error, VAULT_ADDR is not set"
+  die "Error, VAULT_ADDR is not set"
 fi
 
 if [[ -z ${VAULT_TOKEN:-} ]] && ! vault secrets list &>/dev/null; then
-    die "Error, VAULT_TOKEN is not set"
+  die "Error, VAULT_TOKEN is not set"
 fi
 
 vault secrets disable "${MOUNT}"

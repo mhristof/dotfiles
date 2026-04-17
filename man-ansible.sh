@@ -8,7 +8,7 @@ MODULE=$(echo "$YAML" | yq -r '.[-1] | keys | to_entries[] | select(.value != "n
 FIELD=$(echo "$YAML" | yq -r '.[-1].'"$MODULE"' | to_entries[-1].key' 2>/dev/null || echo "")
 
 if [[ $FIELD != "" ]]; then
-    FIELD="#parameter-${FIELD}"
+  FIELD="#parameter-${FIELD}"
 fi
 
 ANSIBLE_VERSION=$(ansible --version ansible --version | head -1 | grep -oP '\d*\.\d*' | head -1)

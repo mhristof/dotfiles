@@ -3,26 +3,26 @@
 image="${1:-mhristof/dotfiles}"
 
 die() {
-    echo "$*" 1>&2
-    exit 1
+  echo "$*" 1>&2
+  exit 1
 }
 
 ARGS=()
 
 if [[ -n $REQUESTS_CA_BUNDLE ]]; then
-    ARGS+=(-e REQUESTS_CA_BUNDLE="$REQUESTS_CA_BUNDLE" -v "$(readlink -f "$REQUESTS_CA_BUNDLE"):$REQUESTS_CA_BUNDLE")
+  ARGS+=(-e REQUESTS_CA_BUNDLE="$REQUESTS_CA_BUNDLE" -v "$(readlink -f "$REQUESTS_CA_BUNDLE"):$REQUESTS_CA_BUNDLE")
 fi
 
 if [[ -n $NODE_EXTRA_CA_CERTS ]]; then
-    ARGS+=(-e NODE_EXTRA_CA_CERTS="$NODE_EXTRA_CA_CERTS" -v "$(readlink -f "$NODE_EXTRA_CA_CERTS"):$NODE_EXTRA_CA_CERTS")
+  ARGS+=(-e NODE_EXTRA_CA_CERTS="$NODE_EXTRA_CA_CERTS" -v "$(readlink -f "$NODE_EXTRA_CA_CERTS"):$NODE_EXTRA_CA_CERTS")
 fi
 
 if [[ -f ~/.config/pip/pip.conf ]]; then
-    ARGS+=(-v ~/.config/pip/pip.conf:/root/.config/pip/pip.conf)
+  ARGS+=(-v ~/.config/pip/pip.conf:/root/.config/pip/pip.conf)
 fi
 
 # shellcheck disable=SC2068
 docker run -it --entrypoint /bin/bash -v "$PWD:/work" -w /work ${ARGS[@]} "$image" || {
-    # shellcheck disable=SC2068
-    docker run -it --entrypoint /bin/sh -v "$PWD:/work" -w /work ${ARGS[@]} "$image"
+  # shellcheck disable=SC2068
+  docker run -it --entrypoint /bin/sh -v "$PWD:/work" -w /work ${ARGS[@]} "$image"
 }

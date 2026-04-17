@@ -2,5 +2,4 @@
 
 set -euo pipefail
 
-
 aws sts get-caller-identity

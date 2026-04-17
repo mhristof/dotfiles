@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 for f in "$@"; do
-    # shellcheck disable=SC2016
-    /bin/cat <<EOF
+  # shellcheck disable=SC2016
+  /bin/cat <<EOF
 cat << DONE > $f
 $(sed 's/`/\\`/g' <"$f" | sed 's/\$/\\\$/g')
 DONE

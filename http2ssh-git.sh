@@ -5,18 +5,18 @@ IFS=$'\n\t'
 
 REMOTE="$(git config --get remote.origin.url)"
 die() {
-    echo "$*" 1>&2
-    exit 1
+  echo "$*" 1>&2
+  exit 1
 }
 
 case $REMOTE in
-    git@github*) die "Remote $REMOTE is ssh, aborting" ;;
-    git@gitlab*) die "Remote $REMOTE is ssh, aborting" ;;
+  git@github*) die "Remote $REMOTE is ssh, aborting" ;;
+  git@gitlab*) die "Remote $REMOTE is ssh, aborting" ;;
 esac
 
 case $REMOTE in
-    *gitlab*) gl=gitlab ;;
-    *github*) gl=github ;;
+  *gitlab*) gl=gitlab ;;
+  *github*) gl=github ;;
 esac
 
 # shellcheck disable=SC2001

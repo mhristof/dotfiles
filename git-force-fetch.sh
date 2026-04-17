@@ -3,8 +3,8 @@ set -euo pipefail
 IFS=$'\n\t'
 
 die() {
-    echo "$*" 1>&2
-    exit 1
+  echo "$*" 1>&2
+  exit 1
 }
 
 branch=$(git rev-parse --abbrev-ref HEAD)

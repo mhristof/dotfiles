@@ -2,17 +2,17 @@
 set -euo pipefail
 
 repos=(
-    "$HOME/dotfiles"
-    "$HOME/.vim"
+  "$HOME/dotfiles"
+  "$HOME/.vim"
 )
 
 for repo in "${repos[@]}"; do
-    while read -r r; do
-        dir=$(dirname "$r")
-        if [[ "$(git -C "$dir" status --porcelain)" == "" ]]; then
-            continue
-        fi
-        echo "$dir  >>> git -C $dir commit -am"
-        git -C "$dir" status --porcelain
-    done < <(find "$repo" -name '*.git')
+  while read -r r; do
+    dir=$(dirname "$r")
+    if [[ "$(git -C "$dir" status --porcelain)" == "" ]]; then
+      continue
+    fi
+    echo "$dir  >>> git -C $dir commit -am"
+    git -C "$dir" status --porcelain
+  done < <(find "$repo" -name '*.git')
 done

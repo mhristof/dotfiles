@@ -3,8 +3,8 @@ set -euo pipefail
 IFS=$'\n\t'
 
 die() {
-    echo "$*" 1>&2
-    exit 1
+  echo "$*" 1>&2
+  exit 1
 }
 
 mkdir -p ~/.gnupg
@@ -17,7 +17,7 @@ pinentry-program /opt/homebrew/bin/pinentry-mac
 EOF
 
 which pinentry-mac &>/dev/null || {
-    brew install pinentry-mac
+  brew install pinentry-mac
 }
 
 exit 0

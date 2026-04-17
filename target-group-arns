@@ -2,4 +2,4 @@
 
 set -euo pipefail
 
-aws elbv2 describe-target-groups | jq '.TargetGroups[] | [.TargetGroupName, .TargetGroupArn] | @tsv'  -r  | column -t
+aws elbv2 describe-target-groups | jq '.TargetGroups[] | [.TargetGroupName, .TargetGroupArn] | @tsv' -r | column -t

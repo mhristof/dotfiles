@@ -3,10 +3,7 @@
 # vim:fenc=utf-8
 #
 
-"""
-
-"""
-
+""" """
 
 import boto3
 import sys

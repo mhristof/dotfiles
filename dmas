@@ -2,9 +2,9 @@
 set -euo pipefail
 
 if [ -t 1 ]; then
-    args=""
+  args=""
 else
-    args="--no-ext-diff"
+  args="--no-ext-diff"
 fi
 main=$(git-main.sh)
 
