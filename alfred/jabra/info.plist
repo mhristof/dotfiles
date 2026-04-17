@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>jabra</string>
+	<key>connections</key>
+	<dict>
+		<key>18F5E791-4B15-48BF-AC32-EC62E589D26E</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6BE84879-4FAE-4774-ABCF-0667947DF5D9</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>sourceoutputuid</key>
+				<string>9BD00610-A491-4A90-9E90-788064F85516</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>0ED295D2-6FBE-4255-B406-0E4CC87EAC34</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>sourceoutputuid</key>
+				<string>C4F5A0F1-E3B9-498C-A4E0-A5BEE0321223</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>15917BD7-3C07-4B8E-B9EB-05F632EBBC65</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>3D17ADAE-0BCE-4D49-A235-B5BFE8313BF0</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>18F5E791-4B15-48BF-AC32-EC62E589D26E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>mikec</string>
+	<key>description</key>
+	<string></string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>jabra</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>applescript</key>
+				<string>on alfred_script(q)
+set targetName to "Jabra Speak2 55 MS"
+set blueutilPath to "/opt/homebrew/bin/blueutil"
+set jqPath to "/opt/homebrew/bin/jq"
+
+-- Get list of paired devices with name and address
+set pairedDevices to do shell script blueutilPath &amp; " --paired --format json"
+
+-- Extract the MAC address of the device named 'foo'
+set deviceAddress to do shell script "echo " &amp; quoted form of pairedDevices &amp; " | " &amp; jqPath &amp; " -r '.[] | select(.name == \"" &amp; targetName &amp; "\") | .address'"
+
+if deviceAddress is "" then
+	display dialog "Bluetooth device '" &amp; targetName &amp; "' not found among paired devices." buttons {"OK"} with icon caution
+	return
+end if
+
+-- Try connecting to the device
+try
+	do shell script blueutilPath &amp; " --disconnect " &amp; deviceAddress
+	display notification "Connected to " &amp; targetName with title "Bluetooth"
+on error errMsg
+	display dialog "Failed to connect to " &amp; targetName &amp; ":\n" &amp; errMsg buttons {"OK"} with icon stop
+end try
+
+end alfred_script</string>
+				<key>cachescript</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.applescript</string>
+			<key>uid</key>
+			<string>6BE84879-4FAE-4774-ABCF-0667947DF5D9</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>keyword</key>
+				<string>jabra</string>
+				<key>subtext</key>
+				<string>No arg for reconnect, on for connect and off for disconnect</string>
+				<key>text</key>
+				<string>Connect jabra speaker</string>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>3D17ADAE-0BCE-4D49-A235-B5BFE8313BF0</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>conditions</key>
+				<array>
+					<dict>
+						<key>inputstring</key>
+						<string></string>
+						<key>matchcasesensitive</key>
+						<false/>
+						<key>matchmode</key>
+						<integer>0</integer>
+						<key>matchstring</key>
+						<string>off</string>
+						<key>outputlabel</key>
+						<string>off</string>
+						<key>uid</key>
+						<string>9BD00610-A491-4A90-9E90-788064F85516</string>
+					</dict>
+					<dict>
+						<key>inputstring</key>
+						<string></string>
+						<key>matchcasesensitive</key>
+						<false/>
+						<key>matchmode</key>
+						<integer>0</integer>
+						<key>matchstring</key>
+						<string>on</string>
+						<key>outputlabel</key>
+						<string>on</string>
+						<key>uid</key>
+						<string>C4F5A0F1-E3B9-498C-A4E0-A5BEE0321223</string>
+					</dict>
+				</array>
+				<key>elselabel</key>
+				<string>else</string>
+				<key>hideelse</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.conditional</string>
+			<key>uid</key>
+			<string>18F5E791-4B15-48BF-AC32-EC62E589D26E</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>applescript</key>
+				<string>on alfred_script(q)
+set targetName to "Jabra Speak2 55 MS"
+set blueutilPath to "/opt/homebrew/bin/blueutil"
+set jqPath to "/opt/homebrew/bin/jq"
+
+-- Get list of paired devices with name and address
+set pairedDevices to do shell script blueutilPath &amp; " --paired --format json"
+
+-- Extract the MAC address of the device named 'foo'
+set deviceAddress to do shell script "echo " &amp; quoted form of pairedDevices &amp; " | " &amp; jqPath &amp; " -r '.[] | select(.name == \"" &amp; targetName &amp; "\") | .address'"
+
+if deviceAddress is "" then
+	display dialog "Bluetooth device '" &amp; targetName &amp; "' not found among paired devices." buttons {"OK"} with icon caution
+	return
+end if
+
+-- Try connecting to the device
+try
+	do shell script blueutilPath &amp; " --connect " &amp; deviceAddress
+	display notification "Connected to " &amp; targetName with title "Bluetooth"
+on error errMsg
+	display dialog "Failed to connect to " &amp; targetName &amp; ":\n" &amp; errMsg buttons {"OK"} with icon stop
+end try
+
+end alfred_script</string>
+				<key>cachescript</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.applescript</string>
+			<key>uid</key>
+			<string>0ED295D2-6FBE-4255-B406-0E4CC87EAC34</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>applescript</key>
+				<string>on alfred_script(q)
+-- Version: 1.1.0
+-- Clean reconnect to Bluetooth device "Jabra Speak2 55 MS"
+-- Requires: /opt/homebrew/bin/blueutil and /opt/homebrew/bin/jq
+
+set targetName to "Jabra Speak2 55 MS"
+set blueutilPath to "/opt/homebrew/bin/blueutil"
+set jqPath to "/opt/homebrew/bin/jq"
+
+-- Fetch list of paired devices
+set pairedDevices to do shell script blueutilPath &amp; " --paired --format json"
+
+-- Extract MAC address
+set deviceAddress to do shell script "echo " &amp; quoted form of pairedDevices &amp; " | " &amp; jqPath &amp; " -r '.[] | select(.name == \"" &amp; targetName &amp; "\") | .address'"
+
+if deviceAddress is "" then
+	display dialog "Bluetooth device '" &amp; targetName &amp; "' not found among paired devices." buttons {"OK"} with icon caution
+	return
+end if
+
+-- Check connection state
+set isConnected to do shell script blueutilPath &amp; " --is-connected " &amp; deviceAddress
+
+-- If connected, disconnect first
+if isConnected is "1" then
+	try
+		do shell script blueutilPath &amp; " --disconnect " &amp; deviceAddress
+		delay 1
+	on error errMsg
+		display dialog "Failed to disconnect " &amp; targetName &amp; ":\n" &amp; errMsg buttons {"OK"} with icon stop
+		return
+	end try
+end if
+
+-- Try connecting
+try
+	do shell script blueutilPath &amp; " --connect " &amp; deviceAddress
+	display notification "Reconnected to " &amp; targetName with title "Bluetooth"
+on error errMsg
+	display dialog "Failed to connect to " &amp; targetName &amp; ":\n" &amp; errMsg buttons {"OK"} with icon stop
+end try
+end alfred_script</string>
+				<key>cachescript</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.applescript</string>
+			<key>uid</key>
+			<string>15917BD7-3C07-4B8E-B9EB-05F632EBBC65</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string></string>
+	<key>uidata</key>
+	<dict>
+		<key>0ED295D2-6FBE-4255-B406-0E4CC87EAC34</key>
+		<dict>
+			<key>xpos</key>
+			<real>415</real>
+			<key>ypos</key>
+			<real>160</real>
+		</dict>
+		<key>15917BD7-3C07-4B8E-B9EB-05F632EBBC65</key>
+		<dict>
+			<key>xpos</key>
+			<real>425</real>
+			<key>ypos</key>
+			<real>305</real>
+		</dict>
+		<key>18F5E791-4B15-48BF-AC32-EC62E589D26E</key>
+		<dict>
+			<key>xpos</key>
+			<real>275</real>
+			<key>ypos</key>
+			<real>120</real>
+		</dict>
+		<key>3D17ADAE-0BCE-4D49-A235-B5BFE8313BF0</key>
+		<dict>
+			<key>xpos</key>
+			<real>65</real>
+			<key>ypos</key>
+			<real>100</real>
+		</dict>
+		<key>6BE84879-4FAE-4774-ABCF-0667947DF5D9</key>
+		<dict>
+			<key>xpos</key>
+			<real>430</real>
+			<key>ypos</key>
+			<real>35</real>
+		</dict>
+	</dict>
+	<key>userconfigurationconfig</key>
+	<array/>
+	<key>webaddress</key>
+	<string></string>
+</dict>
+</plist>

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>com.user.alfred-paste</string>
+	<key>connections</key>
+	<dict>
+		<key>A8E8A8E8-8E8E-4E8E-8E8E-8E8E8E8E8E8E</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>B8E8A8E8-8E8E-4E8E-8E8E-8E8E8E8E8E8E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>F8E8A8E8-8E8E-4E8E-8E8E-8E8E8E8E8E8E</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>A8E8A8E8-8E8E-4E8E-8E8E-8E8E8E8E8E8E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>mhristof</string>
+	<key>description</key>
+	<string>Transform clipboard content with simple commands</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>Alfred Paste</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>p</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>Processing...</string>
+				<key>script</key>
+				<string>/usr/bin/python3 clipboard_transformer.py "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string>Transform clipboard content</string>
+				<key>title</key>
+				<string>Alfred Paste</string>
+				<key>type</key>
+				<integer>5</integer>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>F8E8A8E8-8E8E-4E8E-8E8E-8E8E8E8E8E8E</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>/usr/bin/python3 clipboard_transformer.py "{query}" "{clipboard}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>5</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>A8E8A8E8-8E8E-4E8E-8E8E-8E8E8E8E8E8E</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>autopaste</key>
+				<true/>
+				<key>clipboardtext</key>
+				<string>{query}</string>
+				<key>ignoredynamicplaceholders</key>
+				<false/>
+				<key>transient</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.clipboard</string>
+			<key>uid</key>
+			<string>B8E8A8E8-8E8E-4E8E-8E8E-8E8E8E8E8E8E</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>Alfred Paste Workflow
+
+Type 'p' followed by a transformation verb to transform your clipboard content:
+- psort: Sort lines alphabetically
+- preverse: Reverse line order
+- pupper: Convert to uppercase
+- plower: Convert to lowercase
+- ptrim: Trim whitespace from lines
+
+The transformed content will be automatically pasted.</string>
+	<key>uidata</key>
+	<dict>
+		<key>A8E8A8E8-8E8E-4E8E-8E8E-8E8E8E8E8E8E</key>
+		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
+			<key>ypos</key>
+			<integer>100</integer>
+		</dict>
+		<key>B8E8A8E8-8E8E-4E8E-8E8E-8E8E8E8E8E8E</key>
+		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
+			<key>ypos</key>
+			<integer>100</integer>
+		</dict>
+		<key>F8E8A8E8-8E8E-4E8E-8E8E-8E8E8E8E8E8E</key>
+		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
+			<key>ypos</key>
+			<integer>100</integer>
+		</dict>
+	</dict>
+	<key>version</key>
+	<string>1.1.2</string>
+	<key>webaddress</key>
+	<string>https://github.com/mhristof/alfred-paste</string>
+</dict>
+</plist>

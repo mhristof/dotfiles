@@ -252,7 +252,26 @@ docker: ## Install Docker Desktop and Compose plugin
 pbpaste: /tmp/alfred-pbpaste.alfredworkflow
 	open /tmp/alfred-pbpaste.alfredworkflow
 
-alfred: $(BREW_BIN)/wget pbpaste $(GREP) /tmp/alfred-qrencode.alfredworkflow
+ALFRED_WORKFLOWS_DIR := $(HOME)/Library/Application Support/Alfred/Alfred.alfredpreferences/workflows
+ALFRED_WORKFLOWS := $(wildcard $(PWD)/alfred/*)
+
+.PHONY: alfred
+alfred: $(BREW_BIN)/wget pbpaste $(GREP) /tmp/alfred-qrencode.alfredworkflow alfred-workflows
+
+.PHONY: alfred-workflows
+alfred-workflows: ## Symlink Alfred workflows from dotfiles
+	@for workflow in $(ALFRED_WORKFLOWS); do \
+		name=$$(basename "$$workflow"); \
+		target="$(ALFRED_WORKFLOWS_DIR)/$$name"; \
+		if [ -L "$$target" ]; then \
+			echo "Already linked: $$name"; \
+		elif [ -d "$$target" ]; then \
+			echo "Error: $$target exists and is not a symlink, remove it first"; \
+		else \
+			ln -sf "$$workflow" "$$target"; \
+			echo "Linked: $$name -> $$workflow"; \
+		fi; \
+	done
 
 .PHONY: qrencode
 qrencode: /tmp/alfred-qrencode.alfredworkflow

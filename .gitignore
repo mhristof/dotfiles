@@ -1,5 +1,7 @@
 *.sw[op]
 *.DS_Store
+*.pyc
+__pycache__/
 vault
 terraform
 .config/thefuck/rules/__pycache__/
