@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+aws logs tail --follow --since 1s $(aws logs describe-log-groups | jq -r '.logGroups[].logGroupName' -c | fzf)

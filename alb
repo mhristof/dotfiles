@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+(
+  echo "name state type dns"
+  while read -r lb; do
+    name=$(jq -r '.LoadBalancerName' <<<"$lb")
+    state=$(jq -r '.State.Code' <<<"$lb")
+    typ=$(jq -r '.Type' <<<"$lb")
+    dns=$(jq -r '.DNSName' <<<"$lb")
+
+    echo "$name $state $typ $dns"
+  done < <(aws elbv2 describe-load-balancers | jq -r '.LoadBalancers[]' -c)
+) | column -t

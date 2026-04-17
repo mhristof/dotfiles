@@ -4,68 +4,68 @@ set -euo pipefail
 ARG=${1:-}
 
 case $ARG in
-    m) AUTOMERGE=1 ;;
-    -h | --help)
-        echo "Usage: $0 [-h]"
-        echo "  m: Merge automatically"
-        echo "  -h: Show this help message"
-        exit 0
-        ;;
+  m) AUTOMERGE=1 ;;
+  -h | --help)
+    echo "Usage: $0 [-h]"
+    echo "  m: Merge automatically"
+    echo "  -h: Show this help message"
+    exit 0
+    ;;
 esac
 
 if [[ -z ${GITLAB_TOKEN:-} ]]; then
-    export GITLAB_TOKEN=$(/usr/bin/security find-generic-password -s germ -w -a GITLAB_TOKEN 2>/dev/null)
+  export GITLAB_TOKEN=$(/usr/bin/security find-generic-password -s germ -w -a GITLAB_TOKEN 2>/dev/null)
 fi
 
 description=""
 
 jira=$(git rev-parse --abbrev-ref HEAD | grep -oP '^\w*-\d*')
-if [[ -n "${jira}" ]]; then
-    description="$(echo -e "$jira\n")"
+if [[ -n ${jira} ]]; then
+  description="$(echo -e "$jira\n")"
 fi
 
 message=$(git --no-pager log --format=%b -n 1 "$(git rev-parse --verify HEAD)")
-if [[ -n "${message}" ]]; then
-    description="$(echo -e "$description\n$message")"
+if [[ -n ${message} ]]; then
+  description="$(echo -e "$description\n$message")"
 fi
 
 if [[ -f .gitlab/merge_request_templates/Default.md ]]; then
-    description="$description$(cat .gitlab/merge_request_templates/Default.md)"
+  description="$description$(cat .gitlab/merge_request_templates/Default.md)"
 fi
 
 glab mr create \
-    --description "$description" \
-    --assignee "$(glab api /user | jq .username -r)" \
-    --title "$(git-first-branch-commit.sh | head -1)" \
-    --no-editor --push \
-    --remove-source-branch \
-    --yes || {
-    # If MR already exists, that's okay - we'll continue to auto-merge if requested
-    if ! glab mr view &>/dev/null; then
-        # Only exit if there's no MR at all
-        glab mr view | less --quit-if-one-screen
-        exit 1
-    fi
+  --description "$description" \
+  --assignee "$(glab api /user | jq .username -r)" \
+  --title "$(git-first-branch-commit.sh | head -1)" \
+  --no-editor --push \
+  --remove-source-branch \
+  --yes || {
+  # If MR already exists, that's okay - we'll continue to auto-merge if requested
+  if ! glab mr view &>/dev/null; then
+    # Only exit if there's no MR at all
+    glab mr view | less --quit-if-one-screen
+    exit 1
+  fi
 }
 
 if [[ ${AUTOMERGE:-0} -eq 1 ]]; then
-    echo "Waiting for CI pipeline to start..."
-    for i in $(seq 1 30); do
-        if glab ci list --per-page 1 2>/dev/null | grep -qE 'running|pending|success|passed'; then
-            break
-        fi
-        sleep 2
-    done
+  echo "Waiting for CI pipeline to start..."
+  for i in $(seq 1 30); do
+    if glab ci list --per-page 1 2>/dev/null | grep -qE 'running|pending|success|passed'; then
+      break
+    fi
+    sleep 2
+  done
 
-    # Retry merge with auto-merge since GitLab may need time after pipeline starts
-    for i in $(seq 1 10); do
-        if glab mr merge --auto-merge --remove-source-branch --yes 2>&1; then
-            exit 0
-        fi
-        echo "Merge not ready yet, retrying in 5s... ($i/10)"
-        sleep 5
-    done
+  # Retry merge with auto-merge since GitLab may need time after pipeline starts
+  for i in $(seq 1 10); do
+    if glab mr merge --auto-merge --remove-source-branch --yes 2>&1; then
+      exit 0
+    fi
+    echo "Merge not ready yet, retrying in 5s... ($i/10)"
+    sleep 5
+  done
 
-    echo "Failed to set auto-merge after 10 attempts"
-    exit 1
+  echo "Failed to set auto-merge after 10 attempts"
+  exit 1
 fi

@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+# clipwatch.sh — save clipboard image whenever it changes
+# version: v1.0.0
+# commit: feat: clipboard image watcher (v1.0.0)
+
+set -euo pipefail
+
+# --- config ---
+OUT_DIR="${1:-./clips}"     # override via first arg
+INTERVAL="${INTERVAL:-0.5}" # seconds between checks
+PREFIX="${PREFIX:-clip}"    # filename prefix
+EXT="${EXT:-png}"           # saved format (pngpaste saves PNG)
+# ---------------
+
+# --- preflight (exit early on unmet requirements) ---
+if ! command -v pngpaste >/dev/null 2>&1; then
+  echo "error: pngpaste not found. Install with: brew install pngpaste" >&2
+  exit 1
+fi
+
+mkdir -p "$OUT_DIR"
+
+last_hash=""
+
+cleanup() {
+  echo "exiting…" >&2
+}
+trap cleanup INT TERM
+
+echo "Watching clipboard for images… (dir: $OUT_DIR, interval: ${INTERVAL}s)"
+echo "Press Ctrl-C to stop."
+
+while true; do
+  # 1) If clipboard does not contain an image, skip early.
+  if ! pngpaste -b >/dev/null 2>&1; then
+    sleep "$INTERVAL"
+    continue
+  fi
+
+  # 2) Grab current clipboard image to a temp file and hash it.
+  tmpfile="$(mktemp -t clipwatch.XXXXXX).${EXT}"
+  # If pngpaste fails, skip this cycle early.
+  if ! pngpaste "$tmpfile" >/dev/null 2>&1; then
+    rm -f "$tmpfile"
+    sleep "$INTERVAL"
+    continue
+  fi
+
+  # 3) Hash; if same as last, discard and skip early.
+  cur_hash="$(shasum -a 256 "$tmpfile" | awk '{print $1}')"
+  if [[ $cur_hash == "$last_hash" ]]; then
+    rm -f "$tmpfile"
+    sleep "$INTERVAL"
+    continue
+  fi
+
+  # 4) New image → persist with timestamped filename.
+  ts="$(date '+%Y%m%d_%H%M%S')"
+  outfile="${OUT_DIR}/${PREFIX}_${ts}.${EXT}"
+
+  # Avoid accidental overwrite; if exists, append a counter.
+  n=1
+  while [[ -e $outfile ]]; do
+    outfile="${OUT_DIR}/${PREFIX}_${ts}_${n}.${EXT}"
+    n=$((n + 1))
+  done
+
+  mv "$tmpfile" "$outfile"
+  chmod 0644 "$outfile"
+  last_hash="$cur_hash"
+  echo "Saved: $outfile"
+
+  sleep "$INTERVAL"
+done

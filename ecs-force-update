@@ -5,7 +5,10 @@
 #— Helpers -------------------------------------------------------------------
 require_cmd() {
   command -v "$1" >/dev/null 2>&1 \
-    || { echo "Error: '$1' is not installed or not in PATH." >&2; exit 1; }
+    || {
+      echo "Error: '$1' is not installed or not in PATH." >&2
+      exit 1
+    }
 }
 
 select_cluster() {
@@ -31,10 +34,10 @@ SCRIPT_NAME="ecs-force-update"
 _ecs_force_update_completions() {
   local cur_index="${COMP_CWORD}"
   if [[ $cur_index -eq 1 ]]; then
-    COMPREPLY=( $(select_cluster) )
+    COMPREPLY=($(select_cluster))
   elif [[ $cur_index -eq 2 ]]; then
     local chosen_cluster="${COMP_WORDS[1]}"
-    COMPREPLY=( $(select_service "$chosen_cluster") )
+    COMPREPLY=($(select_service "$chosen_cluster"))
   fi
 }
 
@@ -45,7 +48,7 @@ if (return 0 2>/dev/null); then
 fi
 
 # Register completion only when sourced in an interactive shell
-if (( sourced )) && [[ $- == *i* ]]; then
+if ((sourced)) && [[ $- == *i* ]]; then
   complete -F _ecs_force_update_completions "$SCRIPT_NAME" 2>/dev/null || true
 fi
 
@@ -60,10 +63,10 @@ main() {
   local cluster="${1:-}"
   local service="${2:-}"
 
-  [[ -n "$cluster" ]] || cluster="$(select_cluster)" || exit 1
-  [[ -n "$service" ]] || service="$(select_service "$cluster")" || exit 1
+  [[ -n $cluster ]] || cluster="$(select_cluster)" || exit 1
+  [[ -n $service ]] || service="$(select_service "$cluster")" || exit 1
 
-  if [[ -z "$cluster" || -z "$service" ]]; then
+  if [[ -z $cluster || -z $service ]]; then
     echo "Usage: $SCRIPT_NAME [cluster] [service]" >&2
     exit 1
   fi
@@ -78,6 +81,6 @@ main() {
 }
 
 # Execute main if not sourced
-if (( ! sourced )); then
+if ((!sourced)); then
   main "$@"
 fi

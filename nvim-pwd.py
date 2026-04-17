@@ -12,12 +12,12 @@ import glob
 from pynvim import attach
 
 # Try to get socket from NVIM environment variable first
-socket_path = os.environ.get('NVIM')
+socket_path = os.environ.get("NVIM")
 
 # If not set, try to find the most recent nvim socket
 if not socket_path:
     # Find all nvim sockets (both /tmp/nvim.*.sock and /tmp/nvim*/0)
-    sockets = glob.glob('/tmp/nvim.*.sock') + glob.glob('/tmp/nvim*/0')
+    sockets = glob.glob("/tmp/nvim.*.sock") + glob.glob("/tmp/nvim*/0")
     if sockets:
         # Use the most recently modified socket
         socket_path = max(sockets, key=os.path.getmtime)

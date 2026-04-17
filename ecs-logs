@@ -1,0 +1,239 @@
+#!/usr/bin/env python3
+
+import boto3
+import argparse
+import logging
+import http.client as http_client
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import time
+from datetime import datetime, timedelta, timezone
+
+# Configure logging for script output
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger("ecs_logger")
+
+# Suppress logs from boto3, botocore, and other libraries
+logging.getLogger("boto3").setLevel(logging.CRITICAL)
+logging.getLogger("botocore").setLevel(logging.CRITICAL)
+logging.getLogger("http.client").setLevel(logging.CRITICAL)
+logging.getLogger("urllib3").setLevel(logging.CRITICAL)
+logging.getLogger("urllib3.connectionpool").setLevel(logging.CRITICAL)
+
+http_client.HTTPConnection.debuglevel = 0
+
+
+def describe_services_parallel(ecs_client, cluster, service_arns):
+    deploying_services = []
+
+    def process_service(service):
+        try:
+            service_details = ecs_client.describe_services(
+                cluster=cluster, services=[service]
+            )
+        except Exception as e:
+            logger.error(
+                f"Error fetching deployment details for service {service}: {e}"
+            )
+
+            return None
+
+        deployments = service_details["services"][0]["deployments"]
+
+        for deployment in deployments:
+            if deployment["rolloutState"] != "IN_PROGRESS":
+                continue
+            logger.info(f"Service {service} is deploying in cluster {cluster}.")
+            logger.debug(f"Deployment details for service {service}: {deployment}")
+
+            return (service, cluster)
+
+        return None
+
+    with ThreadPoolExecutor() as executor:
+        futures = [
+            executor.submit(process_service, service) for service in service_arns
+        ]
+
+        for future in as_completed(futures):
+            result = future.result()
+
+            if result:
+                deploying_services.append(result)
+
+    return deploying_services
+
+
+def fetch_task_definition(ecs_client, task):
+    try:
+        return ecs_client.describe_task_definition(
+            taskDefinition=task["taskDefinitionArn"]
+        )["taskDefinition"]
+    except Exception as e:
+        logger.error(f"Error fetching task definition for task {task['taskArn']}: {e}")
+
+        return None
+
+
+def fetch_logs(log_client, log_group, start_time):
+    try:
+        response = log_client.filter_log_events(
+            logGroupName=log_group, startTime=start_time
+        )
+        events = response["events"][-50:]  # Only fetch the last 50 log events
+
+        for event in events:
+            logger.info(f"[{log_group}] {event['message']}")
+    except Exception as e:
+        logger.error(f"Error fetching logs from logGroupName={log_group}: {e}")
+
+
+def tail_logs_for_service(ecs_client, log_client, cluster, service):
+    try:
+        task_arns = ecs_client.list_tasks(
+            cluster=cluster, serviceName=service, desiredStatus="STOPPED"
+        )["taskArns"]
+
+        if not task_arns:
+            task_arns = ecs_client.list_tasks(
+                cluster=cluster, serviceName=service, desiredStatus="RUNNING"
+            )["taskArns"]
+    except ecs_client.exceptions.ServiceNotFoundException:
+        logger.error(f"Service {service} not found in cluster {cluster}. Skipping...")
+
+        return
+    except Exception as e:
+        logger.error(
+            f"Error listing tasks for service {service} in cluster {cluster}: {e}"
+        )
+
+        return
+
+    if not task_arns:
+        logger.info(f"No tasks found for service {service} in cluster {cluster}.")
+
+        return
+
+    try:
+        tasks = ecs_client.describe_tasks(cluster=cluster, tasks=task_arns)["tasks"]
+    except Exception as e:
+        logger.error(
+            f"Error describing tasks for service {service} in cluster {cluster}: {e}"
+        )
+
+        return
+
+    for task in tasks:
+        task_definition = fetch_task_definition(ecs_client, task)
+
+        if not task_definition:
+            continue
+
+        log_group = None
+
+        for container in task_definition["containerDefinitions"]:
+            if "logConfiguration" in container:
+                log_group = (
+                    container["logConfiguration"]
+                    .get("options", {})
+                    .get("awslogs-group")
+                )
+
+                break
+
+        if not log_group:
+            logger.warning(
+                f"No logs configured for task {task['taskArn']} in service {service}."
+            )
+
+            continue
+
+        start_time = int(
+            (datetime.now(timezone.utc) - timedelta(minutes=5)).timestamp() * 1000
+        )
+        logger.info(
+            f"Fetching logs from logGroupName={log_group} for the last 5 minutes."
+        )
+        fetch_logs(log_client, log_group, start_time)
+
+
+def list_ecs_services_with_deployment(verbose=False):
+    if verbose:
+        logger.setLevel(logging.DEBUG)
+
+    try:
+        ecs_client = boto3.client("ecs")
+        log_client = boto3.client("logs")
+    except Exception as e:
+        logger.error(f"Error initializing boto3 clients: {e}")
+
+        return []
+
+    try:
+        clusters_response = ecs_client.list_clusters()
+        clusters = clusters_response["clusterArns"]
+        logger.debug(f"Clusters found: {clusters}")
+    except Exception as e:
+        logger.error(f"Error fetching clusters: {e}")
+
+        return []
+
+    if not clusters:
+        logger.info("No ECS clusters found.")
+
+        return []
+
+    deploying_services = []
+
+    for cluster in clusters:
+        next_token = None
+
+        while True:
+            try:
+                params = {"cluster": cluster}
+
+                if next_token:
+                    params["nextToken"] = next_token
+
+                services_response = ecs_client.list_services(**params)
+                service_arns = services_response["serviceArns"]
+                logger.debug(f"Services found in cluster {cluster}: {service_arns}")
+                deploying_services.extend(
+                    describe_services_parallel(ecs_client, cluster, service_arns)
+                )
+
+                next_token = services_response.get("nextToken")
+
+                if not next_token:
+                    break
+            except Exception as e:
+                logger.error(f"Error fetching services for cluster {cluster}: {e}")
+
+                break
+
+    if not deploying_services:
+        logger.info("No services are currently deploying.")
+    else:
+        logger.info(f"Found {len(deploying_services)} services deploying:")
+
+        for service, correct_cluster in deploying_services:
+            logger.info(f"Service {service} is found in cluster {correct_cluster}.")
+            tail_logs_for_service(ecs_client, log_client, correct_cluster, service)
+
+    return deploying_services
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="List ECS services currently deploying."
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="Enable verbose output for the script.",
+    )
+    args = parser.parse_args()
+
+    list_ecs_services_with_deployment(verbose=args.verbose)

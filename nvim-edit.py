@@ -13,12 +13,12 @@ import glob
 import subprocess
 
 # Try to get socket from NVIM environment variable first
-socket_path = os.environ.get('NVIM')
+socket_path = os.environ.get("NVIM")
 
 # If not set, try to find the most recent nvim socket
 if not socket_path:
     # Find all nvim sockets (both /tmp/nvim.*.sock and /tmp/nvim*/0)
-    sockets = glob.glob('/tmp/nvim.*.sock') + glob.glob('/tmp/nvim*/0')
+    sockets = glob.glob("/tmp/nvim.*.sock") + glob.glob("/tmp/nvim*/0")
     if sockets:
         # Use the most recently modified socket
         socket_path = max(sockets, key=os.path.getmtime)
@@ -30,6 +30,7 @@ Path(file).touch()
 if socket_path:
     try:
         from pynvim import attach
+
         nvim = attach("socket", path=socket_path)
         nvim.command(f"edit {file}")
         try:

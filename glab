@@ -3,21 +3,21 @@
 set -euo pipefail
 
 function get_token {
-    /usr/bin/security find-generic-password -s germ -w -a "$1" 2>/dev/null
+  /usr/bin/security find-generic-password -s germ -w -a "$1" 2>/dev/null
 }
 
-if [[ -z "${GITLAB_TOKEN:-}" ]]; then
-    case "$@" in
-        *DELETE*) export GITLAB_TOKEN=$(get_token GITLAB_TOKEN) ;;
-        *field*) export GITLAB_TOKEN=$(get_token GITLAB_TOKEN) ;;
-        *mr*update*) export GITLAB_TOKEN=$(get_token GITLAB_TOKEN) ;;
-        *mr*rebase*) export GITLAB_TOKEN=$(get_token GITLAB_TOKEN) ;;
-        *mr*create*) export GITLAB_TOKEN=$(get_token GITLAB_TOKEN) ;;
-        *mr*approve*) export GITLAB_TOKEN=$(get_token GITLAB_TOKEN) ;;
-        *mr*merge*) export GITLAB_TOKEN=$(get_token GITLAB_TOKEN) ;;
-        *api*notes*body*) export GITLAB_TOKEN=$(get_token GITLAB_TOKEN) ;;
-        *) export GITLAB_TOKEN=$(get_token GITLAB_READONLY_TOKEN) ;;
-    esac
+if [[ -z ${GITLAB_TOKEN:-} ]]; then
+  case "$@" in
+    *DELETE*) export GITLAB_TOKEN=$(get_token GITLAB_TOKEN) ;;
+    *field*) export GITLAB_TOKEN=$(get_token GITLAB_TOKEN) ;;
+    *mr*update*) export GITLAB_TOKEN=$(get_token GITLAB_TOKEN) ;;
+    *mr*rebase*) export GITLAB_TOKEN=$(get_token GITLAB_TOKEN) ;;
+    *mr*create*) export GITLAB_TOKEN=$(get_token GITLAB_TOKEN) ;;
+    *mr*approve*) export GITLAB_TOKEN=$(get_token GITLAB_TOKEN) ;;
+    *mr*merge*) export GITLAB_TOKEN=$(get_token GITLAB_TOKEN) ;;
+    *api*notes*body*) export GITLAB_TOKEN=$(get_token GITLAB_TOKEN) ;;
+    *) export GITLAB_TOKEN=$(get_token GITLAB_READONLY_TOKEN) ;;
+  esac
 fi
 
 /opt/homebrew/bin/glab "$@"

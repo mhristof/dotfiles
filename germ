@@ -4,12 +4,12 @@ set -euo pipefail
 GERM_BIN="$HOME/.local/bin/germ"
 GERM_REPO="$HOME/code/github.com/mhristof/germ"
 
-if [[ ! -x "$GERM_BIN" ]]; then
-    if [[ ! -d "$GERM_REPO" ]]; then
-        "$HOME/bin/clone" https://github.com/mhristof/germ
-    fi
+if [[ ! -x $GERM_BIN ]]; then
+  if [[ ! -d $GERM_REPO ]]; then
+    "$HOME/bin/clone" https://github.com/mhristof/germ
+  fi
 
-    make --directory "$GERM_REPO" install
+  make --directory "$GERM_REPO" install
 fi
 
 exec "$GERM_BIN" "$@"

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 function usage {
-    cat <<EOF
+  cat <<EOF
 Usage: ./$0 [-a account_nubmer]
 
 Prints out the amis for the given account
@@ -13,47 +13,47 @@ EOF
 }
 
 while getopts "o:a:hv" OPTION; do
-    case $OPTION in
-        o)
-            OWNER=$OPTARG
-            shift
-            ;;
-        a)
-            ACCOUNT=$OPTARG
-            shift
-            ;;
-        h)
-            usage
-            exit 1
-            ;;
-        *)
-            usage
-            exit 1
-            ;;
-    esac
+  case $OPTION in
+    o)
+      OWNER=$OPTARG
+      shift
+      ;;
+    a)
+      ACCOUNT=$OPTARG
+      shift
+      ;;
+    h)
+      usage
+      exit 1
+      ;;
+    *)
+      usage
+      exit 1
+      ;;
+  esac
 done
 
 ARG=${1:-}
 AWS_ARGS=""
 
 case "$ARG" in
-    ami-*)
-        AWS_ARGS="--image-ids $ARG"
-        ;;
+  ami-*)
+    AWS_ARGS="--image-ids $ARG"
+    ;;
 esac
 
 case "$OWNER" in
-    self)
-        AWS_ARGS="$AWS_ARGS --owners self"
-        ;;
-    *)
-        AWS_ARGS="$AWS_ARGS --owners $OWNER"
-        ;;
+  self)
+    AWS_ARGS="$AWS_ARGS --owners self"
+    ;;
+  *)
+    AWS_ARGS="$AWS_ARGS --owners $OWNER"
+    ;;
 esac
 
-if [[ "${ACCOUNT:-invalid}" == "invalid" ]]; then
-    ACCOUNT=$(aws sts get-caller-identity | jq .Account -r)
+if [[ ${ACCOUNT:-invalid} == "invalid" ]]; then
+  ACCOUNT=$(aws sts get-caller-identity | jq .Account -r)
 fi
 
-aws ec2 describe-images --executable-users "$ACCOUNT" $AWS_ARGS |
-    jq -r '.Images[] | [.CreationDate, .ImageId, .Name, .Desription] | @tsv' | sort | column -t
+aws ec2 describe-images --executable-users "$ACCOUNT" $AWS_ARGS \
+  | jq -r '.Images[] | [.CreationDate, .ImageId, .Name, .Desription] | @tsv' | sort | column -t

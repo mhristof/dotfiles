@@ -1,0 +1,161 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Name of the tmux session
+SESSION_NAME="radio"
+PARAPOLITIKA_URL="https://netradio.live24.gr/athinaradio"
+REALFM_URL="https://realfm.live24.gr/realfm"
+CURRENT_URL_FILE="/tmp/radio_current_url"
+TOGGLE_THRESHOLD=10
+TOGGLE_FILE="/tmp/radio_toggle_time"
+LOG_FILE="/tmp/radio_control.log"
+
+# Initialize CURRENT_URL
+if [[ ! -f $CURRENT_URL_FILE ]]; then
+  echo "$PARAPOLITIKA_URL" >$CURRENT_URL_FILE
+fi
+CURRENT_URL=$(cat $CURRENT_URL_FILE)
+
+# Function to send commands to the tmux session
+function send_command {
+  tmux send-keys -t $SESSION_NAME "$1" C-m
+}
+
+# Function to check if a tmux session exists
+function session_exists {
+  tmux has-session -t $SESSION_NAME 2>/dev/null
+}
+
+# Function to kill the tmux session
+function kill_session {
+  tmux kill-session -t $SESSION_NAME
+}
+
+# Function to get the current time in seconds
+function current_time {
+  date +%s
+}
+
+# Function to toggle the URL
+function toggle_url {
+  if [[ $CURRENT_URL == "$PARAPOLITIKA_URL" ]]; then
+    CURRENT_URL="$REALFM_URL"
+  else
+    CURRENT_URL="$PARAPOLITIKA_URL"
+  fi
+  echo "$CURRENT_URL" >$CURRENT_URL_FILE
+}
+
+# Function to log messages
+function log_message {
+  echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >>$LOG_FILE
+}
+
+# Function to send macOS speech notification
+function send_notification {
+  currentVol=$(osascript -e 'output volume of (get volume settings)')
+  voiceVol=$((currentVol * 40 / 100))
+  osascript -e "set volume output volume $voiceVol"
+  log_message "Set volume to $voiceVol"
+  say "$1"
+  osascript -e "set volume output volume $currentVol"
+  log_message "Restored volume to $currentVol"
+}
+
+# Usage information
+function usage {
+  echo "Usage: $0 {play|start|stop|volume-up|volume-down|mute|unmute|realfm}"
+  exit 1
+}
+
+# Determine station name
+function get_station_name {
+  if [[ $CURRENT_URL == "$PARAPOLITIKA_URL" ]]; then
+    echo "Parapolitika"
+  else
+    echo "RealFM"
+  fi
+}
+
+# Control commands
+case "${1:-}" in
+  play)
+    if session_exists; then
+      kill_session
+      log_message "Stopped ffplay in tmux session $SESSION_NAME."
+    else
+      if [[ -f $TOGGLE_FILE ]]; then
+        last_time=$(cat $TOGGLE_FILE)
+        current_time=$(current_time)
+        elapsed_time=$((current_time - last_time))
+        log_message "Last play command at $last_time, current time is $current_time, elapsed time is $elapsed_time seconds."
+        if ((elapsed_time <= TOGGLE_THRESHOLD)); then
+          toggle_url
+          log_message "Toggled URL to $CURRENT_URL."
+        else
+          log_message "Elapsed time $elapsed_time is greater than threshold $TOGGLE_THRESHOLD, not toggling URL."
+        fi
+      fi
+      echo "$(current_time)" >$TOGGLE_FILE
+      tmux new-session -d -s $SESSION_NAME "ffplay -nodisp -hide_banner -volume 100 $CURRENT_URL"
+      station_name=$(get_station_name)
+      log_message "Started ffplay in tmux session $SESSION_NAME with URL $CURRENT_URL."
+      send_notification "Started playing $station_name"
+    fi
+    ;;
+  start)
+    if session_exists; then
+      log_message "Session $SESSION_NAME already exists."
+      send_notification "Session already exists"
+    else
+      tmux new-session -d -s $SESSION_NAME "ffplay -nodisp -hide_banner -volume 100 $PARAPOLITIKA_URL"
+      log_message "Started ffplay in tmux session $SESSION_NAME with URL $PARAPOLITIKA_URL."
+      send_notification "Started playing Parapolitika"
+    fi
+    ;;
+  stop)
+    if session_exists; then
+      kill_session
+      log_message "Stopped ffplay in tmux session $SESSION_NAME."
+      send_notification "Stopped playing"
+    else
+      log_message "Session $SESSION_NAME does not exist."
+      send_notification "Session does not exist"
+    fi
+    ;;
+  mute)
+    if session_exists; then
+      send_command "m"
+      log_message "Muted audio in tmux session $SESSION_NAME."
+      send_notification "Muted audio"
+    else
+      log_message "Session $SESSION_NAME does not exist."
+      send_notification "Session does not exist"
+    fi
+    ;;
+  unmute)
+    if session_exists; then
+      send_command "m"
+      log_message "Unmuted audio in tmux session $SESSION_NAME."
+      send_notification "Unmuted audio"
+    else
+      log_message "Session $SESSION_NAME does not exist."
+      send_notification "Session does not exist"
+    fi
+    ;;
+  realfm)
+    if session_exists; then
+      kill_session
+      log_message "Stopped current stream in tmux session $SESSION_NAME."
+    fi
+    tmux new-session -d -s $SESSION_NAME "ffplay -nodisp -hide_banner -volume 100 $REALFM_URL"
+    echo "$REALFM_URL" >$CURRENT_URL_FILE
+    log_message "Started RealFM in tmux session $SESSION_NAME."
+    send_notification "Started playing RealFM"
+    ;;
+  *)
+    usage
+    ;;
+esac
+
+exit 0

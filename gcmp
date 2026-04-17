@@ -3,20 +3,20 @@ set -euo pipefail
 
 DIR=${1:-}
 
-if [[ -n "$DIR" ]]; then
-    cd "$DIR"
+if [[ -n $DIR ]]; then
+  cd "$DIR"
 fi
 
 git checkout "$(git-main.sh)" || {
-    STASH=1
-    git stash
-    git checkout "$(git-main.sh)"
+  STASH=1
+  git stash
+  git checkout "$(git-main.sh)"
 }
 git pull && git fetch --prune
 
 # shellcheck disable=SC2046
 git branch --merged | { grep -v "$(git-main.sh)" || true; } | xargs --no-run-if-empty git branch -d
 
-if [[ "${STASH:-}" -eq 1 ]]; then
-    git stash apply
+if [[ ${STASH:-} -eq 1 ]]; then
+  git stash apply
 fi

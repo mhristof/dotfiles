@@ -2,9 +2,9 @@
 
 set -euo pipefail
 
-aws ec2 describe-instances            \
-        --output text                       \
-        --query "
+aws ec2 describe-instances \
+  --output text \
+  --query "
         Reservations[].Instances[][
             InstanceId,
             ImageId,
@@ -15,7 +15,6 @@ aws ec2 describe-instances            \
             Placement.AvailabilityZone,
             VpcId,
             StateTransitionReason
-        ]"                |
-        LC_ALL=C sort -b -k 6 |
-        column -s$'\t' -t
-
+        ]" \
+  | LC_ALL=C sort -b -k 6 \
+  | column -s$'\t' -t

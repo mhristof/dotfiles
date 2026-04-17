@@ -20,3 +20,4 @@ stacks
 .local
 .bash-my-aws
 .vscode
+.config/nvim/bundle/Vundle.vim

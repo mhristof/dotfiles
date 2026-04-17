@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Usage: ./find-latest-ami.sh <name-prefix> [<owner-id>]
+# Example: ./find-latest-ami.sh "al2023-ami-2023.6" "137112412989"
+
+NAME_PREFIX="${1:-}"
+OWNER="${2:-137112412989}" # Default to Amazon Linux AMI owner
+
+if [[ -z "$NAME_PREFIX" ]]; then
+  echo "Error: AMI name prefix is required."
+  echo "Usage: $0 <name-prefix> [<owner-id>]"
+  exit 1
+fi
+
+aws ec2 describe-images \
+  --owners "$OWNER" \
+  --filters "Name=name,Values=${NAME_PREFIX}*" \
+  --query 'Images | sort_by(@, &CreationDate) | [-1].{ImageId: ImageId, Name: Name, CreationDate: CreationDate}' \
+  --output table

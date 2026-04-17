@@ -5,9 +5,9 @@ source "$HOME/bin/.lib"
 
 PIPX_BIN="$HOME/.local/bin/pre-commit"
 
-if [[ ! -x "$PIPX_BIN" ]]; then
-    command -v pipx &>/dev/null || brew install pipx
-    pipx install pre-commit
+if [[ ! -x $PIPX_BIN ]]; then
+  command -v pipx &>/dev/null || brew install pipx
+  pipx install pre-commit
 fi
 
 exec "$PIPX_BIN" "$@"
